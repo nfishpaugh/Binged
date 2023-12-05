@@ -75,9 +75,13 @@ $response = $client->request('GET', $url, [
                         <div class="d-flex justify-content-between flex-wrap">
                             <div class="d-flex align-items-end flex-wrap">
                                 <div class="me-md-3 me-xl-5">
-                                    <img src="<?php echo $img_url ?>" width="333" height="500"/>
-                                    <h2><?php echo $page_name; ?></h2>
-                                    <p><?php echo $show_info['description']; ?></p>
+                                    <div style="float:left">
+                                        <img src="<?php echo $img_url ?>" width="333" height="500"
+                                             style="margin-right:50px" alt="images/qmark.jpg"/>
+                                    </div>
+                                    <div style="margin:50px"
+                                    <h2 style="horiz-align: right"><?php echo $page_name; ?></h2>
+                                    <p style="horiz-align: right"><?php echo $show_info['description']; ?></p>
                                     <p>Year released: <?php echo $show_info['year']; ?></p>
                                     <p>Runtime: <?php
                                         if (!is_null($show_info['runtime'])) {
@@ -96,6 +100,7 @@ $response = $client->request('GET', $url, [
             </div>
         </div>
     </div>
+</div>
 </div>
 </body>
 </html>
