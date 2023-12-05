@@ -15,11 +15,28 @@ if (!$in_id) {
 $show_info = $mysqli->show_info($in_id);
 
 $page_name = $show_info['show_name'];
-$key = 'eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJiYjgxNTZhZTA2YTM5NWVkODlmZmViODY2Y2I2MjE0NCIsInN1YiI6IjY1NjE0N2Q1NDk3NTYwMDExZGIxMjAzNiIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.v9LT-PZDYY4uhAH-ojAG79SLI1BbBP_gIYBkfHwAGRM';
+$read = 'eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJiYjgxNTZhZTA2YTM5NWVkODlmZmViODY2Y2I2MjE0NCIsInN1YiI6IjY1NjE0N2Q1NDk3NTYwMDExZGIxMjAzNiIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.v9LT-PZDYY4uhAH-ojAG79SLI1BbBP_gIYBkfHwAGRM';
+$key = 'bb8156ae06a395ed89ffeb866cb62144';
 $url_str = urlencode($page_name);
-$url = 'https://api.themoviedb.org/3/search/tv?query=' . $url_str . '&include_adult=true&language=en-US&page=1';
-$query_arr = array();
-//TODO - SWITCH TO VANILLA CURL REQUEST
+$url = 'https://api.themoviedb.org/3/search/tv?query=' . $url_str . '&include_adult=true&language=en-US&page=1&api_key=' . $key;
+$img_url = 'https://www.themoviedb.org/t/p/w600_and_h900_bestv2';
+$cin = curl_init();
+/*
+$header = array(
+    'Authorization' => 'Bearer ' . $read,
+    'accept' => 'application/json'
+);
+*/
+curl_setopt($cin, CURLOPT_URL, $url);
+//curl_setopt($cin, CURLOPT_HTTPHEADER, $header);
+curl_setopt($cin, CURLOPT_TIMEOUT, 30);
+curl_setopt($cin, CURLOPT_RETURNTRANSFER, true);
+$rstr = curl_exec($cin);
+
+$api_data = json_decode($rstr, 1);
+
+$img_url = $img_url . $api_data['results'][0]['poster_path'];
+
 /*
 $response = $client->request('GET', $url, [
     'headers' => [
@@ -58,6 +75,7 @@ $response = $client->request('GET', $url, [
                         <div class="d-flex justify-content-between flex-wrap">
                             <div class="d-flex align-items-end flex-wrap">
                                 <div class="me-md-3 me-xl-5">
+                                    <img src="<?php echo $img_url ?>" width="333" height="500"/>
                                     <h2><?php echo $page_name; ?></h2>
                                     <p><?php echo $show_info['description']; ?></p>
                                     <p>Year released: <?php echo $show_info['year']; ?></p>
@@ -68,6 +86,8 @@ $response = $client->request('GET', $url, [
                                             echo "Not Available";
                                         } ?></p>
                                     <p>Votes: <?php echo $show_info['votes'] ?></p>
+                                    <!--<p>Path: <?php echo "<pre>" . print_r($api_data) . "</pre>" ?></pre></p>
+                                    <p>Poster: </p><?php echo $api_data['results'][0]['poster_path']; ?></p>-->
                                 </div>
                             </div>
                         </div>

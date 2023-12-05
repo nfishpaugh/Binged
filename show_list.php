@@ -92,7 +92,7 @@ $page_name = "Shows";
                                             <tr>
                                                 <td><?php echo $result['id'] ?></td>
                                                 <td>
-                                                    <a href="show_edit.php?id=<?php echo $result['id'] ?>"> <?php echo $result['show_name'] ?></a>
+                                                    <a href="show_page.php?id=<?php echo $result['id'] ?>"> <?php echo $result['show_name'] ?></a>
                                                 </td>
                                                 <td><?php echo $result['year']; ?></td>
                                                 <td><?php echo $result['runtime']; ?></td>
