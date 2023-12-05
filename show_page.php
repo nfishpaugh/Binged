@@ -15,8 +15,21 @@ if (!$in_id) {
 $show_info = $mysqli->show_info($in_id);
 
 $page_name = $show_info['show_name'];
+$key = 'eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJiYjgxNTZhZTA2YTM5NWVkODlmZmViODY2Y2I2MjE0NCIsInN1YiI6IjY1NjE0N2Q1NDk3NTYwMDExZGIxMjAzNiIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.v9LT-PZDYY4uhAH-ojAG79SLI1BbBP_gIYBkfHwAGRM';
+$url_str = urlencode($page_name);
+$url = 'https://api.themoviedb.org/3/search/tv?query=' . $url_str . '&include_adult=true&language=en-US&page=1';
+$query_arr = array();
+//TODO - SWITCH TO VANILLA CURL REQUEST
+/*
+$response = $client->request('GET', $url, [
+    'headers' => [
+        'Authorization' => 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJiYjgxNTZhZTA2YTM5NWVkODlmZmViODY2Y2I2MjE0NCIsInN1YiI6IjY1NjE0N2Q1NDk3NTYwMDExZGIxMjAzNiIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.v9LT-PZDYY4uhAH-ojAG79SLI1BbBP_gIYBkfHwAGRM',
+        'accept' => 'application/json',
+    ],
+]);
+*/
 
-$client = new \GuzzleHTTP\Client();
+//print_r($response->getBody());
 ?>
 <!DOCTYPE html>
 <html lang="en">
