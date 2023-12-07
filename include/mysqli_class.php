@@ -782,4 +782,64 @@ class mysqli_class extends mysqli
         }
 
     }
+
+    public function show_search($searchstr)
+    {
+        $query = "
+            SELECT * FROM shows WHERE show_name LIKE " . $searchstr;
+
+        if ($stmt = parent::prepare($query)) {
+            $stmt->bind_param("s", $searchstr);
+            if (!$stmt->execute()) {
+                trigger_error($this->error, E_USER_WARNING);
+            }
+            $meta = $stmt->result_metadata();
+            while ($field = $meta->fetch_field()) {
+                $parameters[] = &$row[$field->name];
+            }
+            call_user_func_array(array($stmt, 'bind_result'), $parameters);
+
+            $stmt->fetch();
+            $x = array();
+            foreach ($row as $key => $val) {
+                $results[$key] = $val;
+            }
+            $stmt->close();
+        }//END PREPARE
+        else {
+            trigger_error($this->error, E_USER_WARNING);
+        }
+
+        return $results;
+    }
+
+    public function tmdb_api($showname)
+    {
+        $page_name = $showname;
+        $read = 'eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJiYjgxNTZhZTA2YTM5NWVkODlmZmViODY2Y2I2MjE0NCIsInN1YiI6IjY1NjE0N2Q1NDk3NTYwMDExZGIxMjAzNiIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.v9LT-PZDYY4uhAH-ojAG79SLI1BbBP_gIYBkfHwAGRM';
+        $key = 'bb8156ae06a395ed89ffeb866cb62144';
+        $url_str = urlencode($page_name);
+        $url = 'https://api.themoviedb.org/3/search/tv?query=' . $url_str . '&include_adult=true&language=en-US&page=1&api_key=' . $key;
+        $img_url = 'https://www.themoviedb.org/t/p/w600_and_h900_bestv2';
+
+        //CURL REQUEST START
+        $cin = curl_init();
+        curl_setopt($cin, CURLOPT_URL, $url);
+        //curl_setopt($cin, CURLOPT_HTTPHEADER, $header);
+        curl_setopt($cin, CURLOPT_TIMEOUT, 30);
+        curl_setopt($cin, CURLOPT_RETURNTRANSFER, true);
+        $rstr = curl_exec($cin);
+        curl_close($cin);
+        //CURL REQUEST END
+
+        $api_data = json_decode($rstr, 1);
+
+        if (count($api_data['results']) === 0) {
+            $img_url = 'images/qmark.jpg';
+        } else {
+            $img_url = $img_url . $api_data['results'][0]['poster_path'];
+        }
+
+        return $img_url;
+    }
 }//END CLASS

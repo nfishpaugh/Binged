@@ -1,0 +1,100 @@
+<?php
+
+include "include/config.inc";
+
+$_SESSION[PREFIX . "_ppage"] = $_SERVER['REQUEST_URI'];
+if ($_SESSION[PREFIX . '_username'] == "") {
+    header("Location: login.php");
+    exit;
+}
+
+$in_id = (int)$_GET['id'];
+if (!$in_id) {
+    header("location: show_list.php");
+    exit;
+}
+$show_info = $mysqli->show_info($in_id);
+
+$page_name = $show_info['show_name'];
+
+$img_url = $mysqli->tmdb_api($page_name);
+
+if ($_SERVER['REQUEST_METHOD'] == "POST") {
+
+    //TODO - Add review insert
+    $mysqli->review_insert($_POST['review_value'], $_POST['review_content'], $_POST['review_date'], $_POST['show_id'], $_POST['user_id']);
+
+    $mysqli->actions_insert("Added Review: " . $_POST['review_date'] . " " . $_POST['show_id'], $_SESSION[PREFIX . '_user_id']);
+
+
+    $_SESSION[PREFIX . '_action'][] = 'added';
+    header("location: show_list.php");
+    exit;
+}//END POST
+
+?>
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title><?php echo $app_name; ?> - <?php echo $page_name; ?></title>
+    <link rel="stylesheet" href="vendors/mdi/css/materialdesignicons.min.css">
+    <link rel="stylesheet" href="vendors/base/vendor.bundle.base.css">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="shortcut icon" href="images/favicon.png"/>
+</head>
+<body>
+<div class="container-scroller">
+
+    <?php require_once 'partials/_navbar.php'; ?>
+    <div class="container-fluid page-body-wrapper">
+        <?php require_once 'partials/_sidebar.php'; ?>
+        <div class="main-panel">
+            <div class="content-wrapper">
+
+                <div class="row">
+                    <div class="col-md-12 grid-margin">
+                        <div class="d-flex justify-content-between flex-wrap">
+                            <div class="d-flex align-items-end flex-wrap">
+                                <div class="me-md-3 me-xl-5">
+                                    <div style="float:left">
+                                        <img src="<?php echo $img_url ?>" width="333" height="500"
+                                             alt="Image could not be loaded."/>
+                                    </div>
+                                    <div style="float:right">
+                                        <h2 style="margin-left:50px"><?php echo $page_name; ?></h2>
+                                        <textarea id="textarea" name="Review" rows="10"
+                                                  cols="100" style="margin-left:50px"
+                                                  placeholder="Enter your review for <?php echo $page_name ?>..."></textarea>
+                                        <br>
+                                        <div class="rate" style="margin-left:40px">
+                                            <input type="radio" id="star5" name="rate" value="5"/>
+                                            <label for="star5" title="text">5 stars</label>
+                                            <input type="radio" id="star4" name="rate" value="4"/>
+                                            <label for="star4" title="text">4 stars</label>
+                                            <input type="radio" id="star3" name="rate" value="3"/>
+                                            <label for="star3" title="text">3 stars</label>
+                                            <input type="radio" id="star2" name="rate" value="2"/>
+                                            <label for="star2" title="text">2 stars</label>
+                                            <input type="radio" id="star1" name="rate" value="1"/>
+                                            <label for="star1" title="text">1 star</label>
+                                        </div>
+                                        <br>
+                                        <a href="show_add.php" class="btn btn-primary mt-2 mt-xl-0" style="float:right"><i
+                                                    class="mdi mdi-plus-circle-outline btn-icon-prepend"></i>Submit
+                                            Review</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
