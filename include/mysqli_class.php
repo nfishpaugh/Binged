@@ -842,4 +842,40 @@ class mysqli_class extends mysqli
 
         return $img_url;
     }
+
+    public function show_list_home()
+    {
+        $results = array();
+        $query = "
+			SELECT 
+				*	
+			FROM 
+				shows
+			ORDER BY votes DESC
+			LIMIT 10";
+
+        if ($stmt = parent::prepare($query)) {
+            if (!$stmt->execute()) {
+                trigger_error($this->error, E_USER_WARNING);
+            }
+            $meta = $stmt->result_metadata();
+            while ($field = $meta->fetch_field()) {
+                $parameters[] = &$row[$field->name];
+            }
+            call_user_func_array(array($stmt, 'bind_result'), $parameters);
+
+            while ($stmt->fetch()) {
+                $x = array();
+                foreach ($row as $key => $val) {
+                    $x[$key] = $val;
+                }
+                $results[] = $x;
+            }
+            $stmt->close();
+        }//END PREPARE
+        else {
+            trigger_error($this->error, E_USER_WARNING);
+        }
+        return $results;
+    }
 }//END CLASS
