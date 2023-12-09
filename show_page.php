@@ -48,7 +48,7 @@ $img_url = $mysqli->tmdb_api($show_info['show_name']);
                                         <img src="<?php echo $img_url ?>" width="333" height="500"
                                              style="margin-right:50px" alt="Image could not be loaded."/>
                                     </div>
-                                    <div style="float:right">
+                                    <div style="float:right padding-top: 80px">
                                         <h2 style="flex-wrap"><?php echo $page_name; ?></h2>
                                         <p style="flex-wrap"><?php echo $show_info['description']; ?></p>
                                         <p>Year released: <?php echo $show_info['year']; ?></p>
@@ -60,7 +60,8 @@ $img_url = $mysqli->tmdb_api($show_info['show_name']);
                                             } ?></p>
                                         <p>Votes: <?php echo $show_info['votes'] ?></p>
                                     </div>
-                                    <div class="d-flex justify-content-between align-items-end flex-wrap">
+                                    <div class="d-flex justify-content-between align-items-end flex-wrap"
+                                         style="float:right">
 
                                         <a href="show_review.php?id=<?php echo $in_id ?>"
                                            class="btn btn-primary mt-2 mt-xl-0"><i
