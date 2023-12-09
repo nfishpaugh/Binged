@@ -7,13 +7,7 @@ if ($_SESSION[PREFIX . '_username'] == "") {
     exit;
 }
 
-$in_str = $_GET['id'];
-if (!$in_str) {
-    header("location: show_list.php");
-    exit;
-}
-
-$page_name = "Search: ";
+$page_name = "Search: " . $_POST["searchbar"];
 
 ?>
 <!DOCTYPE html>
@@ -54,12 +48,6 @@ $page_name = "Search: ";
                                     <h2><?php echo $page_name; ?></h2>
                                 </div>
                             </div>
-                            <div class="d-flex justify-content-between align-items-end flex-wrap">
-
-                                <a href="show_add.php" class="btn btn-primary mt-2 mt-xl-0"><i
-                                            class="mdi mdi-plus-circle-outline btn-icon-prepend"></i> Add Shows</a>
-                            </div>
-
                         </div>
 
                     </div>
@@ -75,11 +63,8 @@ $page_name = "Search: ";
                                            data-page-length='100' data-state-save="true" style="width: 100%;">
                                         <thead>
                                         <tr>
-                                            <th>ID</th>
                                             <th>Show Name</th>
                                             <th>Year</th>
-                                            <th>Runtime</th>
-                                            <th>Votes</th>
                                             <th>Genres</th>
                                             <th>Description</th>
                                         </tr>
@@ -87,21 +72,23 @@ $page_name = "Search: ";
                                         <tbody>
 
                                         <?php
-                                        $results = $mysqli->show_list();
-                                        foreach ($results as $result) {
-                                            ?>
-                                            <tr>
-                                                <td><?php echo $result['id'] ?></td>
-                                                <td>
-                                                    <a href="show_page.php?id=<?php echo $result['id'] ?>"> <?php echo $result['show_name'] ?></a>
-                                                </td>
-                                                <td><?php echo $result['year']; ?></td>
-                                                <td><?php echo $result['runtime']; ?></td>
-                                                <td><?php echo $result['votes']; ?></td>
-                                                <td><?php echo $result['genres']; ?></td>
-                                                <td><?php echo $result['description']; ?></td>
-                                            </tr>
-                                            <?php
+                                        $searchstr = $_POST["searchbar"];
+                                        $results = $mysqli->show_search($searchstr);
+                                        if ($results != 0) {
+                                            foreach ($results as $result) {
+                                                ?>
+                                                <tr>
+                                                    <td>
+                                                        <a href="show_page.php?id=<?php echo $result['id'] ?>"> <?php echo $result['show_name'] ?></a>
+                                                    </td>
+                                                    <td><?php echo $result['year']; ?></td>
+                                                    <td><?php echo $result['genres']; ?></td>
+                                                    <td><?php echo $result['description']; ?></td>
+                                                </tr>
+                                                <?php
+                                            }
+                                        } else {
+                                            print("NO SEARCH RESULTS FOUND FOR " . $searchstr);
                                         }
                                         ?>
 

@@ -21,14 +21,31 @@ $img_url = $mysqli->tmdb_api($page_name);
 
 if ($_SERVER['REQUEST_METHOD'] == "POST") {
 
-    //TODO - Add review insert
-    $mysqli->review_insert($_POST['review_value'], $_POST['review_content'], $_POST['review_date'], $_POST['show_id'], $_POST['user_id']);
+    $rating = 0;
+    switch ($_POST['rate']) {
+        case "5":
+            $rating = 5;
+            break;
+        case "4":
+            $rating = 4;
+            break;
+        case "3":
+            $rating = 3;
+            break;
+        case "2":
+            $rating = 2;
+            break;
+        case "1":
+            $rating = 1;
+            break;
+    }
+
+    $mysqli->review_insert($rating, $_POST['review_content'], $in_id, $_SESSION[PREFIX . '_user_id']);
 
     $mysqli->actions_insert("Added Review: " . $_POST['review_date'] . " " . $_POST['show_id'], $_SESSION[PREFIX . '_user_id']);
 
-
     $_SESSION[PREFIX . '_action'][] = 'added';
-    header("location: show_list.php");
+    header("location: show_page.php?id=" . $in_id);
     exit;
 }//END POST
 
@@ -66,26 +83,30 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
                                     </div>
                                     <div style="float:right">
                                         <h2 style="margin-left:50px"><?php echo $page_name; ?></h2>
-                                        <textarea id="textarea" name="Review" rows="10"
-                                                  cols="100" style="margin-left:50px"
-                                                  placeholder="Enter your review for <?php echo $page_name ?>..."></textarea>
-                                        <br>
-                                        <div class="rate" style="margin-left:40px">
-                                            <input type="radio" id="star5" name="rate" value="5"/>
-                                            <label for="star5" title="text">5 stars</label>
-                                            <input type="radio" id="star4" name="rate" value="4"/>
-                                            <label for="star4" title="text">4 stars</label>
-                                            <input type="radio" id="star3" name="rate" value="3"/>
-                                            <label for="star3" title="text">3 stars</label>
-                                            <input type="radio" id="star2" name="rate" value="2"/>
-                                            <label for="star2" title="text">2 stars</label>
-                                            <input type="radio" id="star1" name="rate" value="1"/>
-                                            <label for="star1" title="text">1 star</label>
-                                        </div>
-                                        <br>
-                                        <a href="show_add.php" class="btn btn-primary mt-2 mt-xl-0" style="float:right"><i
-                                                    class="mdi mdi-plus-circle-outline btn-icon-prepend"></i>Submit
-                                            Review</a>
+                                        <form id="form-rev" name="form-rev" action="" method="post">
+                                            <textarea id="review_content" name="review_content" rows="10"
+                                                      cols="100" style="margin-left:50px"
+                                                      placeholder="Enter your review for <?php echo $page_name ?>..."></textarea>
+                                            <br>
+                                            <div class="rate" style="margin-left:40px">
+                                                <input type="radio" id="star5" name="rate" value="5"/>
+                                                <label for="star5" title="text">5 stars</label>
+                                                <input type="radio" id="star4" name="rate" value="4"/>
+                                                <label for="star4" title="text">4 stars</label>
+                                                <input type="radio" id="star3" name="rate" value="3"/>
+                                                <label for="star3" title="text">3 stars</label>
+                                                <input type="radio" id="star2" name="rate" value="2"/>
+                                                <label for="star2" title="text">2 stars</label>
+                                                <input type="radio" id="star1" name="rate" value="1"/>
+                                                <label for="star1" title="text">1 star</label>
+                                            </div>
+                                            <br>
+                                            <button type="submit" class="btn btn-primary mt-2 mt-xl-0"
+                                                    style="float:right"><i
+                                                        class="mdi mdi-plus-circle-outline btn-icon-prepend"></i>Submit
+                                                Review
+                                            </button>
+                                        </form>
                                     </div>
                                 </div>
                             </div>

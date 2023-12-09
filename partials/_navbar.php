@@ -13,14 +13,42 @@
     <div class="navbar-menu-wrapper d-flex align-items-center justify-content-end">
         <ul class="navbar-nav mr-lg-4 w-100">
             <li class="nav-item nav-search d-none d-lg-block w-100">
-                <div class="input-group">
-                    <div class="input-group-prepend">
-                <span class="input-group-text" id="search">
+                <div class="input-group" id="search">
+                    <div class="input-group-append">
+                <span class="input-group-text">
                   <i class="mdi mdi-magnify"></i>
                 </span>
                     </div>
-                    <input type="text" class="form-control" placeholder="Search now" aria-label="search"
-                           aria-describedby="search">
+                    <form action="show_search.php" method="post" id="form" name="form">
+                        <input type="text" class="form-control" name="searchbar" id="searchbar"
+                               placeholder="Search now">
+                        <input type="submit" name="sub" id="sub" hidden>
+                    </form>
+                    <script src="http://code.jquery.com/jquery-1.9.1.js"></script>
+                    <script>
+                        $(function ())
+                        {
+                            $("form").submit(function (e) {
+                                e.preventDefault();
+                                var form = document.getElementById('form');
+                                var formData = new FormData(form);
+                                $.ajax({
+                                    url: 'show_search.php',
+                                    method: 'POST',
+                                    data: formData,
+                                    processData: false,
+                                    contentType: false,
+                                    success: function (response) {
+                                        alert('Form has been submitted');
+                                    },
+                                    error: function (xhr, status, error) {
+                                        alert('Form was not sent');
+                                        console.error(error);
+                                    }
+                                });
+                            });
+                        }
+                    </script>
                 </div>
             </li>
         </ul>

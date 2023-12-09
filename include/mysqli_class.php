@@ -785,9 +785,13 @@ class mysqli_class extends mysqli
 
     public function show_search($searchstr)
     {
+        $results = [];
         $query = "
-            SELECT * FROM shows WHERE show_name LIKE " . $searchstr;
+            SELECT *
+            FROM shows 
+            WHERE show_name LIKE '%$searchstr%'";
 
+        /*
         if ($stmt = parent::prepare($query)) {
             $stmt->bind_param("s", $searchstr);
             if (!$stmt->execute()) {
@@ -808,6 +812,25 @@ class mysqli_class extends mysqli
         }//END PREPARE
         else {
             trigger_error($this->error, E_USER_WARNING);
+        }
+        */
+        $result = parent::query($query);
+        $rows = mysqli_num_rows($result);
+        $i = 0;
+
+        if ($rows > 0) {
+            while ($row = mysqli_fetch_assoc($result)) {
+                $results[$i]['id'] = $row['id'];
+                $results[$i]['show_name'] = $row['show_name'];
+                $results[$i]['year'] = $row['year'];
+                //$results[$i]['runtime'] = $row['runtime'];
+                //$results[$i]['votes'] = $row['votes'];
+                $results[$i]['genres'] = $row['genres'];
+                $results[$i]['description'] = $row['description'];
+                $i++;
+            }
+        } else {
+            $results = 0;
         }
 
         return $results;
@@ -877,5 +900,32 @@ class mysqli_class extends mysqli
             trigger_error($this->error, E_USER_WARNING);
         }
         return $results;
+    }
+
+    public function review_insert($review_value, $review_content, $show_id, $user_id)
+    {
+        $query = "
+			INSERT INTO reviews
+				(review_value,
+				 review_content,
+				 review_date,
+				 show_id,
+				 user_id)	
+			VALUES
+				(?,?,CURDATE(),?,?)";
+        if ($stmt = parent::prepare($query)) {
+            $stmt->bind_param("isii", $review_value, $review_content, $show_id, $user_id);
+            if (!$stmt->execute()) {
+                trigger_error($this->error, E_USER_WARNING);
+            }
+            $last_id = $this->insert_id;
+
+            $stmt->close();
+        }//END PREPARE
+        else {
+            trigger_error($this->error, E_USER_WARNING);
+        }
+
+        return $last_id;
     }
 }//END CLASS

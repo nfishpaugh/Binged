@@ -13,7 +13,19 @@ if ($_SESSION[PREFIX . '_security'] < 5) {
 
 $page_name = "Top Ten Shows";
 
+//TODO
+if ($_SERVER['REQUEST_METHOD'] == "POST") {
 
+
+    $mysqli->show_insert($_POST['show_name'], $_POST['year'], $_POST['runtime'], $_POST['votes'], $_POST['genres'], $_POST['description']);
+
+    $mysqli->actions_insert("Added Show: " . $_POST['show_name'] . " " . $_POST['year'], $_SESSION[PREFIX . '_user_id']);
+
+
+    $_SESSION[PREFIX . '_action'][] = 'added';
+    header("location: show_list.php");
+    exit;
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
