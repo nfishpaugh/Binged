@@ -13,7 +13,6 @@ if ($_SESSION[PREFIX . '_security'] < 5) {
 
 $page_name = "Top Ten Shows";
 
-//TODO
 if ($_SERVER['REQUEST_METHOD'] == "POST") {
 
 
