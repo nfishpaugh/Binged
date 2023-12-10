@@ -50,15 +50,20 @@ $img_url = $mysqli->tmdb_api($show_info['show_name']);
                                     </div>
                                     <div style="float:right padding-top: 80px">
                                         <h2 style="flex-wrap"><?php echo $page_name; ?></h2>
-                                        <p style="flex-wrap"><?php echo $show_info['description']; ?></p>
-                                        <p>Year released: <?php echo $show_info['year']; ?></p>
-                                        <p>Runtime: <?php
+                                        <p style="flex-wrap"><span
+                                                    class="show-details"> Description: </span><?php echo $show_info['description']; ?>
+                                        </p>
+                                        <p>
+                                            <span class="show-details">Year released: </span><?php echo $show_info['year']; ?>
+                                        </p>
+                                        <p><span class="show-details">Runtime: </span><?php
                                             if (!is_null($show_info['runtime'])) {
                                                 echo $show_info['runtime'];
                                             } else {
                                                 echo "Not Available";
-                                            } ?></p>
-                                        <p>Votes: <?php echo $show_info['votes'] ?></p>
+                                            } ?><span> minutes</span></p>
+                                        <p><span class="show-details">Votes: </span><?php echo $show_info['votes'] ?>
+                                        </p>
                                     </div>
                                     <div class="d-flex justify-content-between align-items-end flex-wrap"
                                          style="float:right">
