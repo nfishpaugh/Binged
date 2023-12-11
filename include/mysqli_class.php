@@ -638,7 +638,8 @@ class mysqli_class extends mysqli
 				*	
 			FROM 
 				shows
-			ORDER BY votes DESC";
+			ORDER BY votes DESC
+			LIMIT 50";
 
         if ($stmt = parent::prepare($query)) {
             if (!$stmt->execute()) {
@@ -786,12 +787,15 @@ class mysqli_class extends mysqli
     public function show_search($searchstr)
     {
         $results = [];
+        $searchstr = "%" . $searchstr . "%";
         $query = "
             SELECT *
             FROM shows 
-            WHERE show_name LIKE '%$searchstr%'";
+            WHERE show_name 
+            LIKE ?
+            ORDER BY votes DESC
+            LIMIT 50";
 
-        /*
         if ($stmt = parent::prepare($query)) {
             $stmt->bind_param("s", $searchstr);
             if (!$stmt->execute()) {
@@ -803,17 +807,19 @@ class mysqli_class extends mysqli
             }
             call_user_func_array(array($stmt, 'bind_result'), $parameters);
 
-            $stmt->fetch();
-            $x = array();
-            foreach ($row as $key => $val) {
-                $results[$key] = $val;
+            while ($stmt->fetch()) {
+                $x = array();
+                foreach ($row as $key => $val) {
+                    $x[$key] = $val;
+                }
+                $results[] = $x;
             }
             $stmt->close();
         }//END PREPARE
         else {
             trigger_error($this->error, E_USER_WARNING);
         }
-        */
+        /*
         $result = parent::query($query);
         $rows = mysqli_num_rows($result);
         $i = 0;
@@ -832,7 +838,7 @@ class mysqli_class extends mysqli
         } else {
             $results = 0;
         }
-
+        */
         return $results;
     }
 
@@ -861,6 +867,9 @@ class mysqli_class extends mysqli
             $img_url = 'images/qmark.jpg';
         } else {
             $img_url = $img_url . $api_data['results'][0]['poster_path'];
+            if (!filter_var($img_url, FILTER_VALIDATE_URL)) {
+                $img_url = 'images/qmark.jpg';
+            }
         }
 
         return $img_url;
@@ -928,4 +937,117 @@ class mysqli_class extends mysqli
 
         return $last_id;
     }
+
+    public
+    function user_review_info($user_id)
+    {
+
+        $results = array();
+        $query = "
+			SELECT shows.show_name, 
+			       shows.id,
+			       reviews.review_id,
+			       reviews.review_content, 
+			       reviews.review_value, 
+			       reviews.review_date ,
+			       reviews.user_id
+            FROM reviews
+            JOIN shows ON reviews.show_id = shows.id
+            WHERE reviews.user_id = ?";
+        if ($stmt = parent::prepare($query)) {
+            $stmt->bind_param("i", $user_id);
+            if (!$stmt->execute()) {
+                trigger_error($this->error, E_USER_WARNING);
+            }
+            $meta = $stmt->result_metadata();
+            while ($field = $meta->fetch_field()) {
+                $parameters[] = &$row[$field->name];
+            }
+            call_user_func_array(array($stmt, 'bind_result'), $parameters);
+
+            while ($stmt->fetch()) {
+                $x = array();
+                foreach ($row as $key => $val) {
+                    $x[$key] = $val;
+                }
+                $results[] = $x;
+            }
+            $stmt->close();
+        }//END PREPARE
+        else {
+            trigger_error($this->error, E_USER_WARNING);
+        }
+        return $results;
+    }
+
+    public function review_info($id)
+    {
+        $results = array();
+        $query = "
+			SELECT 
+				*	
+			FROM 
+				reviews
+			WHERE
+				review_id = ?";
+        if ($stmt = parent::prepare($query)) {
+            $stmt->bind_param("i", $id);
+            if (!$stmt->execute()) {
+                trigger_error($this->error, E_USER_WARNING);
+            }
+            $meta = $stmt->result_metadata();
+            while ($field = $meta->fetch_field()) {
+                $parameters[] = &$row[$field->name];
+            }
+            call_user_func_array(array($stmt, 'bind_result'), $parameters);
+
+            $stmt->fetch();
+            $x = array();
+            foreach ($row as $key => $val) {
+                $results[$key] = $val;
+            }
+            $stmt->close();
+        }//END PREPARE
+        else {
+            trigger_error($this->error, E_USER_WARNING);
+        }
+
+        return $results;
+    }
+
+    public function show_reviews($id)
+    {
+        $results = array();
+        $query = "
+            SELECT * 
+            FROM reviews 
+            WHERE show_id=?
+            ORDER BY review_date DESC
+            LIMIT 5";
+        if ($stmt = parent::prepare($query)) {
+            $stmt->bind_param("i", $id);
+            if (!$stmt->execute()) {
+                trigger_error($this->error, E_USER_WARNING);
+            }
+            $meta = $stmt->result_metadata();
+            while ($field = $meta->fetch_field()) {
+                $parameters[] = &$row[$field->name];
+            }
+            call_user_func_array(array($stmt, 'bind_result'), $parameters);
+
+            while ($stmt->fetch()) {
+                $x = array();
+                foreach ($row as $key => $val) {
+                    $x[$key] = $val;
+                }
+                $results[] = $x;
+            }
+            $stmt->close();
+        }//END PREPARE
+        else {
+            trigger_error($this->error, E_USER_WARNING);
+        }
+        return $results;
+    }
+
 }//END CLASS

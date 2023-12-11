@@ -6,8 +6,8 @@ if ($_SESSION[PREFIX . '_username'] == "") {
     header("Location: login.php");
     exit;
 }
-
-$page_name = "Search: " . $_POST["searchbar"];
+$searchstr = $_POST["searchbar"];
+$page_name = "Search: " . $searchstr;
 
 ?>
 <!DOCTYPE html>
@@ -48,57 +48,54 @@ $page_name = "Search: " . $_POST["searchbar"];
                                     <h2><?php echo $page_name; ?></h2>
                                 </div>
                             </div>
+                            <div class="d-flex justify-content-between align-items-end flex-wrap">
+
+                                <a href="show_add.php" class="btn btn-primary mt-2 mt-xl-0"><i
+                                            class="mdi mdi-plus-circle-outline btn-icon-prepend"></i> Add Shows</a>
+                            </div>
+
                         </div>
 
                     </div>
                 </div>
 
 
-                <div class="row">
-                    <div class="col-md-12 grid-margin stretch-card">
-                        <div class="card">
-                            <div class="card-body">
-                                <div class="table-responsive">
-                                    <table id="datatables" class="datatable" data-order='[[ 2, "desc" ]]'
-                                           data-page-length='100' data-state-save="true" style="width: 100%;">
-                                        <thead>
-                                        <tr>
-                                            <th>Show Name</th>
-                                            <th>Year</th>
-                                            <th>Genres</th>
-                                            <th>Description</th>
-                                        </tr>
-                                        </thead>
-                                        <tbody>
-
-                                        <?php
-                                        $searchstr = $_POST["searchbar"];
-                                        $results = $mysqli->show_search($searchstr);
-                                        if ($results != 0) {
-                                            foreach ($results as $result) {
-                                                ?>
-                                                <tr>
-                                                    <td>
-                                                        <a href="show_page.php?id=<?php echo $result['id'] ?>"> <?php echo $result['show_name'] ?></a>
-                                                    </td>
-                                                    <td><?php echo $result['year']; ?></td>
-                                                    <td><?php echo $result['genres']; ?></td>
-                                                    <td><?php echo $result['description']; ?></td>
-                                                </tr>
-                                                <?php
-                                            }
-                                        } else {
-                                            print("NO SEARCH RESULTS FOUND FOR " . $searchstr);
-                                        }
-                                        ?>
-
-                                        </tbody>
-                                    </table>
+                <div class="row no-gutters">
+                    <?php
+                    $results = $mysqli->show_search($searchstr);
+                    if (empty($results)) {?>
+                        <div class="col-sm-12 grid-margin stretch-card">
+                            <div class="card">
+                                <div class="card-body">
+                                    <div class="card-title">No results found for <?php echo $searchstr ?></div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-
+                    <?php }
+                    else{
+                        foreach ($results as $result) {
+                            $img_url = $mysqli->tmdb_api($result['show_name']); ?>
+                            <div class="col-sm-3 grid-margin stretch-card" style="border-radius: 15px">
+                                <div class="card flex-row flex-wrap" style="border-radius: 15px">
+                                    <div class="card-header border-0" style="back">
+                                        <a href="show_page.php?id=<?php echo $result['id']; ?>"><img
+                                                    src="<?php echo $img_url ?>" class="card-img"
+                                                    style="max-width: 30%; max-height: 100%; object-fit: scale-down"
+                                                    alt=""/></a>
+                                    </div>
+                                    <div class="card-description" style="padding:5px; border-radius: 15px">
+                                        <a href="show_page.php?id=<?php echo $result['id']; ?>"
+                                           style="text-decoration: none; color: inherit">
+                                            <p class="card-title"><?php echo $result['show_name'] . " (" . $result['year'] . ")"; ?></p>
+                                            <p class="card-text" style=""><?php echo $result['description']; ?></p>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                            <?php
+                        }
+                    }
+                    ?>
                 </div>
 
 
@@ -144,3 +141,4 @@ $page_name = "Search: " . $_POST["searchbar"];
 </body>
 
 </html>
+

@@ -14,7 +14,7 @@ if ($_SESSION[PREFIX . '_security'] < 5) {
 $page_name = "Show Edit";
 $in_id = (int)$_GET['id'];
 if (!$in_id) {
-    header("location: show_list.php");
+    header("location: index.php");
     exit;
 }
 $show_info = $mysqli->show_info($in_id);
@@ -27,7 +27,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
 
 
     $_SESSION[PREFIX . '_action'][] = 'added';
-    header("location: show_list.php");
+    header("location: index.php");
     exit;
 }//END POST
 

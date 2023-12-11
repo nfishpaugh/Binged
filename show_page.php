@@ -9,12 +9,16 @@ if ($_SESSION[PREFIX . '_username'] == "") {
 
 $in_id = (int)$_GET['id'];
 if (!$in_id) {
-    header("location: show_list.php");
+    header("location: index.php");
     exit;
 }
 $show_info = $mysqli->show_info($in_id);
 
 $img_url = $mysqli->tmdb_api($show_info['show_name']);
+
+$page_name = $show_info['show_name'];
+
+$reviews = $mysqli->show_reviews($show_info['id']);
 
 ?>
 <!DOCTYPE html>
@@ -40,34 +44,86 @@ $img_url = $mysqli->tmdb_api($show_info['show_name']);
             <div class="content-wrapper">
 
                 <div class="row">
-                    <div class="col-md-12 grid-margin">
-                        <div class="d-flex justify-content-between flex-wrap">
-                            <div class="d-flex align-items-end flex-wrap">
-                                <div class="me-md-3 me-xl-5">
-                                    <div style="float:left">
-                                        <img src="<?php echo $img_url ?>" width="333" height="500"
-                                             style="margin-right:50px" alt="Image could not be loaded."/>
-                                    </div>
-                                    <div style="float:right">
-                                        <h2 style="flex-wrap"><?php echo $page_name; ?></h2>
-                                        <p style="flex-wrap"><?php echo $show_info['description']; ?></p>
-                                        <p>Year released: <?php echo $show_info['year']; ?></p>
-                                        <p>Runtime: <?php
-                                            if (!is_null($show_info['runtime'])) {
-                                                echo $show_info['runtime'];
-                                            } else {
-                                                echo "Not Available";
-                                            } ?></p>
-                                        <p>Votes: <?php echo $show_info['votes'] ?></p>
-                                    </div>
-                                    <div class="d-flex justify-content-between align-items-end flex-wrap">
-
-                                        <a href="show_review.php?id=<?php echo $in_id ?>"
-                                           class="btn btn-primary mt-2 mt-xl-0"><i
-                                                    class="mdi mdi-plus-circle-outline btn-icon-prepend"></i>Write a
-                                            review</a>
-                                    </div>
+                    <div class="col-lg-12 grid-margin stretch-card">
+                        <div class="card">
+                            <div class="card-body">
+                                <div style="float:left">
+                                    <img src="<?php echo $img_url ?>" width="333" height="500"
+                                         style="margin-right:50px" alt="Image could not be loaded."/>
                                 </div>
+                                <div class="flex-wrap">
+                                    <h2 class="flex-wrap"
+                                        style="padding-bottom:20px"><?php echo $page_name . " (" . $show_info['year'] . ")" ?></h2>
+                                    <p class="flex-wrap"
+                                       style="padding-bottom:10px"><?php echo $show_info['description']; ?></p>
+                                    <p class="flex-wrap">Runtime (min): <?php
+                                        if (!is_null($show_info['runtime'])) {
+                                            echo $show_info['runtime'];
+                                        } else {
+                                            echo "Not Available";
+                                        } ?></p>
+                                    <p class="flex-wrap">Likes: <?php echo $show_info['votes'] ?></p>
+                                </div>
+                                <div class="d-flex justify-content-between align-items-end flex-lg-column"
+                                     style="float:right">
+                                    <a href="show_review.php?id=<?php echo $in_id ?>"
+                                       class="btn btn-primary mt-2 mt-xl-0"><i
+                                                class="mdi mdi-plus-circle-outline btn-icon-prepend"></i>Write a
+                                        review</a>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="col-lg-12 grid-margin stretch-card">
+                        <div class="card">
+                            <div class="card-body">
+                                <h2 style="border-bottom:2px solid grey; text-align:center; padding-bottom:10px">Recent
+                                    Reviews</h2>
+                                <?php
+                                if(empty($reviews)){?>
+                                    <div class="col-sm-12 grid-margin stretch-card" style="border: none; outline: none">
+                                        <div class="card" style="border: none; outline: none">
+                                            <div class="card-body" style="border: none; outline: none">
+                                                <div class="card-title">No reviews yet!</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                <?php }
+                                foreach ($reviews as $review) { ?>
+                                    <p>
+                                        <b><a href="review_page.php?rid=<?php echo $review["review_id"] ?>&sid=<?php echo $review["show_id"] ?>&uid=<?php echo $review["user_id"] ?>"><?php
+                                                $user_info = $mysqli->user_info($review['user_id']);
+                                                echo $user_info['user_name'] . "'" . "s review:"; ?></a></b></p>
+                                    <p><?php echo $review['review_content']; ?></p>
+                                    <p>Rating: <?php
+                                        switch ($review["review_value"]) {
+                                            case 0:
+                                                echo "No Rating";
+                                                break;
+                                            case 1:
+                                                echo "★";
+                                                break;
+                                            case 2:
+                                                echo "★★";
+                                                break;
+                                            case 3:
+                                                echo "★★★";
+                                                break;
+                                            case 4:
+                                                echo "★★★★";
+                                                break;
+                                            case 5:
+                                                echo "★★★★★";
+                                                break;
+                                            default:
+                                                echo "None";
+                                                break;
+                                        }
+                                        ?></p>
+                                    <p style="padding-bottom:10px; border-bottom: 2px solid grey;">Review
+                                        Date: <?php echo $review['review_date']; ?></p>
+                                <?php } ?>
                             </div>
                         </div>
                     </div>
@@ -75,9 +131,6 @@ $img_url = $mysqli->tmdb_api($show_info['show_name']);
             </div>
         </div>
     </div>
-</div>
-</div>
-</div>
 </div>
 </body>
 </html>

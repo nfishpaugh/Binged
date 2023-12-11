@@ -11,7 +11,7 @@ if ($_SESSION[PREFIX . '_security'] < 5) {
     exit;
 }
 
-$page_name = "Top Ten Shows";
+$page_name = "Most Popular";
 
 if ($_SERVER['REQUEST_METHOD'] == "POST") {
 
@@ -22,7 +22,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
 
 
     $_SESSION[PREFIX . '_action'][] = 'added';
-    header("location: show_list.php");
+    header("location: index.php");
     exit;
 }
 ?>
@@ -45,6 +45,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
     <link rel="stylesheet" href="css/style.css">
     <!-- endinject -->
     <link rel="shortcut icon" href="images/favicon.png"/>
+
 </head>
 <body>
 <div class="container-scroller">
@@ -63,94 +64,85 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
                                     <h2><?php echo $page_name; ?></h2>
                                 </div>
                             </div>
+                            <div class="d-flex justify-content-between align-items-end flex-wrap">
+
+                                <a href="show_add.php" class="btn btn-primary mt-2 mt-xl-0"><i
+                                            class="mdi mdi-plus-circle-outline btn-icon-prepend"></i> Add Shows</a>
+                            </div>
 
                         </div>
 
                     </div>
                 </div>
-                <div class="row">
-                    <div class="col-md-12 grid-margin stretch-card">
-                        <div class="card">
-                            <div class="card-body">
-                                <div class="table-responsive">
-                                    <table id="datatables" class="datatable" data-order='[[ 2, "desc" ]]'
-                                           data-page-length='100' data-state-save="true" style="width: 100%;">
-                                        <thead>
-                                        <tr>
-                                            <th>Show Name</th>
-                                            <th>Year</th>
-                                            <th>Runtime</th>
-                                            <th>Votes</th>
-                                            <th>Genres</th>
-                                            <th>Description</th>
-                                        </tr>
-                                        </thead>
-                                        <tbody>
 
-                                        <?php
-                                        $results = $mysqli->show_list_home();
-                                        foreach ($results as $result) {
-                                            ?>
-                                            <tr>
-                                                <td>
-                                                    <a href="show_page.php?id=<?php echo $result['id'] ?>"> <?php echo $result['show_name'] ?></a>
-                                                </td>
-                                                <td><?php echo $result['year']; ?></td>
-                                                <td><?php echo $result['runtime']; ?></td>
-                                                <td><?php echo $result['votes']; ?></td>
-                                                <td><?php echo $result['genres']; ?></td>
-                                                <td><?php echo $result['description']; ?></td>
-                                            </tr>
-                                            <?php
-                                        }
-                                        ?>
 
-                                        </tbody>
-                                    </table>
+                <div class="row no-gutters">
+                    <?php
+                    $results = $mysqli->show_list();
+                    foreach ($results as $result) {
+                        $img_url = $mysqli->tmdb_api($result['show_name']); ?>
+                        <div class="col-sm-3 grid-margin stretch-card" style="border-radius: 15px">
+                            <div class="card flex-row flex-wrap" style="border-radius: 15px">
+                                <div class="card-header border-0" style="back">
+                                    <a href="show_page.php?id=<?php echo $result['id']; ?>"><img
+                                                src="<?php echo $img_url ?>" class="card-img"
+                                                style="max-width: 30%; max-height: 100%; object-fit: scale-down"
+                                                alt=""/></a>
+                                </div>
+                                <div class="card-description" style="padding:5px; border-radius: 15px">
+                                    <a href="show_page.php?id=<?php echo $result['id']; ?>"
+                                       style="text-decoration: none; color: inherit">
+                                        <p class="card-title"><?php echo $result['show_name'] . " (" . $result['year'] . ")"; ?></p>
+                                        <p class="card-text" style=""><?php echo $result['description']; ?></p>
+                                    </a>
                                 </div>
                             </div>
                         </div>
-                    </div>
-
+                        <?php
+                    }
+                    ?>
                 </div>
-                <?php require_once 'partials/_footer.php'; ?>
+
 
             </div>
-            <!-- main-panel ends -->
+            <!-- content-wrapper ends -->
+            <?php require_once 'partials/_footer.php'; ?>
         </div>
-        <!-- page-body-wrapper ends -->
+        <!-- main-panel ends -->
     </div>
-    <!-- container-scroller -->
+    <!-- page-body-wrapper ends -->
+</div>
+<!-- container-scroller -->
 
-    <!-- plugins:js -->
-    <script src="vendors/base/vendor.bundle.base.js"></script>
-    <!-- endinject -->
-    <!-- Plugin js for this page-->
-    <script src="vendors/chart.js/Chart.min.js"></script>
-    <script src="vendors/datatables.net/jquery.dataTables.js"></script>
-    <script src="vendors/datatables.net-bs4/dataTables.bootstrap4.js"></script>
-    <!-- End plugin js for this page-->
-    <!-- inject:js -->
-    <script src="js/off-canvas.js"></script>
-    <script src="js/hoverable-collapse.js"></script>
-    <script src="js/template.js"></script>
-    <!-- endinject -->
-    <!-- Custom js for this page-->
-    <script src="js/dashboard.js"></script>
+<!-- plugins:js -->
+<script src="vendors/base/vendor.bundle.base.js"></script>
+<!-- endinject -->
+<!-- Plugin js for this page-->
+<script src="vendors/chart.js/Chart.min.js"></script>
+<script src="vendors/datatables.net/jquery.dataTables.js"></script>
+<script src="vendors/datatables.net-bs4/dataTables.bootstrap4.js"></script>
+<!-- End plugin js for this page-->
+<!-- inject:js -->
+<script src="js/off-canvas.js"></script>
+<script src="js/hoverable-collapse.js"></script>
+<script src="js/template.js"></script>
+<!-- endinject -->
+<!-- Custom js for this page-->
+
+<script src="js/data-table.js"></script>
+<script src="js/jquery.dataTables.js"></script>
+<script src="js/dataTables.bootstrap4.js"></script>
+
+<script>
+    $(document).ready(function () {
+        $('.datatable').DataTable();
+    });
+</script>
 
 
-    <script src="js/data-table.js"></script>
-    <script src="js/jquery.dataTables.js"></script>
-    <script src="js/dataTables.bootstrap4.js"></script>
+<!-- End custom js for this page-->
 
-    <script>
-        $(document).ready(function () {
-            $('.datatable').DataTable();
-        });
-    </script>
-
-
-    <script src="js/jquery.cookie.js" type="text/javascript"></script>
+<script src="js/jquery.cookie.js" type="text/javascript"></script>
 </body>
 
 </html>

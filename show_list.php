@@ -65,52 +65,33 @@ $page_name = "Shows";
                 </div>
 
 
-                <div class="row">
-                    <div class="col-md-12 grid-margin stretch-card">
-                        <div class="card">
-                            <div class="card-body">
-                                <div class="table-responsive">
-                                    <table id="datatables" class="datatable" data-order='[[ 2, "desc" ]]'
-                                           data-page-length='100' data-state-save="true" style="width: 100%;">
-                                        <thead>
-                                        <tr>
-                                            <th>ID</th>
-                                            <th>Show Name</th>
-                                            <th>Year</th>
-                                            <th>Runtime</th>
-                                            <th>Votes</th>
-                                            <th>Genres</th>
-                                            <th>Description</th>
-                                        </tr>
-                                        </thead>
-                                        <tbody>
+                <div class="row no-gutters">
+                    <?php
+                    $results = $mysqli->show_list();
+                    foreach ($results
 
-                                        <?php
-                                        $results = $mysqli->show_list();
-                                        foreach ($results as $result) {
-                                            ?>
-                                            <tr>
-                                                <td><?php echo $result['id'] ?></td>
-                                                <td>
-                                                    <a href="show_page.php?id=<?php echo $result['id'] ?>"> <?php echo $result['show_name'] ?></a>
-                                                </td>
-                                                <td><?php echo $result['year']; ?></td>
-                                                <td><?php echo $result['runtime']; ?></td>
-                                                <td><?php echo $result['votes']; ?></td>
-                                                <td><?php echo $result['genres']; ?></td>
-                                                <td><?php echo $result['description']; ?></td>
-                                            </tr>
-                                            <?php
-                                        }
-                                        ?>
-
-                                        </tbody>
-                                    </table>
+                             as $result) {
+                        $img_url = $mysqli->tmdb_api($result['show_name']); ?>
+                        <div class="col-sm-3 grid-margin stretch-card" style="border-radius: 15px">
+                            <div class="card flex-row flex-wrap" style="border-radius: 15px">
+                                <div class="card-header border-0" style="back">
+                                    <a href="show_page.php?id=<?php echo $result['id']; ?>"><img
+                                                src="<?php echo $img_url ?>" class="card-img"
+                                                style="max-width: 30%; max-height: 100%; object-fit: scale-down"
+                                                alt=""/></a>
+                                </div>
+                                <div class="card-description" style="padding:5px; border-radius: 15px">
+                                    <a href="show_page.php?id=<?php echo $result['id']; ?>"
+                                       style="text-decoration: none; color: inherit">
+                                        <p class="card-title"><?php echo $result['show_name'] . " (" . $result['year'] . ")"; ?></p>
+                                        <p class="card-text" style=""><?php echo $result['description']; ?></p>
+                                    </a>
                                 </div>
                             </div>
                         </div>
-                    </div>
-
+                        <?php
+                    }
+                    ?>
                 </div>
 
 

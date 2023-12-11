@@ -10,7 +10,7 @@ if ($_SESSION[PREFIX . '_username'] == "") {
 
 $in_id = (int)$_GET['id'];
 if (!$in_id) {
-    header("location: show_list.php");
+    header("location: index.php");
     exit;
 }
 $show_info = $mysqli->show_info($in_id);
@@ -85,7 +85,8 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
                                         <h2 style="margin-left:50px"><?php echo $page_name; ?></h2>
                                         <form id="form-rev" name="form-rev" action="" method="post">
                                             <textarea id="review_content" name="review_content" rows="10"
-                                                      cols="100" style="margin-left:50px"
+                                                      cols="100"
+                                                      style="margin-left:50px; border: 2px solid #73AD21; border-radius: 15px; padding: 20px"
                                                       placeholder="Enter your review for <?php echo $page_name ?>..."></textarea>
                                             <br>
                                             <div class="rate" style="margin-left:40px">

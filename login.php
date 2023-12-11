@@ -35,7 +35,7 @@ if ($_POST['email'] != "" && $_POST['password'] != "") {
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>Majestic Admin</title>
+    <title>Telephile</title>
     <!-- plugins:css -->
     <link rel="stylesheet" href="vendors/mdi/css/materialdesignicons.min.css">
     <link rel="stylesheet" href="vendors/base/vendor.bundle.base.css">
@@ -55,10 +55,10 @@ if ($_POST['email'] != "" && $_POST['password'] != "") {
             <div class="row w-100 mx-0">
                 <div class="col-lg-4 mx-auto">
                     <div class="auth-form-light text-left py-5 px-4 px-sm-5">
-                        <div class="brand-logo">
-                            <img src="images/logo.svg" alt="logo">
+                        <div class="brand-logo" style="margin-bottom: 0;">
+                            <img src="images/logocustom.jpg" alt="logo">
                         </div>
-                        <h4>Hello! let's get started</h4>
+                        <h4>Hello! Welcome to Telephile!</h4>
                         <h6 class="font-weight-light">Sign in to continue.</h6>
                         <form class="pt-3" action="" method="POST">
                             <div class="form-group">

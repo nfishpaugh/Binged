@@ -17,7 +17,7 @@ session_save_path("./");
 //START THE SESSION
 session_start();
 
-$app_name = "Students App";
+$app_name = "Telephile";
 
 //CREATE VARIABLES FOR ANY EXTERNAL FILES THAT MAY NEED TO BE INCLUDED ON MULTIPLE PAGES
 //SO IF THE FILE NEEDS TO BE UPDATED, IT ONLY HAS TO BE UPDATED IN 1 PLACE

@@ -1,5 +1,5 @@
 <?php
-include "include/config.php";
+include "include/config.inc";
 
 // Unset all of the session variables.
 $_SESSION = array();

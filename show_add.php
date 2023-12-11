@@ -22,7 +22,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
 
 
     $_SESSION[PREFIX . '_action'][] = 'added';
-    header("location: show_list.php");
+    header("location: index.php");
     exit;
 }//END POST
 
