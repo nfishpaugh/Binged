@@ -64,7 +64,6 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
                             <div class="d-flex align-items-end flex-wrap">
                                 <div class="me-md-3 me-xl-5">
                                     <h2><?php echo $page_name; ?></h2>
-                                    <p class="mb-md-0">text</p>
                                 </div>
 
                             </div>
@@ -77,10 +76,6 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
                     <div class="col-md-12 grid-margin stretch-card">
                         <div class="card">
                             <div class="card-body">
-                                <h4 class="card-title">Horizontal Form</h4>
-                                <p class="card-description">
-                                    Horizontal form layout
-                                </p>
                                 <form class="forms-sample" id="form1" action="" method="post">
 
                                     <div class="form-group row">

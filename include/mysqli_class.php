@@ -6,17 +6,10 @@ class mysqli_class extends mysqli
 {
     public function __construct()
     {
-
-        //OR SUPPLY OTHER CONNECTION INFO
-        $DBHost = '43.231.234.179';
-        $DBUser = 'group2';
-        $DBPass = '2UTyvKnuAKA3mYCxWzY6jdyR2s';
-
-        //SELECT THE DB
-        $databaseName = 'group2';
+        include_once "../private/dbconf.php";
 
         mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
-        @parent::__construct($DBHost, $DBUser, $DBPass, $databaseName);
+        @parent::__construct(DBHost, DBUser, DBPass, DBName, DBPort);
         // check if connect errno is set
 
         //IF THE CONNECTION DOES NOT WORK - REDIRECT TO OUR "DB DOWN" PAGE, BUT PASS THE URL TO THE APPLICATION
@@ -25,166 +18,6 @@ class mysqli_class extends mysqli
             echo mysqli_connect_error();
             exit;
         }
-    }
-
-
-    /*** LIST ******************************************************************
-     * /*## List all data */
-    public function student_list()
-    {
-        $results = array();
-        $query = "
-			SELECT 
-				*	
-			FROM 
-				students		
-			ORDER BY student_lname";
-
-        if ($stmt = parent::prepare($query)) {
-            if (!$stmt->execute()) {
-                trigger_error($this->error, E_USER_WARNING);
-            }
-            $meta = $stmt->result_metadata();
-            while ($field = $meta->fetch_field()) {
-                $parameters[] = &$row[$field->name];
-            }
-            call_user_func_array(array($stmt, 'bind_result'), $parameters);
-
-            while ($stmt->fetch()) {
-                $x = array();
-                foreach ($row as $key => $val) {
-                    $x[$key] = $val;
-                }
-                $results[] = $x;
-            }
-            $stmt->close();
-        }//END PREPARE
-        else {
-            trigger_error($this->error, E_USER_WARNING);
-        }
-        return $results;
-    }
-
-    /*** INFO ******************************************************************
-     * /*## Gets info for a row */
-    public function student_info($id)
-    {
-
-        $results = array();
-        $query = "
-			SELECT 
-				*	
-			FROM 
-				students
-			WHERE
-				student_id = ?";
-        if ($stmt = parent::prepare($query)) {
-            $stmt->bind_param("i", $id);
-            if (!$stmt->execute()) {
-                trigger_error($this->error, E_USER_WARNING);
-            }
-            $meta = $stmt->result_metadata();
-            while ($field = $meta->fetch_field()) {
-                $parameters[] = &$row[$field->name];
-            }
-            call_user_func_array(array($stmt, 'bind_result'), $parameters);
-
-            $stmt->fetch();
-            $x = array();
-            foreach ($row as $key => $val) {
-                $results[$key] = $val;
-            }
-            $stmt->close();
-        }//END PREPARE
-        else {
-            trigger_error($this->error, E_USER_WARNING);
-        }
-
-        return $results;
-
-    }
-
-    //ADD new students
-    public function student_insert($student_fname, $student_lname, $student_email, $student_phone, $student_dob)
-    {
-        $query = "
-			INSERT INTO students 
-				(student_fname,
-				student_lname,
-				student_email,
-				student_phone,
-				student_dob)	
-			VALUES
-				(?,?,?,?,?)";
-        if ($stmt = parent::prepare($query)) {
-            $stmt->bind_param("sssss", $student_fname, $student_lname, $student_email, $student_phone, $student_dob);
-            if (!$stmt->execute()) {
-                trigger_error($this->error, E_USER_WARNING);
-            }
-            $last_id = $this->insert_id;
-
-            $stmt->close();
-        }//END PREPARE
-        else {
-            trigger_error($this->error, E_USER_WARNING);
-        }
-
-        return $last_id;
-
-    }
-
-    //EDIT students
-
-    /*** EDIT  ******************************************************************
-     * /*## Updates row */
-    public function student_edit($student_id, $student_fname, $student_lname, $student_email, $student_phone, $student_dob)
-    {
-
-        $query = "
-			UPDATE students SET 
-				student_fname = ?,
-				student_lname = ?,
-				student_phone = ?,
-				student_email = ?,
-				student_dob = ?	
-			WHERE
-				student_id=?";
-        if ($stmt = parent::prepare($query)) {
-            $stmt->bind_param("sssssi", $student_fname, $student_lname, $student_phone, $student_email, $student_dob, $student_id);
-            if (!$stmt->execute()) {
-                trigger_error($this->error, E_USER_WARNING);
-            }
-
-            $stmt->close();
-        }//END PREPARE
-        else {
-            trigger_error($this->error, E_USER_WARNING);
-        }
-
-    }
-
-    /*** REMOVE  ******************************************************************
-     * /*## removes row */
-    public function student_delete($id)
-    {
-
-        $query = "
-			DELETE FROM 
-				table_name 
-			WHERE
-				id = ?";
-        if ($stmt = parent::prepare($query)) {
-            $stmt->bind_param("i", $id);
-            if (!$stmt->execute()) {
-                trigger_error($this->error, E_USER_WARNING);
-            }
-
-            $stmt->close();
-        }//END PREPARE
-        else {
-            trigger_error($this->error, E_USER_WARNING);
-        }
-
     }
 
     /**** LOGIN ******************************************************************
@@ -290,7 +123,7 @@ class mysqli_class extends mysqli
     }
 
 //////////////
-//USERS
+//USERS TODO - Add user table
 /////////////
 
     /*** INFO ******************************************************************
@@ -333,6 +166,7 @@ class mysqli_class extends mysqli
 
     /*** USER LIST ******************************************************************
      * /*## List all data */
+    //TODO - add user levels table
     public
     function user_list()
     {
@@ -409,6 +243,8 @@ class mysqli_class extends mysqli
     public
     function user_edit($user_id, $email, $name, $password, $level)
     {
+        // if password is given via the function parameter above, hash it,
+        // otherwise, get already hashed password from sql table
         if ($password) {
             $pass_hash = password_hash($password, PASSWORD_DEFAULT);
         } else {
@@ -500,135 +336,6 @@ class mysqli_class extends mysqli
         return $results;
     }
 
-    public function sock_list()
-    {
-        $results = array();
-        $query = "
-			SELECT 
-				*	
-			FROM 
-				Socks	
-			ORDER BY socktype";
-
-        if ($stmt = parent::prepare($query)) {
-            if (!$stmt->execute()) {
-                trigger_error($this->error, E_USER_WARNING);
-            }
-            $meta = $stmt->result_metadata();
-            while ($field = $meta->fetch_field()) {
-                $parameters[] = &$row[$field->name];
-            }
-            call_user_func_array(array($stmt, 'bind_result'), $parameters);
-
-            while ($stmt->fetch()) {
-                $x = array();
-                foreach ($row as $key => $val) {
-                    $x[$key] = $val;
-                }
-                $results[] = $x;
-            }
-            $stmt->close();
-        }//END PREPARE
-        else {
-            trigger_error($this->error, E_USER_WARNING);
-        }
-        return $results;
-    }
-
-    public function sock_insert($sockname, $socktype, $sockprice)
-    {
-        $query = "
-			INSERT INTO Socks
-				(sockname,
-				socktype,
-				sockprice)	
-			VALUES
-				(?,?,?)";
-        if ($stmt = parent::prepare($query)) {
-            //GIVE SOCKPRICE A VALUE IF IT IS OUT OF RANGE OR IS NOT A DOUBLE
-            if (($sockprice > (double)PHP_INT_MAX) || ($sockprice < (double)PHP_INT_MIN) || (!is_double($sockprice))) {
-                $sockprice = 99.99;
-            }
-            $stmt->bind_param("ssd", $sockname, $socktype, $sockprice);
-            if (!$stmt->execute()) {
-                trigger_error($this->error, E_USER_WARNING);
-            }
-            $last_id = $this->insert_id;
-
-            $stmt->close();
-        }//END PREPARE
-        else {
-            trigger_error($this->error, E_USER_WARNING);
-        }
-
-        return $last_id;
-
-    }
-
-    public function sock_info($id)
-    {
-
-        $results = array();
-        $query = "
-			SELECT 
-				*	
-			FROM 
-				Socks
-			WHERE
-				id = ?";
-        if ($stmt = parent::prepare($query)) {
-            $stmt->bind_param("i", $id);
-            if (!$stmt->execute()) {
-                trigger_error($this->error, E_USER_WARNING);
-            }
-            $meta = $stmt->result_metadata();
-            while ($field = $meta->fetch_field()) {
-                $parameters[] = &$row[$field->name];
-            }
-            call_user_func_array(array($stmt, 'bind_result'), $parameters);
-
-            $stmt->fetch();
-            $x = array();
-            foreach ($row as $key => $val) {
-                $results[$key] = $val;
-            }
-            $stmt->close();
-        }//END PREPARE
-        else {
-            trigger_error($this->error, E_USER_WARNING);
-        }
-
-        return $results;
-
-    }
-
-    public function sock_edit($id, $sockname, $socktype, $sockprice)
-    {
-
-        $query = "
-			UPDATE Socks SET 
-				sockname = ?,
-				socktype = ?,
-				sockprice = ?
-			WHERE
-				id=?";
-        if ($stmt = parent::prepare($query)) {
-            if ($sockprice > (double)PHP_INT_MAX || $sockprice < (double)PHP_INT_MIN || !is_double($sockprice)) {
-                $sockprice = 99.99;
-            }
-            $stmt->bind_param("ssdi", $sockname, $socktype, $sockprice, $id);
-            if (!$stmt->execute()) {
-                trigger_error($this->error, E_USER_WARNING);
-            }
-
-            $stmt->close();
-        }//END PREPARE
-        else {
-            trigger_error($this->error, E_USER_WARNING);
-        }
-
-    }
-
     /** SHOWS START HERE */
     public function show_list()
     {
@@ -638,7 +345,7 @@ class mysqli_class extends mysqli
 				*	
 			FROM 
 				shows
-			ORDER BY votes DESC
+			ORDER BY show_votes DESC
 			LIMIT 50";
 
         if ($stmt = parent::prepare($query)) {
@@ -666,6 +373,7 @@ class mysqli_class extends mysqli
         return $results;
     }
 
+    //TODO - Change variables
     public function show_insert($showname, $year, $runtime, $votes, $genres, $description)
     {
         $query = "
@@ -698,7 +406,7 @@ class mysqli_class extends mysqli
     public function show_genre_insert($show_id, $genre_id)
     {
         $query = "
-			INSERT INTO shows_genres
+			INSERT INTO show_genres
 				(show_id,
 				 genre_id)
 			VALUES
@@ -757,17 +465,16 @@ class mysqli_class extends mysqli
 
     }
 
+    //TODO - Change variables
     public function show_edit($id, $showname, $year, $runtime, $votes, $genres, $description)
     {
 
         $query = "
 			UPDATE shows SET 
 				show_name = ?,
-				year = ?,
-				runtime = ?,
-				votes = ?,
-				genres = ?,
-				description = ?
+				show_air_date = ?,
+				show_votes = ?,
+				show_overview = ?
 			WHERE
 				id=?";
         if ($stmt = parent::prepare($query)) {
@@ -793,7 +500,7 @@ class mysqli_class extends mysqli
             FROM shows 
             WHERE show_name 
             LIKE ?
-            ORDER BY votes DESC
+            ORDER BY show_votes DESC
             LIMIT 50";
 
         if ($stmt = parent::prepare($query)) {
@@ -867,6 +574,8 @@ class mysqli_class extends mysqli
             $img_url = 'images/qmark.jpg';
         } else {
             $img_url = $img_url . $api_data['results'][0]['poster_path'];
+
+            // if img_url is not a valid url, display placeholder img
             if (!filter_var($img_url, FILTER_VALIDATE_URL)) {
                 $img_url = 'images/qmark.jpg';
             }
@@ -883,7 +592,7 @@ class mysqli_class extends mysqli
 				*	
 			FROM 
 				shows
-			ORDER BY votes DESC
+			ORDER BY show_votes DESC
 			LIMIT 10";
 
         if ($stmt = parent::prepare($query)) {
@@ -911,6 +620,7 @@ class mysqli_class extends mysqli
         return $results;
     }
 
+    //TODO - Add review table
     public function review_insert($review_value, $review_content, $show_id, $user_id)
     {
         $query = "
