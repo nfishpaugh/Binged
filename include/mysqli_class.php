@@ -123,7 +123,7 @@ class mysqli_class extends mysqli
     }
 
 //////////////
-//USERS TODO - Add user table
+//USERS
 /////////////
 
     /*** INFO ******************************************************************
@@ -166,7 +166,6 @@ class mysqli_class extends mysqli
 
     /*** USER LIST ******************************************************************
      * /*## List all data */
-    //TODO - add user levels table
     public
     function user_list()
     {
@@ -372,22 +371,25 @@ class mysqli_class extends mysqli
         }
         return $results;
     }
-
-    //TODO - Change variables
-    public function show_insert($showname, $year, $runtime, $votes, $genres, $description)
+    
+    public function show_insert($apiid, $showname, $lang, $overview, $vote_avg, $votes, $poster, $air_date, $orig_lang, $pop)
     {
         $query = "
 			INSERT INTO shows
-				(show_name,
-				year,
-				runtime,
-				votes,
-				genres,
-				description)	
+				(api_id,
+				show_name,
+				show_language,
+				show_overview,
+				show_vote_average,
+				show_votes,
+				show_poster_path,
+				show_air_date,
+				show_original_lang,
+				show_popularity)
 			VALUES
-				(?,?,?,?,?,?)";
+				(?,?,?,?,?,?,?,?,?,?)";
         if ($stmt = parent::prepare($query)) {
-            $stmt->bind_param("siiiss", $showname, $year, $runtime, $votes, $genres, $description);
+            $stmt->bind_param("isssdisssd", $apiid, $showname, $lang, $overview, $vote_avg, $votes, $poster, $air_date, $orig_lang, $pop);
             if (!$stmt->execute()) {
                 trigger_error($this->error, E_USER_WARNING);
             }
@@ -465,20 +467,25 @@ class mysqli_class extends mysqli
 
     }
 
-    //TODO - Change variables
-    public function show_edit($id, $showname, $year, $runtime, $votes, $genres, $description)
+    public function show_edit($id, $showname, $api_id = null, $lang = null, $overview = null, $vote_avg = null, $votes = null, $poster = null, $air_date = null, $orig_lang = null, $pop = null)
     {
 
         $query = "
 			UPDATE shows SET 
 				show_name = ?,
-				show_air_date = ?,
+				api_id = ?,
+				show_language = ?,
+				show_overview = ?,
+				show_vote_average = ?,
 				show_votes = ?,
-				show_overview = ?
+				show_poster_path = ?,
+				show_air_date = ?,
+				show_original_lang = ?,
+				show_popularity = ?
 			WHERE
 				id=?";
         if ($stmt = parent::prepare($query)) {
-            $stmt->bind_param("siiissi", $showname, $year, $runtime, $votes, $genres, $description, $id);
+            $stmt->bind_param("sissdisssd", $showname, $api_id, $lang, $overview, $vote_avg, $votes, $poster, $air_date, $orig_lang, $pop);
             if (!$stmt->execute()) {
                 trigger_error($this->error, E_USER_WARNING);
             }
@@ -620,7 +627,6 @@ class mysqli_class extends mysqli
         return $results;
     }
 
-    //TODO - Add review table
     public function review_insert($review_value, $review_content, $show_id, $user_id)
     {
         $query = "
