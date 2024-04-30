@@ -2,6 +2,11 @@
 
 include "include/config.inc";
 
+if ($_SESSION[PREFIX . '_security'] == 1){
+    header("location: " . $_SESSION[PREFIX . "_ppage"]);
+    exit;
+}
+
 $_SESSION[PREFIX . "_ppage"] = $_SERVER['REQUEST_URI'];
 if ($_SESSION[PREFIX . '_username'] == "") {
     header("Location: login.php");
@@ -68,7 +73,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
 
     <?php require_once 'partials/_navbar.php'; ?>
     <div class="container-fluid page-body-wrapper">
-        <?php require_once 'partials/_sidebar.php'; ?>
+        <?php //require_once 'partials/_sidebar.php'; ?>
         <div class="main-panel">
             <div class="content-wrapper">
 
@@ -84,9 +89,9 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
                                     <div style="float:right">
                                         <h2 style="margin-left:50px"><?php echo $page_name; ?></h2>
                                         <form id="form-rev" name="form-rev" action="" method="post">
-                                            <textarea id="review_content" name="review_content" rows="10"
-                                                      cols="100"
-                                                      style="margin-left:50px; border: 2px solid #73AD21; border-radius: 15px; padding: 20px"
+                                            <textarea id="review_content" name="review_content" rows="5"
+                                                      cols="50"
+                                                      style="margin-left:50px; border: 2px solid black; border-radius: 5px; padding: 20px"
                                                       placeholder="Enter your review for <?php echo $page_name ?>..."></textarea>
                                             <br>
                                             <div class="rate" style="margin-left:40px">
@@ -115,8 +120,24 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
                     </div>
                 </div>
             </div>
+            <!-- content wrapper ends -->
         </div>
     </div>
 </div>
+<!-- plugins:js -->
+<script src="vendors/base/vendor.bundle.base.js"></script>
+<!-- endinject -->
+<!-- Plugin js for this page-->
+<script src="vendors/chart.js/Chart.min.js"></script>
+<script src="vendors/datatables.net/jquery.dataTables.js"></script>
+<script src="vendors/datatables.net-bs4/dataTables.bootstrap4.js"></script>
+<!-- End plugin js for this page-->
+<!-- inject:js -->
+<script src="js/off-canvas.js"></script>
+<script src="js/hoverable-collapse.js"></script>
+<script src="js/template.js"></script>
+<!-- endinject -->
+
+<script src="js/jquery.cookie.js" type="text/javascript"></script>
 </body>
 </html>

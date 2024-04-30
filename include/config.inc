@@ -16,6 +16,9 @@ session_save_path("./");
 
 //START THE SESSION
 session_start();
+$_SESSION[PREFIX . '_created'] = time();
+$_SESSION[PREFIX . '_last_activity'] = time();
+ini_set('session.gc_maxlifetime', 1800);
 
 $app_name = "Binged";
 

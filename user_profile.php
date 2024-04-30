@@ -13,12 +13,14 @@ if (!$in_id) {
     exit;
 }
 
+$user_pf_info = $mysqli->user_pf_info($in_id);
 $user_info = $mysqli->user_info($in_id);
-
-$page_name = "" . $user_info['user_name'] . "'" . "s Reviews";
-
+$pf_img = $user_pf_info['profile_pic_src'];
+$pf_desc = $user_pf_info['user_description'];
+$pf_name = $user_info['user_name'];
+$pf_joined = $user_pf_info['user_join_date'];
+$page_name = $pf_name . "'s profile";
 $img_url = 'https://image.tmdb.org/t/p/original';
-
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -43,10 +45,8 @@ $img_url = 'https://image.tmdb.org/t/p/original';
 </head>
 <body>
 <div class="container-scroller">
-
     <?php require_once 'partials/_navbar.php'; ?>
     <div class="container-fluid page-body-wrapper">
-        <?php //require_once 'partials/_sidebar.php'; ?>
         <div class="main-panel">
             <div class="content-wrapper">
 
@@ -55,33 +55,50 @@ $img_url = 'https://image.tmdb.org/t/p/original';
                         <div class="dashboard-tabs p-0">
                             <ul class="nav nav-tabs px-4">
                                 <li class="nav-item">
-                                    <a id="profile-tab" class="nav-link"
-                                       href="user_profile.php?id=<?php echo $in_id; ?>">Profile</a>
+                                    <a id="profile-tab" class="nav-link active">Profile</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a id="review-tab" class="nav-link active">Reviews</a>
+                                    <a id="review-tab" class="nav-link" href="user_reviews.php?id=<?php echo $in_id ?>">Reviews</a>
                                 </li>
                             </ul>
                         </div>
                     </div>
                 </div>
 
-                <div class="row">
+                <div class="row no-gutters mx-lg-5 mb-lg-2">
+                    <div class="col-md-12 grid-margin stretch-card" style="height: 100%">
+                        <div class="card flex-wrap" style="flex-direction: row; padding-bottom: 0;">
+                            <div class="card-body">
+                                <img src="images/faces/<?php echo $pf_img; ?>"
+                                     onerror="this.onerror=null; this.src='images/faces/dummy_pfp.jpg';"
+                                     style="border-radius: 100%" height="150vh" width="150vw"/>
+                            </div>
+                            <div class="card-body mt-3" style="width: 60%">
+                                <h2 style="color: grey"><?php echo $pf_name; ?></h2>
+                                <p class="mt-4 flex-wrap"
+                                   style="text-wrap: normal; overflow:visible; white-space: normal; width: 100%; height: 50%"><?php echo $pf_desc; ?></p>
+                                <h6 style="color:grey">Joined <?php echo $pf_joined; ?></h6>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row no-gutters mb-lg-2">
                     <div class="col-md-12 grid-margin">
                         <div class="d-flex justify-content-between flex-wrap">
                             <div class="d-flex align-items-end flex-wrap">
                                 <div class="me-md-3 me-xl-5">
-                                    <h4><?php echo $page_name; ?></h4>
+                                    <h5 style="border-bottom:1px solid grey; text-align:left; padding-bottom:10px">
+                                        Recent reviews</h5>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
 
-
                 <div class="row no-gutters">
                     <?php
-                    $results = $mysqli->user_review_info($in_id);
+                    $results = $mysqli->user_review_info_lim($in_id, 6);
                     if (empty($results)) { ?>
                         <div class="col-sm-12 grid-margin stretch-card">
                             <div class="card">
@@ -94,7 +111,7 @@ $img_url = 'https://image.tmdb.org/t/p/original';
                     <?php } else {
                         foreach ($results as $result) {
                             $temp_url = $img_url . $result['show_poster_path']; ?>
-                            <div class="col-md-6" style="border-radius: 0">
+                            <div class="col-4 col-md-3 col-lg-2" style="border-radius: 0">
                                 <div class="card flex-nowrap" style="border-radius: 0; flex-direction: row">
                                     <div class="container-md-1">
                                         <div class="card-img">
@@ -104,38 +121,6 @@ $img_url = 'https://image.tmdb.org/t/p/original';
                                                         alt=""/></a>
                                         </div>
                                     </div>
-                                    <div class="card-description">
-                                        <a href="review_page.php?rid=<?php echo $result['review_id']; ?>&sid=<?php echo $result['id']; ?>&uid=<?php echo $in_id; ?>"
-                                           style="text-decoration: none; color: inherit">
-                                            <p class="card-title"><?php echo $result['show_name']; ?>
-                                                <span style="color: #0072ff"><?php switch ($result['review_value']) {
-                                                        case 0:
-                                                            $r_str = "No Rating";
-                                                            break;
-                                                        case 1:
-                                                            $r_str = "★";
-                                                            break;
-                                                        case 2:
-                                                            $r_str = "★★";
-                                                            break;
-                                                        case 3:
-                                                            $r_str = "★★★";
-                                                            break;
-                                                        case 4:
-                                                            $r_str = "★★★★";
-                                                            break;
-                                                        case 5:
-                                                            $r_str = "★★★★★";
-                                                            break;
-                                                        default:
-                                                            $r_str = "No rating";
-                                                            break;
-                                                    }
-                                                    echo nl2br("\n") . $r_str; ?></span>
-                                            </p>
-                                            <p class="card-text"><?php echo $result['review_content']; ?></p>
-                                        </a>
-                                    </div>
                                 </div>
                             </div>
                             <?php
@@ -144,16 +129,10 @@ $img_url = 'https://image.tmdb.org/t/p/original';
                     ?>
                 </div>
 
-
             </div>
-            <!-- content-wrapper ends -->
-            <?php require_once 'partials/_footer.php'; ?>
         </div>
-        <!-- main-panel ends -->
     </div>
-    <!-- page-body-wrapper ends -->
 </div>
-<!-- container-scroller -->
 
 <!-- plugins:js -->
 <script src="vendors/base/vendor.bundle.base.js"></script>
@@ -174,8 +153,6 @@ $img_url = 'https://image.tmdb.org/t/p/original';
 <!-- End custom js for this page-->
 
 <script src="js/jquery.cookie.js" type="text/javascript"></script>
+
 </body>
-
 </html>
-
-

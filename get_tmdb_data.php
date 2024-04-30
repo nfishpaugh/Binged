@@ -1,5 +1,7 @@
 <?php
-include_once '../private/dbconf.php';
+require '../private/dbconf.php';
+include 'include/config.inc';
+
 $pages = 100;
 $url_str = 'https://api.themoviedb.org/3/discover/tv?include_adult=true&include_null_first_air_dates=false&language=en-US&sort_by=popularity.desc&vote_count.gte=300&api_key=' . key;
 $temp_str = '';
@@ -33,11 +35,37 @@ for ($i = 1; $i <= $pages; $i++) {
 }
 
 foreach ($page_array as $page) {
-    echo '<pre>';
-    print_r($page);
-    $temp_url = $img_url . $page['results'][0]['poster_path'];
-    echo '<img src=' . $temp_url . ' width="333" height="500" alt=""/>';
-    echo '</pre>';
+    for ($i = 0; $i < 20; $i++) {
+        // variables for show_insert
+        /*
+        $poster = $page['results'][$i]['poster_path'];
+        $orig_lang = $page['results'][$i]['original_language'];
+        */
+        //$over = $page['results'][$i]['overview'];
+        $back_path = $page['results'][$i]['backdrop_path'];
+        $api_id = $page['results'][$i]['id'];
+        $mysqli->show_update_back($api_id, $back_path);
+        /*
+        $pop = $page['results'][$i]['popularity'];
+        $date = $page['results'][$i]['first_air_date'];
+        $name = $page['results'][$i]['name'];
+        $vote_avg = $page['results'][$i]['vote_average'];
+        $votes = $page['results'][$i]['vote_count'];
+
+        $mysqli->show_insert($api_id, $name, $orig_lang, $over, $vote_avg, $votes, $poster, $date, $orig_lang, $pop);
+        */
+        // variables for genre_insert
+        /*
+        $genres = $page['results'][$i]['genre_ids'];
+        $page_num = $page['page'];
+        $show_id = (($page_num - 1) * 20) + $i + 1;
+
+        // need to loop since genre_ids is an array
+        foreach ($genres as $genre) {
+            $mysqli->show_genre_insert($show_id, $genre);
+        }
+        */
+    }
 }
 
 

@@ -1,16 +1,13 @@
 <?php
 include "include/config.inc";
 
-
-if ($_POST['email'] != "" && $_POST['password'] != "") {
-
-
-    $login_response = $mysqli->login($_POST['email'], $_POST['password']);
-    if ($login_response[0] == 1) {
-        $_SESSION[PREFIX . '_username'] = $login_response[1]['email'];
-        $_SESSION[PREFIX . '_user_id'] = $login_response[1]['user_id'];
-        $_SESSION[PREFIX . '_security'] = $login_response[1]['user_level_id'];
-        $_SESSION[PREFIX . '_fullname'] = $login_response[1]['user_name'];
+function setlogin($response)
+{
+    if ($response[0] == 1) {
+        $_SESSION[PREFIX . '_username'] = $response[1]['email'];
+        $_SESSION[PREFIX . '_user_id'] = $response[1]['user_id'];
+        $_SESSION[PREFIX . '_security'] = $response[1]['user_level_id'];
+        $_SESSION[PREFIX . '_fullname'] = $response[1]['user_name'];
 
         if ($_SESSION[PREFIX . "_ppage"] != '') {
             $redirect = $_SESSION[PREFIX . "_ppage"];
@@ -20,10 +17,27 @@ if ($_POST['email'] != "" && $_POST['password'] != "") {
         header("location:index.php");
         exit;
     } else {
-        $loginF = "You are not approved to access this site";
+        ?>
+        <script>
+            alert("Your username and password are incorrect.");
+        </script>
+        <?php
     }
+}
 
-}//END POST
+if ($_POST['email'] != "" && $_POST['password'] != "" && isset($_POST['signin'])) {
+
+    $login_response = $mysqli->login($_POST['email'], $_POST['password']);
+    setlogin($login_response);
+
+} elseif (isset($_POST['signup'])) {
+
+    $_POST = array();
+    header("location: user_add.php");
+    exit;
+
+}
+//END POST
 
 //echo $_SESSION[PREFIX."_ppage"];
 
@@ -35,7 +49,7 @@ if ($_POST['email'] != "" && $_POST['password'] != "") {
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>Telephile</title>
+    <title>Binged</title>
     <!-- plugins:css -->
     <link rel="stylesheet" href="vendors/mdi/css/materialdesignicons.min.css">
     <link rel="stylesheet" href="vendors/base/vendor.bundle.base.css">
@@ -56,26 +70,35 @@ if ($_POST['email'] != "" && $_POST['password'] != "") {
                 <div class="col-lg-4 mx-auto">
                     <div class="auth-form-light text-left py-5 px-4 px-sm-5">
                         <div class="brand-logo" style="margin-bottom: 0;">
-                            <img src="images/logocustom.jpg" alt="logo">
+                            <img src="images/binged_logo.svg" width="64" height="64" alt="logo">
                         </div>
-                        <h4>Hello! Welcome to Telephile!</h4>
+                        <h4>Hello! Welcome to Binged!</h4>
                         <h6 class="font-weight-light">Sign in to continue.</h6>
-                        <form class="pt-3" action="" method="POST">
+                        <form id="subform" class="pt-3" action="" method="POST">
                             <div class="form-group">
                                 <input type="email" class="form-control form-control-lg" id="email" name="email"
-                                       placeholder="Username" required autofocus>
+                                       placeholder="Username" autofocus>
                             </div>
                             <div class="form-group">
                                 <input type="password" class="form-control form-control-lg" id="password"
                                        name="password"
-                                       placeholder="Password" required>
+                                       placeholder="Password">
                             </div>
                             <div class="mt-3">
-                                <input type="submit" id="submit"
-                                       class="btn btn-block btn-primary btn-lg font-weight-medium auth-form-btn"
-                                       value="SIGN IN">
+                                <button type="submit" id="signin" name="signin"
+                                        class="btn btn-block btn-primary btn-lg font-weight-medium auth-form-btn"
+                                        value="SIGN IN">Sign in
+                                </button>
+                                <button type="submit" id="signup" name="signup"
+                                        class="btn btn-block btn-primary btn-lg font-weight-medium auth-form-btn"
+                                        style="float: right"
+                                        value="SIGN UP">Sign up
+                                </button>
                             </div>
-
+                            <div class="text-center mt-4 font-weight-medium">
+                                Don't want to make an account? <a class="text-primary" href="guest_login.php">Log in as
+                                    a guest</a>
+                            </div>
                         </form>
                     </div>
                 </div>

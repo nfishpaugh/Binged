@@ -6,8 +6,7 @@ class mysqli_class extends mysqli
 {
     public function __construct()
     {
-        include_once "../private/dbconf.php";
-
+        require "../private/dbconf.php";
         mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
         @parent::__construct(DBHost, DBUser, DBPass, DBName, DBPort);
         // check if connect errno is set
@@ -45,11 +44,18 @@ class mysqli_class extends mysqli
             $stmt->close();
 
             if ($x['email'] == $email && password_verify($password, $x['user_password'])) {
-                $this->logins_insert($x['user_id']);
-                return array(1, $x);
+                try {
+                    $this->logins_insert($x['user_id']);
+                    return array(1, $x);
+                } catch (mysqli_sql_exception $e) {
+                    $this->login_remove($x['user_id']);
+                    $this->logins_insert($x['user_id']);
+                    return array(1, $x);
+                }
             } else {
                 return array(0, $x);
             }
+            //return password_verify($password, $x['user_password']);
 
         }//END PREPARE
         else {
@@ -85,6 +91,23 @@ class mysqli_class extends mysqli
             trigger_error($this->error, E_USER_WARNING);
         }
         return $last_id;
+    }
+
+    public function login_remove($id)
+    {
+        $query = "DELETE FROM logins WHERE user_id = ?";
+
+        if ($stmt = parent::prepare($query)) {
+            $stmt->bind_param("i", $id);
+            if (!$stmt->execute()) {
+                trigger_error($this->error, E_USER_WARNING);
+            }
+
+            $stmt->close();
+        }//END PREPARE
+        else {
+            trigger_error($this->error, E_USER_WARNING);
+        }
     }
 
     //ADD actions logging
@@ -142,6 +165,75 @@ class mysqli_class extends mysqli
 				user_id = ?";
         if ($stmt = parent::prepare($query)) {
             $stmt->bind_param("i", $user_id);
+            if (!$stmt->execute()) {
+                trigger_error($this->error, E_USER_WARNING);
+            }
+            $meta = $stmt->result_metadata();
+            while ($field = $meta->fetch_field()) {
+                $parameters[] = &$row[$field->name];
+            }
+            call_user_func_array(array($stmt, 'bind_result'), $parameters);
+
+            $stmt->fetch();
+            $x = array();
+            foreach ($row as $key => $val) {
+                $results[$key] = $val;
+            }
+            $stmt->close();
+        }//END PREPARE
+        else {
+            trigger_error($this->error, E_USER_WARNING);
+        }
+        return $results;
+    }
+
+    public function user_pf_info($user_id)
+    {
+        $results = array();
+        $query = "
+			SELECT
+				*
+			FROM
+				user_pf_data
+			WHERE
+				user_id = ?";
+        if ($stmt = parent::prepare($query)) {
+            $stmt->bind_param("i", $user_id);
+            if (!$stmt->execute()) {
+                trigger_error($this->error, E_USER_WARNING);
+            }
+            $meta = $stmt->result_metadata();
+            while ($field = $meta->fetch_field()) {
+                $parameters[] = &$row[$field->name];
+            }
+            call_user_func_array(array($stmt, 'bind_result'), $parameters);
+
+            $stmt->fetch();
+            $x = array();
+            foreach ($row as $key => $val) {
+                $results[$key] = $val;
+            }
+            $stmt->close();
+        }//END PREPARE
+        else {
+            trigger_error($this->error, E_USER_WARNING);
+        }
+        return $results;
+    }
+
+    public function user_pf_info_lim($user_id, $limit)
+    {
+        $results = array();
+        $query = "
+			SELECT
+				*
+			FROM
+				user_pf_data
+			WHERE
+				user_id = ?
+			LIMIT ?";
+        if ($stmt = parent::prepare($query)) {
+            $stmt->bind_param("ii", $user_id, $limit);
             if (!$stmt->execute()) {
                 trigger_error($this->error, E_USER_WARNING);
             }
@@ -235,6 +327,43 @@ class mysqli_class extends mysqli
 
         return $last_id;
 
+    }
+
+    public function user_field_check($field, $column)
+    {
+        $query = "SELECT email FROM users WHERE " . $column . " = ?";
+
+        if ($stmt = parent::prepare($query)) {
+            $stmt->bind_param("s", $field);
+            if (!$stmt->execute()) {
+                trigger_error($this->error, E_USER_WARNING);
+            }
+            if (!$stmt->execute()) {
+                trigger_error($this->error, E_USER_WARNING);
+            }
+            $meta = $stmt->result_metadata();
+            while ($field = $meta->fetch_field()) {
+                $parameters[] = &$row[$field->name];
+            }
+            call_user_func_array(array($stmt, 'bind_result'), $parameters);
+
+            while ($stmt->fetch()) {
+                $x = array();
+                foreach ($row as $key => $val) {
+                    $x[$key] = $val;
+                }
+                $results[] = $x;
+            }
+            /*
+            $result = $stmt->num_rows;
+            $exists = (bool)$result;
+            $stmt->close();
+            */
+        } else {
+            trigger_error($this->error, E_USER_WARNING);
+        }
+
+        return (bool)count($results);
     }
 
     /*** USER EDIT  ******************************************************************
@@ -345,7 +474,7 @@ class mysqli_class extends mysqli
 			FROM 
 				shows
 			ORDER BY show_votes DESC
-			LIMIT 50";
+			LIMIT 24";
 
         if ($stmt = parent::prepare($query)) {
             if (!$stmt->execute()) {
@@ -371,7 +500,89 @@ class mysqli_class extends mysqli
         }
         return $results;
     }
-    
+
+    public function show_list_genre($genre, $limit)
+    {
+        $results = array();
+        $query = "
+            SELECT 
+                shows.id, 
+                shows.api_id, 
+                shows.show_poster_path, 
+                shows.show_name, 
+                genres.genre_name
+            FROM show_genres
+            JOIN genres ON show_genres.genre_id = genres.genre_id
+            JOIN shows ON show_genres.show_id = shows.id
+            WHERE genres.genre_name = ?
+            LIMIT ?";
+
+        if ($stmt = parent::prepare($query)) {
+            $stmt->bind_param("si", $genre, $limit);
+            if (!$stmt->execute()) {
+                trigger_error($this->error, E_USER_WARNING);
+            }
+            $meta = $stmt->result_metadata();
+            while ($field = $meta->fetch_field()) {
+                $parameters[] = &$row[$field->name];
+            }
+            call_user_func_array(array($stmt, 'bind_result'), $parameters);
+
+            while ($stmt->fetch()) {
+                $x = array();
+                foreach ($row as $key => $val) {
+                    $x[$key] = $val;
+                }
+                $results[] = $x;
+            }
+            $stmt->close();
+        }//END PREPARE
+        else {
+            trigger_error($this->error, E_USER_WARNING);
+        }
+
+        return $results;
+    }
+
+    public function show_genres($id)
+    {
+        $results = array();
+        // limit results just in case a show has like 20 genres
+        $query = "
+            SELECT genres.genre_name
+            FROM show_genres
+            JOIN genres ON show_genres.genre_id = genres.genre_id
+            JOIN shows ON show_genres.show_id = shows.id
+            WHERE shows.id = ?
+            LIMIT 5 ";
+
+        if ($stmt = parent::prepare($query)) {
+            $stmt->bind_param("i", $id);
+            if (!$stmt->execute()) {
+                trigger_error($this->error, E_USER_WARNING);
+            }
+            $meta = $stmt->result_metadata();
+            while ($field = $meta->fetch_field()) {
+                $parameters[] = &$row[$field->name];
+            }
+            call_user_func_array(array($stmt, 'bind_result'), $parameters);
+
+            while ($stmt->fetch()) {
+                $x = array();
+                foreach ($row as $key => $val) {
+                    $x[$key] = $val;
+                }
+                $results[] = $x;
+            }
+            $stmt->close();
+        }//END PREPARE
+        else {
+            trigger_error($this->error, E_USER_WARNING);
+        }
+
+        return $results;
+    }
+
     public function show_insert($apiid, $showname, $lang, $overview, $vote_avg, $votes, $poster, $air_date, $orig_lang, $pop)
     {
         $query = "
@@ -405,6 +616,48 @@ class mysqli_class extends mysqli
 
     }
 
+    public function show_update_desc($show_id, $desc)
+    {
+        $query = "
+			UPDATE shows SET 
+				show_overview = ?
+			WHERE
+				api_id=?";
+
+        if ($stmt = parent::prepare($query)) {
+            $stmt->bind_param("si", $desc, $show_id);
+            if (!$stmt->execute()) {
+                trigger_error($this->error, E_USER_WARNING);
+            }
+
+            $stmt->close();
+        }//END PREPARE
+        else {
+            trigger_error($this->error, E_USER_WARNING);
+        }
+    }
+
+    public function show_update_back($show_id, $back)
+    {
+        $query = "
+			UPDATE shows SET 
+				show_backdrop_path = ?
+			WHERE
+				api_id=?";
+
+        if ($stmt = parent::prepare($query)) {
+            $stmt->bind_param("si", $back, $show_id);
+            if (!$stmt->execute()) {
+                trigger_error($this->error, E_USER_WARNING);
+            }
+
+            $stmt->close();
+        }//END PREPARE
+        else {
+            trigger_error($this->error, E_USER_WARNING);
+        }
+    }
+
     public function show_genre_insert($show_id, $genre_id)
     {
         $query = "
@@ -436,7 +689,7 @@ class mysqli_class extends mysqli
         $results = array();
         $query = "
 			SELECT 
-				*	
+				*
 			FROM 
 				shows
 			WHERE
@@ -464,7 +717,37 @@ class mysqli_class extends mysqli
         }
 
         return $results;
+    }
 
+    public function show_info_name($name)
+    {
+        $results = array();
+        $query = "
+            SELECT * FROM shows
+            WHERE show_name = ?";
+
+        if ($stmt = parent::prepare($query)) {
+            $stmt->bind_param("s", $name);
+            if (!$stmt->execute()) {
+                trigger_error($this->error, E_USER_WARNING);
+            }
+            $meta = $stmt->result_metadata();
+            while ($field = $meta->fetch_field()) {
+                $parameters[] = &$row[$field->name];
+            }
+            call_user_func_array(array($stmt, 'bind_result'), $parameters);
+
+            $stmt->fetch();
+            foreach ($row as $key => $val) {
+                $results[$key] = $val;
+            }
+            $stmt->close();
+        }//END PREPARE
+        else {
+            trigger_error($this->error, E_USER_WARNING);
+        }
+
+        return $results;
     }
 
     public function show_edit($id, $showname, $api_id = null, $lang = null, $overview = null, $vote_avg = null, $votes = null, $poster = null, $air_date = null, $orig_lang = null, $pop = null)
@@ -485,7 +768,7 @@ class mysqli_class extends mysqli
 			WHERE
 				id=?";
         if ($stmt = parent::prepare($query)) {
-            $stmt->bind_param("sissdisssd", $showname, $api_id, $lang, $overview, $vote_avg, $votes, $poster, $air_date, $orig_lang, $pop);
+            $stmt->bind_param("sissdisssdi", $showname, $api_id, $lang, $overview, $vote_avg, $votes, $poster, $air_date, $orig_lang, $pop, $id);
             if (!$stmt->execute()) {
                 trigger_error($this->error, E_USER_WARNING);
             }
@@ -508,7 +791,7 @@ class mysqli_class extends mysqli
             WHERE show_name 
             LIKE ?
             ORDER BY show_votes DESC
-            LIMIT 50";
+            LIMIT 72";
 
         if ($stmt = parent::prepare($query)) {
             $stmt->bind_param("s", $searchstr);
@@ -662,6 +945,7 @@ class mysqli_class extends mysqli
         $query = "
 			SELECT shows.show_name, 
 			       shows.id,
+			       shows.show_poster_path,
 			       reviews.review_id,
 			       reviews.review_content, 
 			       reviews.review_value, 
@@ -669,9 +953,99 @@ class mysqli_class extends mysqli
 			       reviews.user_id
             FROM reviews
             JOIN shows ON reviews.show_id = shows.id
-            WHERE reviews.user_id = ?";
+            WHERE reviews.user_id = ?
+            ORDER BY review_date DESC";
         if ($stmt = parent::prepare($query)) {
             $stmt->bind_param("i", $user_id);
+            if (!$stmt->execute()) {
+                trigger_error($this->error, E_USER_WARNING);
+            }
+            $meta = $stmt->result_metadata();
+            while ($field = $meta->fetch_field()) {
+                $parameters[] = &$row[$field->name];
+            }
+            call_user_func_array(array($stmt, 'bind_result'), $parameters);
+
+            while ($stmt->fetch()) {
+                $x = array();
+                foreach ($row as $key => $val) {
+                    $x[$key] = $val;
+                }
+                $results[] = $x;
+            }
+            $stmt->close();
+        }//END PREPARE
+        else {
+            trigger_error($this->error, E_USER_WARNING);
+        }
+        return $results;
+    }
+
+    public
+    function show_review_info($show_id)
+    {
+
+        $results = array();
+        $query = "
+			SELECT shows.show_name, 
+			       shows.id,
+			       shows.show_poster_path,
+			       reviews.review_id,
+			       reviews.review_content, 
+			       reviews.review_value, 
+			       reviews.review_date ,
+			       reviews.user_id
+            FROM reviews
+            JOIN shows ON reviews.show_id = shows.id
+            WHERE reviews.show_id = ?
+            ORDER BY review_date DESC";
+        if ($stmt = parent::prepare($query)) {
+            $stmt->bind_param("i", $show_id);
+            if (!$stmt->execute()) {
+                trigger_error($this->error, E_USER_WARNING);
+            }
+            $meta = $stmt->result_metadata();
+            while ($field = $meta->fetch_field()) {
+                $parameters[] = &$row[$field->name];
+            }
+            call_user_func_array(array($stmt, 'bind_result'), $parameters);
+
+            while ($stmt->fetch()) {
+                $x = array();
+                foreach ($row as $key => $val) {
+                    $x[$key] = $val;
+                }
+                $results[] = $x;
+            }
+            $stmt->close();
+        }//END PREPARE
+        else {
+            trigger_error($this->error, E_USER_WARNING);
+        }
+        return $results;
+    }
+
+    public
+    function user_review_info_lim($user_id, $limit)
+    {
+
+        $results = array();
+        $query = "
+			SELECT shows.show_name, 
+			       shows.id,
+			       shows.show_poster_path,
+			       reviews.review_id,
+			       reviews.review_content, 
+			       reviews.review_value, 
+			       reviews.review_date ,
+			       reviews.user_id
+            FROM reviews
+            JOIN shows ON reviews.show_id = shows.id
+            WHERE reviews.user_id = ?
+            ORDER BY review_date DESC
+            LIMIT ?";
+        if ($stmt = parent::prepare($query)) {
+            $stmt->bind_param("ii", $user_id, $limit);
             if (!$stmt->execute()) {
                 trigger_error($this->error, E_USER_WARNING);
             }
@@ -731,7 +1105,7 @@ class mysqli_class extends mysqli
         return $results;
     }
 
-    public function show_reviews($id)
+    public function show_reviews($id, $limit)
     {
         $results = array();
         $query = "
@@ -739,9 +1113,15 @@ class mysqli_class extends mysqli
             FROM reviews 
             WHERE show_id=?
             ORDER BY review_date DESC
-            LIMIT 5";
+            LIMIT ?";
         if ($stmt = parent::prepare($query)) {
-            $stmt->bind_param("i", $id);
+            if ($limit > 0) {
+                $stmt->bind_param("ii", $id, $limit);
+            } else {
+                $z = 99;
+                $stmt->bind_param("ii", $id, $z);
+            }
+
             if (!$stmt->execute()) {
                 trigger_error($this->error, E_USER_WARNING);
             }

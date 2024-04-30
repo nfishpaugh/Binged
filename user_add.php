@@ -1,7 +1,10 @@
+<!DOCTYPE html>
+<html lang="en">
+
 <?php
 include "include/config.inc";
 
-$_SESSION[PREFIX . "_ppage"] = $_SERVER['REQUEST_URI'];
+/*
 if ($_SESSION[PREFIX . '_username'] == "") {
     header("Location: login.php");
     exit;
@@ -10,24 +13,38 @@ if ($_SESSION[PREFIX . '_security'] < 10) {
     header("location:index.php?action=5");
     exit;
 }
+*/
 
 $page_name = "User Add";
 
-if ($_SERVER['REQUEST_METHOD'] == "POST") {
+if (isset($_POST['back'])) {
+    header("location: login.php");
+    exit;
+}
 
-    $mysqli->user_insert($_POST['user_email'], $_POST['user_name'], $_POST['user_password'], $_POST['user_level_id']);
+if ($_SERVER['REQUEST_METHOD'] == "POST" && !$mysqli->user_field_check($_POST['user_email'], "email") && !$mysqli->user_field_check($_POST['user_name'], "user_name")) {
+    var_dump($_POST);
+
+    $mysqli->user_insert($_POST['user_email'], $_POST['user_name'], $_POST['user_password'], 5);
 
     $mysqli->actions_insert("Added User: " . $_POST['user_email'], $_SESSION[PREFIX . '_user_id']);
 
     $_SESSION[PREFIX . '_action'][] = 'added';
-    header("location: user_list.php");
+
+    header("location: login.php");
     exit;
-}//END POST
-
-
+} elseif ($_SERVER['REQUEST_METHOD'] == "POST" && $mysqli->user_field_check($_POST['user_email'], "email")) {
+    ?>
+    <script> alert("Email has been taken, please choose another."); </script>
+<?php
+$_POST = array();
+} elseif ($_SERVER['REQUEST_METHOD'] == "POST" && $mysqli->user_field_check($_POST['user_name'], "user_name")) {
 ?>
-<!DOCTYPE html>
-<html lang="en">
+    <script> alert("User name has been taken, please choose another."); </script>
+    <?php
+    $_POST = array();
+}
+?>
 
 <head>
     <!-- Required meta tags -->
@@ -47,91 +64,68 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
     <link rel="shortcut icon" href="images/favicon.png"/>
 
 </head>
+
 <body>
 <div class="container-scroller">
-
-    <?php require_once 'partials/_navbar.php'; ?>
-    <div class="container-fluid page-body-wrapper">
-        <?php require_once 'partials/_sidebar.php'; ?>
-        <div class="main-panel">
-            <div class="content-wrapper">
-
-                <div class="row">
-                    <div class="col-md-12 grid-margin">
-                        <div class="d-flex justify-content-between flex-wrap">
-                            <div class="d-flex align-items-end flex-wrap">
-                                <div class="me-md-3 me-xl-5">
-                                    <h2><?php echo $page_name; ?></h2>
-                                </div>
-
-                            </div>
-
+    <div class="container-fluid page-body-wrapper full-page-wrapper">
+        <div class="content-wrapper d-flex align-items-center auth px-0">
+            <div class="row w-100 mx-0">
+                <div class="col-lg-4 mx-auto">
+                    <div class="auth-form-light text-left py-5 px-4 px-sm-5">
+                        <div class="brand-logo" style="margin-bottom: 0;">
+                            <img src="images/binged_logo.svg" width="64" height="64" alt="logo">
                         </div>
+                        <h6 class="font-weight-light">Enter your information below to create a Binged account</h6>
+                        <form id="subform" class="pt-3" action="" method="POST">
+                            <div class="form-group">
+                                <input type="email" class="form-control form-control-lg" id="user_email"
+                                       name="user_email"
+                                       placeholder="Email" autofocus>
+                            </div>
+                            <div class="form-group">
+                                <input type="text" class="form-control form-control-lg" id="user_name"
+                                       name="user_name" placeholder="User name">
+                            </div>
+                            <div class="form-group">
+                                <input type="password" class="form-control form-control-lg" id="user_password"
+                                       name="user_password" onkeyup="check()"
+                                       placeholder="Password">
+                            </div>
+                            <div class="form-group">
+                                <input type="password" class="form-control form-control-lg" id="confpassword"
+                                       name="confpassword" onkeyup="check()"
+                                       placeholder="Confirm password">
+                                <span id="passwordmsg"></span>
+                            </div>
+                            <div class="mt-3">
+                                <button type="submit" id="sub" name="sub"
+                                        class="btn btn-block btn-primary btn-lg font-weight-medium auth-form-btn"
+                                        value="SUBMIT">Submit
+                                </button>
+                                <button type="submit" id="back" name="back"
+                                        class="btn btn-block btn-primary btn-lg font-weight-medium auth-form-btn"
+                                        style="float: right"
+                                        value="BACK">Back
+                                </button>
+                            </div>
+                            <script>
+                                var check = function () {
+                                    if (document.getElementById('user_password').value != document.getElementById('confpassword').value) {
+                                        document.getElementById('passwordmsg').style.color = 'red';
+                                        document.getElementById('passwordmsg').innerHTML = 'Passwords do not match.';
+                                        document.getElementById('sub').prop('disabled', true);
+                                    } else {
+                                        document.getElementById('passwordmsg').innerHTML = '';
+                                        document.getElementById('sub').prop('disabled', false);
+                                    }
+                                }
+                            </script>
+                        </form>
                     </div>
                 </div>
-
-                <div class="row">
-                    <div class="col-md-12 grid-margin stretch-card">
-                        <div class="card">
-                            <div class="card-body">
-                                <h4 class="card-title"><?php echo $page_name; ?></h4>
-                                <form class="forms-sample" id="form1" action="" method="post">
-
-                                    <div class="form-group row">
-                                        <label for="user_name" class="col-sm-3 col-form-label">Name</label>
-                                        <div class="col-sm-9">
-                                            <input type="text" class="form-control" id="user_name"
-                                                   name="user_name"
-                                                   placeholder="Full Name" autofocus required>
-                                        </div>
-                                    </div>
-
-                                    <div class="form-group row">
-                                        <label for="user_email" class="col-sm-3 col-form-label">Email</label>
-                                        <div class="col-sm-9">
-                                            <input type="email" class="form-control" id="user_email"
-                                                   name="user_email"
-                                                   placeholder="Email" required>
-                                        </div>
-                                    </div>
-                                    <div class="form-group row">
-                                        <label for="user_password" class="col-sm-3 col-form-label">Password</label>
-                                        <div class="col-sm-9">
-                                            <input type="text" class="form-control" id="user_password"
-                                                   name="user_password"
-                                                   placeholder="Password" required>
-                                        </div>
-                                    </div>
-                                    <div class="form-group row">
-                                        <label for="user_level_id" class="col-sm-3 col-form-label">User Level</label>
-                                        <div class="col-sm-9">
-                                            <select class="form-control" id="user_level_id"
-                                                    name="user_level_id" required>
-                                                <?php $results = $mysqli->user_level_list();
-                                                foreach ($results as $result) {
-                                                    ?>
-                                                    <option value="<?php echo $result['user_level_id']; ?>"><?php echo $result['user_level_name']; ?></option>
-                                                <?php } ?>
-                                            </select>
-                                        </div>
-                                    </div>
-
-
-                                    <button type="submit" class="btn btn-primary me-2">Submit</button>
-                                    <button class="btn btn-light">Cancel</button>
-                                </form>
-                            </div>
-                        </div>
-                    </div>
-
-                </div>
-
-
             </div>
-            <!-- content-wrapper ends -->
-            <?php require_once 'partials/_footer.php'; ?>
         </div>
-        <!-- main-panel ends -->
+        <!-- content-wrapper ends -->
     </div>
     <!-- page-body-wrapper ends -->
 </div>

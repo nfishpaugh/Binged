@@ -6,25 +6,10 @@ if ($_SESSION[PREFIX . '_username'] == "") {
     header("Location: login.php");
     exit;
 }
-if ($_SESSION[PREFIX . '_security'] < 5) {
-    header("location:index.php?action=5");
-    exit;
-}
 
 $page_name = "Most Popular";
 
-if ($_SERVER['REQUEST_METHOD'] == "POST") {
-
-
-    $mysqli->show_insert($_POST['show_name'], $_POST['year'], $_POST['runtime'], $_POST['votes'], $_POST['genres'], $_POST['description']);
-
-    $mysqli->actions_insert("Added Show: " . $_POST['show_name'] . " " . $_POST['year'], $_SESSION[PREFIX . '_user_id']);
-
-
-    $_SESSION[PREFIX . '_action'][] = 'added';
-    header("location: index.php");
-    exit;
-}
+$img_url = 'https://image.tmdb.org/t/p/original';
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -52,7 +37,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
 
     <?php require_once 'partials/_navbar.php'; ?>
     <div class="container-fluid page-body-wrapper">
-        <?php require_once 'partials/_sidebar.php'; ?>
+        <?php //require_once 'partials/_sidebar.php'; ?>
         <div class="main-panel">
             <div class="content-wrapper">
 
@@ -63,11 +48,6 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
                                 <div class="me-md-3 me-xl-5">
                                     <h2><?php echo $page_name; ?></h2>
                                 </div>
-                            </div>
-                            <div class="d-flex justify-content-between align-items-end flex-wrap">
-
-                                <a href="show_add.php" class="btn btn-primary mt-2 mt-xl-0"><i
-                                            class="mdi mdi-plus-circle-outline btn-icon-prepend"></i> Add Shows</a>
                             </div>
 
                         </div>
@@ -80,22 +60,27 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
                     <?php
                     $results = $mysqli->show_list();
                     foreach ($results as $result) {
-                        $img_url = $mysqli->tmdb_api($result['show_name']); ?>
-                        <div class="col-sm-3 grid-margin stretch-card" style="border-radius: 15px">
-                            <div class="card flex-row flex-wrap" style="border-radius: 15px">
-                                <div class="card-header border-0" style="back">
-                                    <a href="show_page.php?id=<?php echo $result['id']; ?>"><img
-                                                src="<?php echo $img_url ?>" class="card-img"
-                                                style="max-width: 30%; max-height: 100%; object-fit: scale-down"
-                                                alt=""/></a>
+                        $temp_url = $img_url . $result['show_poster_path']; ?>
+                        <div class="col-4 col-md-3 col-lg-2 grid-margin stretch-card" style="border-radius: 0">
+                            <div class="card flex-wrap" style="border-radius: 0">
+                                <div class="container-lg">
+                                    <div class="card-img">
+                                        <a href="show_page.php?id=<?php echo $result['id']; ?>/"><img
+                                                    src="<?php echo $temp_url ?>" class="card-img"
+                                                    style="max-width: 100%; max-height: 100%; object-fit: scale-down"
+                                                    alt=""/></a>
+                                    </div>
                                 </div>
-                                <div class="card-description" style="padding:5px; border-radius: 15px">
+
+
+                                <div class="card-description">
                                     <a href="show_page.php?id=<?php echo $result['id']; ?>"
                                        style="text-decoration: none; color: inherit">
-                                        <p class="card-title"><?php echo $result['show_name'] . " (" . $result['year'] . ")"; ?></p>
-                                        <p class="card-text" style=""><?php echo $result['description']; ?></p>
+                                        <p class="card-title" style="flex-wrap: wrap; white-space: normal; overflow: visible; height: 5vh"><?php echo $result['show_name'] ?></p>
+                                        <!-- <p class="card-text" style=""><?php //echo $result['show_overview']; ?></p> -->
                                     </a>
                                 </div>
+
                             </div>
                         </div>
                         <?php
@@ -103,10 +88,186 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
                     ?>
                 </div>
 
+                <div class="row">
+                    <div class="col-md-12 grid-margin">
+                        <div class="d-flex justify-content-between flex-wrap">
+                            <div class="d-flex align-items-end flex-wrap">
+                                <div class="me-md-3 me-xl-5">
+                                    <a class="one" href="genre_page.php?genre=<?php echo "Action" ?>">
+                                        <h2>Action & Adventure</h2></a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row no-gutters">
+                    <?php
+                    $results = $mysqli->show_list_genre("Action & Adventure", 18);
+                    foreach ($results as $result) {
+                        $temp_url = $img_url . $result['show_poster_path'];
+                        //$year = substr($result['show_air_date'], 0, 4); ?>
+                        <div class="col-4 col-md-3 col-lg-2 grid-margin stretch-card" style="border-radius: 0">
+                            <div class="card flex-wrap" style="border-radius: 0; outline: 0;">
+                                    <div class="container-lg">
+                                        <div class="card-img" style="overflow: hidden; object-fit: fill">
+                                            <a href="show_page.php?id=<?php echo $result['id']; ?>"><img
+                                                        src="<?php echo $temp_url ?>" class="card-img"
+                                                        alt=""/></a>
+                                        </div>
+                                    </div>
+
+                                    <div class="card-description">
+                                        <a href="show_page.php?id=<?php echo $result['id']; ?>"
+                                           style="text-decoration: none; color: inherit">
+                                            <p class="card-title" style="flex-wrap: wrap; white-space: normal; overflow: visible; height: 5vh"><?php echo $result['show_name'] ?></p>
+                                            <!-- <p class="card-text" style=""><?php //echo $result['show_overview']; ?></p> -->
+                                        </a>
+                                    </div>
+                            </div>
+                        </div>
+                        <?php
+                    }
+                    ?>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-12 grid-margin">
+                        <div class="d-flex justify-content-between flex-wrap">
+                            <div class="d-flex align-items-end flex-wrap">
+                                <div class="me-md-3 me-xl-5">
+                                    <a class="one" href="genre_page.php?genre=<?php echo "Drama" ?>">
+                                        <h2>Drama</h2></a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row no-gutters">
+                    <?php
+                    $results = $mysqli->show_list_genre("Drama", 18);
+                    foreach ($results as $result) {
+                        $temp_url = $img_url . $result['show_poster_path'];
+                        //$year = substr($result['show_air_date'], 0, 4); ?>
+                        <div class="col-4 col-md-3 col-lg-2 grid-margin stretch-card" style="border-radius: 0">
+                            <div class="card flex-wrap" style="border-radius: 0">
+                                <div class="container-lg">
+                                    <div class="card-img">
+                                        <a href="show_page.php?id=<?php echo $result['id']; ?>"><img
+                                                    src="<?php echo $temp_url ?>" class="card-img"
+                                                    style="max-width: 100%; max-height: 100%; object-fit: scale-down"
+                                                    alt=""/></a>
+                                    </div>
+                                </div>
+
+                                <div class="card-description">
+                                    <a href="show_page.php?id=<?php echo $result['id']; ?>"
+                                       style="text-decoration: none; color: inherit">
+                                        <p class="card-title" style="flex-wrap: wrap; white-space: normal; overflow: visible; height: 5vh"><?php echo $result['show_name'] ?></p>
+                                        <!-- <p class="card-text" style=""><?php //echo $result['show_overview']; ?></p> -->
+                                    </a>
+                                </div>
+
+                            </div>
+                        </div>
+                        <?php
+                    }
+                    ?>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-12 grid-margin">
+                        <div class="d-flex justify-content-between flex-wrap">
+                            <div class="d-flex align-items-end flex-wrap">
+                                <div class="me-md-3 me-xl-5">
+                                    <a class="one" href="genre_page.php?genre=<?php echo "Comedy" ?>">
+                                        <h2>Comedy</h2></a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row no-gutters">
+                    <?php
+                    $results = $mysqli->show_list_genre("Comedy", 18);
+                    foreach ($results as $result) {
+                        $temp_url = $img_url . $result['show_poster_path'];
+                        //$year = substr($result['show_air_date'], 0, 4); ?>
+                        <div class="col-4 col-md-3 col-lg-2 grid-margin stretch-card" style="border-radius: 0">
+                            <div class="card flex-wrap" style="border-radius: 0">
+                                <div class="container-lg">
+                                    <div class="card-img">
+                                        <a href="show_page.php?id=<?php echo $result['id']; ?>"><img
+                                                    src="<?php echo $temp_url ?>" class="card-img"
+                                                    style="max-width: 100%; max-height: 100%; object-fit: scale-down"
+                                                    alt=""/></a>
+                                    </div>
+                                </div>
+
+                                <div class="card-description">
+                                    <a href="show_page.php?id=<?php echo $result['id']; ?>"
+                                       style="text-decoration: none; color: inherit">
+                                        <p class="card-title" style="flex-wrap: wrap; white-space: normal; overflow: visible; height: 5vh"><?php echo $result['show_name'] ?></p>
+                                        <!-- <p class="card-text" style=""><?php //echo $result['show_overview']; ?></p> -->
+                                    </a>
+                                </div>
+
+                            </div>
+                        </div>
+                        <?php
+                    }
+                    ?>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-12 grid-margin">
+                        <div class="d-flex justify-content-between flex-wrap">
+                            <div class="d-flex align-items-end flex-wrap">
+                                <div class="me-md-3 me-xl-5">
+                                    <a class="one" href="genre_page.php?genre=<?php echo "SciFi" ?>">
+                                        <h2>Sci-Fi & Fantasy</h2></a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row no-gutters">
+                    <?php
+                    $results = $mysqli->show_list_genre("Sci-Fi & Fantasy", 18);
+                    foreach ($results as $result) {
+                        $temp_url = $img_url . $result['show_poster_path'];
+                        //$year = substr($result['show_air_date'], 0, 4); ?>
+                        <div class="col-4 col-md-3 col-lg-2 grid-margin stretch-card" style="border-radius: 0">
+                            <div class="card flex-wrap" style="border-radius: 0">
+                                <div class="container-lg">
+                                    <div class="card-img">
+                                        <a href="show_page.php?id=<?php echo $result['id']; ?>"><img
+                                                    src="<?php echo $temp_url ?>" class="card-img"
+                                                    style="max-width: 100%; max-height: 100%; object-fit: scale-down"
+                                                    alt=""/></a>
+                                    </div>
+                                </div>
+
+                                <div class="card-description">
+                                    <a href="show_page.php?id=<?php echo $result['id']; ?>"
+                                       style="text-decoration: none; color: inherit">
+                                        <p class="card-title" style="flex-wrap: wrap; white-space: normal; overflow: visible; height: 5vh"><?php echo $result['show_name'] ?></p>
+                                        <!-- <p class="card-text" style=""><?php //echo $result['show_overview']; ?></p> -->
+                                    </a>
+                                </div>
+
+                            </div>
+                        </div>
+                        <?php
+                    }
+                    ?>
+                </div>
 
             </div>
             <!-- content-wrapper ends -->
-            <?php require_once 'partials/_footer.php'; ?>
         </div>
         <!-- main-panel ends -->
     </div>
@@ -128,18 +289,6 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
 <script src="js/template.js"></script>
 <!-- endinject -->
 <!-- Custom js for this page-->
-
-<script src="js/data-table.js"></script>
-<script src="js/jquery.dataTables.js"></script>
-<script src="js/dataTables.bootstrap4.js"></script>
-
-<script>
-    $(document).ready(function () {
-        $('.datatable').DataTable();
-    });
-</script>
-
-
 <!-- End custom js for this page-->
 
 <script src="js/jquery.cookie.js" type="text/javascript"></script>

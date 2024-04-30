@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="WebServers">
+    <option name="servers">
+      <webServer id="2a8d689c-1d5b-4a13-96fe-5223b5eec538" name="MIS4770">
+        <fileTransfer accessType="SFTP" host="pen.eiu.edu" port="22" sshConfigId="7c1912d5-7257-437d-beb4-918800c37f45" sshConfig="nrfishpaugh@pen.eiu.edu:22 password">
+          <advancedOptions>
+            <advancedOptions dataProtectionLevel="Private" keepAliveTimeout="0" passiveMode="true" shareSSLContext="true" />
+          </advancedOptions>
+        </fileTransfer>
+      </webServer>
+    </option>
+  </component>
+</project>
