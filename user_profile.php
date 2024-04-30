@@ -96,7 +96,7 @@ $img_url = 'https://image.tmdb.org/t/p/original';
                     </div>
                 </div>
 
-                <div class="row no-gutters">
+                <div class="row">
                     <?php
                     $results = $mysqli->user_review_info_lim($in_id, 6);
                     if (empty($results)) { ?>
@@ -111,9 +111,9 @@ $img_url = 'https://image.tmdb.org/t/p/original';
                     <?php } else {
                         foreach ($results as $result) {
                             $temp_url = $img_url . $result['show_poster_path']; ?>
-                            <div class="col-4 col-md-3 col-lg-2" style="border-radius: 0">
-                                <div class="card flex-nowrap" style="border-radius: 0; flex-direction: row">
-                                    <div class="container-md-1">
+                            <div class="col-4 col-md-3 col-lg-2 grid-margin stretch-card" style="border-radius: 0">
+                                <div class="card flex-wrap" style="border-radius: 0;">
+                                    <div class="container-lg">
                                         <div class="card-img">
                                             <a href="review_page.php?rid=<?php echo $result['review_id']; ?>&sid=<?php echo $result['id']; ?>&uid=<?php echo $in_id; ?>"><img
                                                         src="<?php echo $temp_url ?>" class="card-img"
@@ -121,6 +121,14 @@ $img_url = 'https://image.tmdb.org/t/p/original';
                                                         alt=""/></a>
                                         </div>
                                     </div>
+
+                                        <div class="card-description">
+                                            <a href="show_page.php?id=<?php echo $result['id']; ?>"
+                                               style="text-decoration: none; color: inherit">
+                                                <p class="card-title" style="flex-wrap: wrap; white-space: normal; overflow: visible; height: 6vh"><?php echo $result['show_name'] ?></p>
+                                                <!-- <p class="card-text" style=""><?php //echo $result['show_overview']; ?></p> -->
+                                            </a>
+                                        </div>
                                 </div>
                             </div>
                             <?php

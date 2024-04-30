@@ -74,7 +74,7 @@ $pf_img_nav = $pf_result['profile_pic_src'];
                 <div class="dropdown-menu dropdown-menu-right navbar-dropdown" aria-labelledby="profileDropdown">
 
                     <a class="dropdown-item"
-                       href="user_reviews.php?id=<?php echo $_SESSION[PREFIX . '_user_id']; ?>">
+                       href="user_profile.php?id=<?php echo $_SESSION[PREFIX . '_user_id']; ?>">
                         <i class="mdi mdi-logout text-secondary"></i>
                         Profile
                     </a>
