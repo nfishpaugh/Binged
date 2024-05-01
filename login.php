@@ -8,14 +8,6 @@ function setlogin($response)
         $_SESSION[PREFIX . '_user_id'] = $response[1]['user_id'];
         $_SESSION[PREFIX . '_security'] = $response[1]['user_level_id'];
         $_SESSION[PREFIX . '_fullname'] = $response[1]['user_name'];
-
-        if ($_SESSION[PREFIX . "_ppage"] != '') {
-            $redirect = $_SESSION[PREFIX . "_ppage"];
-            header("location: $redirect");
-            exit;
-        }
-        header("location:index.php");
-        exit;
     } else {
         ?>
         <script>
@@ -29,6 +21,14 @@ if ($_POST['email'] != "" && $_POST['password'] != "" && isset($_POST['signin'])
 
     $login_response = $mysqli->login($_POST['email'], $_POST['password']);
     setlogin($login_response);
+    $mysqli->user_pf_insert($_SESSION[PREFIX . '_user_id'], date('Y-m-d'));
+    if ($_SESSION[PREFIX . "_ppage"] != '') {
+        $redirect = $_SESSION[PREFIX . "_ppage"];
+        header("location: $redirect");
+        exit;
+    }
+    header("location:index.php");
+    exit;
 
 } elseif (isset($_POST['signup'])) {
 

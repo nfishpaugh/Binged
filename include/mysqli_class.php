@@ -329,6 +329,27 @@ class mysqli_class extends mysqli
 
     }
 
+    public function user_pf_insert($user_id, $join_date)
+    {
+        $query = "
+            INSERT INTO user_pf_data(user_id, user_description, user_join_date) 
+            VALUES (?, ?, ?)
+        ";
+
+        if ($stmt = parent::prepare($query)) {
+            $desc = "This user has not added a description yet.";
+            $stmt->bind_param("iss", $user_id, $desc, $join_date);
+            if (!$stmt->execute()) {
+                trigger_error($this->error, E_USER_WARNING);
+            }
+
+            $stmt->close();
+        }//END PREPARE
+        else {
+            trigger_error($this->error, E_USER_WARNING);
+        }
+    }
+
     public function user_field_check($field, $column)
     {
         $query = "SELECT email FROM users WHERE " . $column . " = ?";

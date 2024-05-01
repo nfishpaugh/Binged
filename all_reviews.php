@@ -15,12 +15,15 @@ if (!$in_id) {
 
 $show_info = $mysqli->show_info($in_id);
 
-$page_name = "All reviews for " . $show_info['show_name'];
+$page_name = $show_info['show_name'];
 
 $reviews = $mysqli->show_reviews($show_info['id'], -1);
+$review_count = count($reviews);
 
 $img_url = 'https://image.tmdb.org/t/p/original';
 $temp_url = $img_url . $show_info['show_poster_path'];
+
+$genres = $mysqli->show_genres($in_id);
 
 $year = substr($show_info['show_air_date'], 0, 4);
 
@@ -83,6 +86,34 @@ $r_str = '';
                                 }
                             </script>
                         </div>
+                        <h5 class="flex-wrap">Genres: </h5>
+                        <?php
+                        if(empty($genres)){
+                            ?>
+                            <p>None</p>
+                            <?php
+                        }
+                        else{
+                            foreach($genres as $genre){
+                                $g_name = $genre['genre_name'];
+                                switch($genre['genre_name']){
+                                    case "Action & Adventure":
+                                        $g_name = "Action";
+                                        break;
+                                    case "Sci-Fi & Fantasy":
+                                        $g_name = "SciFi";
+                                        break;
+                                }
+                                ?>
+                                <p style="flex-direction: row">
+                                    <b>
+                                        <a class="one" style="color: #282f3a; flex-direction: row" href="genre_page.php?genre=<?php echo $g_name;?>"><?php echo $genre['genre_name'];?></a>
+                                    </b>
+                                </p>
+                                <?php
+                            }
+                        }
+                        ?>
                     </div>
                 </div>
 
