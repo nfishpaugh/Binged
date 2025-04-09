@@ -35,7 +35,11 @@ $user_info = $mysqli->user_info($user_id);
 
 $user_pf = $mysqli->user_pf_info($review['user_id']);
 
-$pfp = $user_pf['profile_pic_src'];
+if (isset($user_pf['profile_pic_src'])) {
+    $pfp = $user_pf['profile_pic_src'];
+} else {
+    $pfp = 'dummy_pfp.jpg';
+}
 
 $page_name = $user_info['user_name'] . "'" . "s review of " . $show_info['show_name'];
 
@@ -97,7 +101,8 @@ switch ($review["review_value"]) {
                                 <div class="container-md-1" style="float:left; max-width:20vw;">
                                     <div class="card-img-2">
                                         <a href="show_page.php?id=<?php echo $show_id ?>">
-                                            <img src="<?php echo $img_url . $show_info['show_poster_path'] ?>" width="333"
+                                            <img src="<?php echo $img_url . $show_info['show_poster_path'] ?>"
+                                                 width="333"
                                                  height="500"
                                                  style="margin-right:50px" alt="Image could not be loaded."/>
                                         </a>

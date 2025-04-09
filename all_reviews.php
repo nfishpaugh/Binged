@@ -88,15 +88,14 @@ $r_str = '';
                         </div>
                         <h5 class="flex-wrap">Genres: </h5>
                         <?php
-                        if(empty($genres)){
+                        if (empty($genres)) {
                             ?>
                             <p>None</p>
                             <?php
-                        }
-                        else{
-                            foreach($genres as $genre){
+                        } else {
+                            foreach ($genres as $genre) {
                                 $g_name = $genre['genre_name'];
-                                switch($genre['genre_name']){
+                                switch ($genre['genre_name']) {
                                     case "Action & Adventure":
                                         $g_name = "Action";
                                         break;
@@ -107,7 +106,8 @@ $r_str = '';
                                 ?>
                                 <p style="flex-direction: row">
                                     <b>
-                                        <a class="one" style="color: #282f3a; flex-direction: row" href="genre_page.php?genre=<?php echo $g_name;?>"><?php echo $genre['genre_name'];?></a>
+                                        <a class="one" style="color: #282f3a; flex-direction: row"
+                                           href="genre_page.php?genre=<?php echo $g_name; ?>"><?php echo $genre['genre_name']; ?></a>
                                     </b>
                                 </p>
                                 <?php
@@ -147,8 +147,7 @@ $r_str = '';
                                         </div>
                                     </div>
                                 </div>
-                            <?php }
-                            else{
+                            <?php } else {
                                 foreach ($reviews as $review) {
                                     switch ($review["review_value"]) {
                                         case 0:
@@ -178,7 +177,11 @@ $r_str = '';
                                               href="review_page.php?rid=<?php echo $review["review_id"] ?>&sid=<?php echo $review["show_id"] ?>&uid=<?php echo $review["user_id"] ?>"><?php
                                                 $user_info = $mysqli->user_info($review['user_id']);
                                                 $user_pf = $mysqli->user_pf_info($review['user_id']);
-                                                $pfp = $user_pf['profile_pic_src'];
+                                                if (isset($user_pf['profile_pic_src'])) {
+                                                    $pfp = $user_pf['profile_pic_src'];
+                                                } else {
+                                                    $pfp = 'dummy_pfp.jpg';
+                                                }
                                                 ?>
                                                 <img src="images/faces/<?php echo $pfp ?>"
                                                      onerror="this.onerror=null; this.src='images/faces/dummy_pfp.jpg';"
@@ -190,7 +193,7 @@ $r_str = '';
                                     <p><?php echo $review['review_content']; ?></p>
                                     <p style="padding-bottom:10px; border-bottom: 2px solid grey;"></p>
                                 <?php }
-                            }?>
+                            } ?>
                         </div>
                     </div>
                 </div>

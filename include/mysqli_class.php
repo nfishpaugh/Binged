@@ -69,7 +69,7 @@ class mysqli_class extends mysqli
     function logins_insert($user_id)
     {
         $agent = $_SERVER['HTTP_USER_AGENT'];
-        $ip = explode(',', $_SERVER['HTTP_X_FORWARDED_FOR'])[0];
+        $ip = explode(',', $_SERVER['HTTP_X_FORWARDED_FOR'] ?? '')[0];
         $refer = $_SERVER['HTTP_REFERER'];
         $query = "
 			INSERT INTO logins 
@@ -350,15 +350,13 @@ class mysqli_class extends mysqli
         }
     }
 
-    public function user_field_check($field, $column)
+    public function user_field_check($field, $column): bool
     {
         $query = "SELECT email FROM users WHERE " . $column . " = ?";
+        $results = [];
 
         if ($stmt = parent::prepare($query)) {
             $stmt->bind_param("s", $field);
-            if (!$stmt->execute()) {
-                trigger_error($this->error, E_USER_WARNING);
-            }
             if (!$stmt->execute()) {
                 trigger_error($this->error, E_USER_WARNING);
             }
@@ -375,11 +373,9 @@ class mysqli_class extends mysqli
                 }
                 $results[] = $x;
             }
-            /*
             $result = $stmt->num_rows;
             $exists = (bool)$result;
             $stmt->close();
-            */
         } else {
             trigger_error($this->error, E_USER_WARNING);
         }
@@ -604,7 +600,7 @@ class mysqli_class extends mysqli
         return $results;
     }
 
-    public function show_insert($apiid, $showname, $lang, $overview, $vote_avg, $votes, $poster, $air_date, $orig_lang, $pop)
+    public function show_insert($apiid, $showname, $lang, $overview, $vote_avg, $votes, $poster, $air_date, $orig_lang, $pop, $back_path)
     {
         $query = "
 			INSERT INTO shows
@@ -617,11 +613,12 @@ class mysqli_class extends mysqli
 				show_poster_path,
 				show_air_date,
 				show_original_lang,
-				show_popularity)
+				show_popularity,
+				show_backdrop_path)
 			VALUES
-				(?,?,?,?,?,?,?,?,?,?)";
+				(?,?,?,?,?,?,?,?,?,?,?)";
         if ($stmt = parent::prepare($query)) {
-            $stmt->bind_param("isssdisssd", $apiid, $showname, $lang, $overview, $vote_avg, $votes, $poster, $air_date, $orig_lang, $pop);
+            $stmt->bind_param("isssdisssds", $apiid, $showname, $lang, $overview, $vote_avg, $votes, $poster, $air_date, $orig_lang, $pop, $back_path);
             if (!$stmt->execute()) {
                 trigger_error($this->error, E_USER_WARNING);
             }
@@ -863,8 +860,6 @@ class mysqli_class extends mysqli
     public function tmdb_api($showname)
     {
         $page_name = $showname;
-        $read = 'eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJiYjgxNTZhZTA2YTM5NWVkODlmZmViODY2Y2I2MjE0NCIsInN1YiI6IjY1NjE0N2Q1NDk3NTYwMDExZGIxMjAzNiIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.v9LT-PZDYY4uhAH-ojAG79SLI1BbBP_gIYBkfHwAGRM';
-        $key = 'bb8156ae06a395ed89ffeb866cb62144';
         $url_str = urlencode($page_name);
         $url = 'https://api.themoviedb.org/3/search/tv?query=' . $url_str . '&include_adult=true&language=en-US&page=1&api_key=' . $key;
         $img_url = 'https://www.themoviedb.org/t/p/w600_and_h900_bestv2';
@@ -895,41 +890,41 @@ class mysqli_class extends mysqli
         return $img_url;
     }
 
-    public function show_list_home()
-    {
-        $results = array();
-        $query = "
-			SELECT 
-				*	
-			FROM 
-				shows
-			ORDER BY show_votes DESC
-			LIMIT 10";
-
-        if ($stmt = parent::prepare($query)) {
-            if (!$stmt->execute()) {
-                trigger_error($this->error, E_USER_WARNING);
-            }
-            $meta = $stmt->result_metadata();
-            while ($field = $meta->fetch_field()) {
-                $parameters[] = &$row[$field->name];
-            }
-            call_user_func_array(array($stmt, 'bind_result'), $parameters);
-
-            while ($stmt->fetch()) {
-                $x = array();
-                foreach ($row as $key => $val) {
-                    $x[$key] = $val;
-                }
-                $results[] = $x;
-            }
-            $stmt->close();
-        }//END PREPARE
-        else {
-            trigger_error($this->error, E_USER_WARNING);
-        }
-        return $results;
-    }
+//    public function show_list_home()
+//    {
+//        $results = array();
+//        $query = "
+//			SELECT
+//				*
+//			FROM
+//				shows
+//			ORDER BY show_votes DESC
+//			LIMIT 10";
+//
+//        if ($stmt = parent::prepare($query)) {
+//            if (!$stmt->execute()) {
+//                trigger_error($this->error, E_USER_WARNING);
+//            }
+//            $meta = $stmt->result_metadata();
+//            while ($field = $meta->fetch_field()) {
+//                $parameters[] = &$row[$field->name];
+//            }
+//            call_user_func_array(array($stmt, 'bind_result'), $parameters);
+//
+//            while ($stmt->fetch()) {
+//                $x = array();
+//                foreach ($row as $key => $val) {
+//                    $x[$key] = $val;
+//                }
+//                $results[] = $x;
+//            }
+//            $stmt->close();
+//        }//END PREPARE
+//        else {
+//            trigger_error($this->error, E_USER_WARNING);
+//        }
+//        return $results;
+//    }
 
     public function review_insert($review_value, $review_content, $show_id, $user_id)
     {
@@ -1002,49 +997,49 @@ class mysqli_class extends mysqli
         return $results;
     }
 
-    public
-    function show_review_info($show_id)
-    {
-
-        $results = array();
-        $query = "
-			SELECT shows.show_name, 
-			       shows.id,
-			       shows.show_poster_path,
-			       reviews.review_id,
-			       reviews.review_content, 
-			       reviews.review_value, 
-			       reviews.review_date ,
-			       reviews.user_id
-            FROM reviews
-            JOIN shows ON reviews.show_id = shows.id
-            WHERE reviews.show_id = ?
-            ORDER BY review_date DESC";
-        if ($stmt = parent::prepare($query)) {
-            $stmt->bind_param("i", $show_id);
-            if (!$stmt->execute()) {
-                trigger_error($this->error, E_USER_WARNING);
-            }
-            $meta = $stmt->result_metadata();
-            while ($field = $meta->fetch_field()) {
-                $parameters[] = &$row[$field->name];
-            }
-            call_user_func_array(array($stmt, 'bind_result'), $parameters);
-
-            while ($stmt->fetch()) {
-                $x = array();
-                foreach ($row as $key => $val) {
-                    $x[$key] = $val;
-                }
-                $results[] = $x;
-            }
-            $stmt->close();
-        }//END PREPARE
-        else {
-            trigger_error($this->error, E_USER_WARNING);
-        }
-        return $results;
-    }
+//    public
+//    function show_review_info($show_id)
+//    {
+//
+//        $results = array();
+//        $query = "
+//			SELECT shows.show_name,
+//			       shows.id,
+//			       shows.show_poster_path,
+//			       reviews.review_id,
+//			       reviews.review_content,
+//			       reviews.review_value,
+//			       reviews.review_date ,
+//			       reviews.user_id
+//            FROM reviews
+//            JOIN shows ON reviews.show_id = shows.id
+//            WHERE reviews.show_id = ?
+//            ORDER BY review_date DESC";
+//        if ($stmt = parent::prepare($query)) {
+//            $stmt->bind_param("i", $show_id);
+//            if (!$stmt->execute()) {
+//                trigger_error($this->error, E_USER_WARNING);
+//            }
+//            $meta = $stmt->result_metadata();
+//            while ($field = $meta->fetch_field()) {
+//                $parameters[] = &$row[$field->name];
+//            }
+//            call_user_func_array(array($stmt, 'bind_result'), $parameters);
+//
+//            while ($stmt->fetch()) {
+//                $x = array();
+//                foreach ($row as $key => $val) {
+//                    $x[$key] = $val;
+//                }
+//                $results[] = $x;
+//            }
+//            $stmt->close();
+//        }//END PREPARE
+//        else {
+//            trigger_error($this->error, E_USER_WARNING);
+//        }
+//        return $results;
+//    }
 
     public
     function user_review_info_lim($user_id, $limit)

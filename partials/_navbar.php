@@ -7,7 +7,12 @@ if ($_SESSION[PREFIX . '_username'] == "") {
 }
 
 $pf_result = $mysqli->user_pf_info($_SESSION[PREFIX . '_user_id']);
-$pf_img_nav = $pf_result['profile_pic_src'];
+
+if (isset($pf_result['profile_pic_src'])) {
+    $pf_img_nav = $pf_result['profile_pic_src'];
+} else {
+    $pf_img_nav = 'dummy_pfp.jpg';
+}
 ?>
 <nav class="navbar col-lg-12 col-12 p-0 fixed-top d-flex flex-row">
     <div class="navbar-brand-wrapper d-flex justify-content-center">
@@ -23,7 +28,7 @@ $pf_img_nav = $pf_result['profile_pic_src'];
     </div>
     <div class="navbar-menu-wrapper d-flex align-items-center justify-content-end">
         <ul class="navbar-nav mr-lg-4 w-100">
-            <li class="nav-item nav-search d-none d-lg-block w-100">
+            <li class="nav-item nav-search d-sm-block d-md-block d-lg-block w-100">
                 <div class="input-group" id="search">
                     <div class="input-group-append">
                         <span class="input-group-text">

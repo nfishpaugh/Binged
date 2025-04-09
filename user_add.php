@@ -109,8 +109,8 @@ $_POST = array();
                                 </button>
                             </div>
                             <script>
-                                var check = function () {
-                                    if (document.getElementById('user_password').value != document.getElementById('confpassword').value) {
+                                let check = function () {
+                                    if (document.getElementById('user_password').value !== document.getElementById('confpassword').value) {
                                         document.getElementById('passwordmsg').style.color = 'red';
                                         document.getElementById('passwordmsg').innerHTML = 'Passwords do not match.';
                                         document.getElementById('sub').prop('disabled', true);

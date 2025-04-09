@@ -17,25 +17,27 @@ function setlogin($response)
     }
 }
 
-if ($_POST['email'] != "" && $_POST['password'] != "" && isset($_POST['signin'])) {
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    if ($_POST['email'] != "" && $_POST['password'] != "" && isset($_POST['signin'])) {
 
-    $login_response = $mysqli->login($_POST['email'], $_POST['password']);
-    setlogin($login_response);
-    $mysqli->user_pf_insert($_SESSION[PREFIX . '_user_id'], date('Y-m-d'));
-    if ($_SESSION[PREFIX . "_ppage"] != '') {
-        $redirect = $_SESSION[PREFIX . "_ppage"];
-        header("location: $redirect");
+        $login_response = $mysqli->login($_POST['email'], $_POST['password']);
+        setlogin($login_response);
+        $mysqli->user_pf_insert($_SESSION[PREFIX . '_user_id'], date('Y-m-d'));
+        if ($_SESSION[PREFIX . "_ppage"] != '') {
+            $redirect = $_SESSION[PREFIX . "_ppage"];
+            header("location: $redirect");
+            exit;
+        }
+        header("location:index.php");
         exit;
+
+    } elseif (isset($_POST['signup'])) {
+
+        $_POST = array();
+        header("location: user_add.php");
+        exit;
+
     }
-    header("location:index.php");
-    exit;
-
-} elseif (isset($_POST['signup'])) {
-
-    $_POST = array();
-    header("location: user_add.php");
-    exit;
-
 }
 //END POST
 

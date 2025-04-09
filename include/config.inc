@@ -1,24 +1,25 @@
 <?php
-//SET UP PHP SESSION
 ini_set('display_errors', 1);
 error_reporting(E_ALL & ~E_NOTICE);
-
-
-define('PREFIX', 'boiler');
-session_name(PREFIX);
-
+if (!defined("PREFIX")) define('PREFIX', 'boiler');
 
 //THIS IS JUST TO REDUCE PHP ERRORS
 date_default_timezone_set("America/Chicago");
 
-//SAVES SESSION IN MAIN DIR
-session_save_path("./");
+//SET UP AND START PHP SESSION
+if (!session_start()) {
+    session_name(PREFIX);
 
-//START THE SESSION
-session_start();
+    // SAVES SESSION IN MAIN DIR
+    session_save_path("./");
+
+    // SET SESSION TIMEOUT
+    ini_set('session.gc_maxlifetime', 720);
+    session_start();
+}
+
 $_SESSION[PREFIX . '_created'] = time();
 $_SESSION[PREFIX . '_last_activity'] = time();
-ini_set('session.gc_maxlifetime', 1800);
 
 $app_name = "Binged";
 

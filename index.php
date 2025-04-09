@@ -61,7 +61,7 @@ $img_url = 'https://image.tmdb.org/t/p/original';
                     $results = $mysqli->show_list();
                     foreach ($results as $result) {
                         $temp_url = $img_url . $result['show_poster_path']; ?>
-                        <div class="col-4 col-md-3 col-lg-2 grid-margin stretch-card" style="border-radius: 0">
+                        <div class="col-sm-4 col-3 col-md-3 col-lg-2 grid-margin stretch-card" style="border-radius: 0">
                             <div class="card flex-wrap" style="border-radius: 0">
                                 <div class="container-lg">
                                     <div class="card-img">
@@ -76,7 +76,8 @@ $img_url = 'https://image.tmdb.org/t/p/original';
                                 <div class="card-description">
                                     <a href="show_page.php?id=<?php echo $result['id']; ?>"
                                        style="text-decoration: none; color: inherit">
-                                        <p class="card-title" style="flex-wrap: wrap; white-space: normal; overflow: visible; height: 5vh"><?php echo $result['show_name'] ?></p>
+                                        <p class="card-title text-truncate"
+                                           style="flex-wrap: wrap; white-space: normal; min-height: 5vh"><?php echo $result['show_name'] ?></p>
                                         <!-- <p class="card-text" style=""><?php //echo $result['show_overview']; ?></p> -->
                                     </a>
                                 </div>
@@ -107,23 +108,24 @@ $img_url = 'https://image.tmdb.org/t/p/original';
                     foreach ($results as $result) {
                         $temp_url = $img_url . $result['show_poster_path'];
                         //$year = substr($result['show_air_date'], 0, 4); ?>
-                        <div class="col-4 col-md-3 col-lg-2 grid-margin stretch-card" style="border-radius: 0">
+                        <div class="col-sm-3 col-3 col-md-3 col-lg-2 grid-margin stretch-card" style="border-radius: 0">
                             <div class="card flex-wrap" style="border-radius: 0; outline: 0;">
-                                    <div class="container-lg">
-                                        <div class="card-img" style="overflow: hidden; object-fit: fill">
-                                            <a href="show_page.php?id=<?php echo $result['id']; ?>"><img
-                                                        src="<?php echo $temp_url ?>" class="card-img"
-                                                        alt=""/></a>
-                                        </div>
+                                <div class="container-lg">
+                                    <div class="card-img" style="overflow: hidden; object-fit: fill">
+                                        <a href="show_page.php?id=<?php echo $result['id']; ?>"><img
+                                                    src="<?php echo $temp_url ?>" class="card-img"
+                                                    alt=""/></a>
                                     </div>
+                                </div>
 
-                                    <div class="card-description">
-                                        <a href="show_page.php?id=<?php echo $result['id']; ?>"
-                                           style="text-decoration: none; color: inherit">
-                                            <p class="card-title" style="flex-wrap: wrap; white-space: normal; overflow: visible; height: 5vh"><?php echo $result['show_name'] ?></p>
-                                            <!-- <p class="card-text" style=""><?php //echo $result['show_overview']; ?></p> -->
-                                        </a>
-                                    </div>
+                                <div class="card-description">
+                                    <a href="show_page.php?id=<?php echo $result['id']; ?>"
+                                       style="text-decoration: none; color: inherit">
+                                        <p class="card-title"
+                                           style="flex-wrap: wrap; white-space: normal; overflow: visible; height: 5vh"><?php echo $result['show_name'] ?></p>
+                                        <!-- <p class="card-text" style=""><?php //echo $result['show_overview']; ?></p> -->
+                                    </a>
+                                </div>
                             </div>
                         </div>
                         <?php
@@ -150,7 +152,7 @@ $img_url = 'https://image.tmdb.org/t/p/original';
                     foreach ($results as $result) {
                         $temp_url = $img_url . $result['show_poster_path'];
                         //$year = substr($result['show_air_date'], 0, 4); ?>
-                        <div class="col-4 col-md-3 col-lg-2 grid-margin stretch-card" style="border-radius: 0">
+                        <div class="col-sm-3 col-3 col-md-3 col-lg-2 grid-margin stretch-card" style="border-radius: 0">
                             <div class="card flex-wrap" style="border-radius: 0">
                                 <div class="container-lg">
                                     <div class="card-img">
@@ -164,7 +166,8 @@ $img_url = 'https://image.tmdb.org/t/p/original';
                                 <div class="card-description">
                                     <a href="show_page.php?id=<?php echo $result['id']; ?>"
                                        style="text-decoration: none; color: inherit">
-                                        <p class="card-title" style="flex-wrap: wrap; white-space: normal; overflow: visible; height: 5vh"><?php echo $result['show_name'] ?></p>
+                                        <p class="card-title"
+                                           style="flex-wrap: wrap; white-space: normal; overflow: visible; height: 5vh"><?php echo $result['show_name'] ?></p>
                                         <!-- <p class="card-text" style=""><?php //echo $result['show_overview']; ?></p> -->
                                     </a>
                                 </div>
@@ -195,7 +198,7 @@ $img_url = 'https://image.tmdb.org/t/p/original';
                     foreach ($results as $result) {
                         $temp_url = $img_url . $result['show_poster_path'];
                         //$year = substr($result['show_air_date'], 0, 4); ?>
-                        <div class="col-4 col-md-3 col-lg-2 grid-margin stretch-card" style="border-radius: 0">
+                        <div class="col-sm-3 col-3 col-md-3 col-lg-2 grid-margin stretch-card" style="border-radius: 0">
                             <div class="card flex-wrap" style="border-radius: 0">
                                 <div class="container-lg">
                                     <div class="card-img">
@@ -209,7 +212,8 @@ $img_url = 'https://image.tmdb.org/t/p/original';
                                 <div class="card-description">
                                     <a href="show_page.php?id=<?php echo $result['id']; ?>"
                                        style="text-decoration: none; color: inherit">
-                                        <p class="card-title" style="flex-wrap: wrap; white-space: normal; overflow: visible; height: 5vh"><?php echo $result['show_name'] ?></p>
+                                        <p class="card-title"
+                                           style="flex-wrap: wrap; white-space: normal; overflow: visible; height: 5vh"><?php echo $result['show_name'] ?></p>
                                         <!-- <p class="card-text" style=""><?php //echo $result['show_overview']; ?></p> -->
                                     </a>
                                 </div>
@@ -240,7 +244,7 @@ $img_url = 'https://image.tmdb.org/t/p/original';
                     foreach ($results as $result) {
                         $temp_url = $img_url . $result['show_poster_path'];
                         //$year = substr($result['show_air_date'], 0, 4); ?>
-                        <div class="col-4 col-md-3 col-lg-2 grid-margin stretch-card" style="border-radius: 0">
+                        <div class="col-sm-3 col-3 col-md-3 col-lg-2 grid-margin stretch-card" style="border-radius: 0">
                             <div class="card flex-wrap" style="border-radius: 0">
                                 <div class="container-lg">
                                     <div class="card-img">
@@ -254,7 +258,8 @@ $img_url = 'https://image.tmdb.org/t/p/original';
                                 <div class="card-description">
                                     <a href="show_page.php?id=<?php echo $result['id']; ?>"
                                        style="text-decoration: none; color: inherit">
-                                        <p class="card-title" style="flex-wrap: wrap; white-space: normal; overflow: visible; height: 5vh"><?php echo $result['show_name'] ?></p>
+                                        <p class="card-title"
+                                           style="flex-wrap: wrap; white-space: normal; overflow: visible; height: 5vh"><?php echo $result['show_name'] ?></p>
                                         <!-- <p class="card-text" style=""><?php //echo $result['show_overview']; ?></p> -->
                                     </a>
                                 </div>
@@ -278,11 +283,6 @@ $img_url = 'https://image.tmdb.org/t/p/original';
 <!-- plugins:js -->
 <script src="vendors/base/vendor.bundle.base.js"></script>
 <!-- endinject -->
-<!-- Plugin js for this page-->
-<script src="vendors/chart.js/Chart.min.js"></script>
-<script src="vendors/datatables.net/jquery.dataTables.js"></script>
-<script src="vendors/datatables.net-bs4/dataTables.bootstrap4.js"></script>
-<!-- End plugin js for this page-->
 <!-- inject:js -->
 <script src="js/off-canvas.js"></script>
 <script src="js/hoverable-collapse.js"></script>

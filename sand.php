@@ -9,6 +9,6 @@ foreach ($results as $result) {
 
     foreach ($genre_array as $genre) {
         //TODO - ADD SHOWS_GENRE_INSERT
-        $mysqli->shows_genere_insert($result['id'], $genre);
+        $mysqli->shows_genre_insert($result['id'], $genre);
     }
 }

@@ -1,7 +1,7 @@
 <?php
 include "include/config.inc";
 
-// Unset all of the session variables.
+// Unset all the session variables.
 $_SESSION = array();
 
 // If it's desired to kill the session, also delete the session cookie.

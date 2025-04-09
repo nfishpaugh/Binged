@@ -22,6 +22,9 @@ switch ($genre) {
     case "SciFi":
         $genre = "Sci-Fi & Fantasy";
         break;
+    case "War":
+        $genre = "War & Politics";
+        break;
 }
 
 $results = $mysqli->show_list_genre($genre, 72);
@@ -90,7 +93,8 @@ $results = $mysqli->show_list_genre($genre, 72);
                                 <div class="card-description">
                                     <a href="show_page.php?id=<?php echo $result['id']; ?>"
                                        style="text-decoration: none; color: inherit">
-                                        <p class="card-title" style="white-space: normal; overflow: visible"><?php echo $result['show_name'] ?></p>
+                                        <p class="card-title"
+                                           style="white-space: normal; overflow: visible"><?php echo $result['show_name'] ?></p>
                                         <!-- <p class="card-text" style=""><?php //echo $result['show_overview']; ?></p> -->
                                     </a>
                                 </div>
