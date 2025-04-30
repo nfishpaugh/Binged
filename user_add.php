@@ -48,7 +48,6 @@ $_POST = array();
     <link rel="stylesheet" href="vendors/base/vendor.bundle.base.css">
     <!-- endinject -->
     <!-- plugin css for this page -->
-    <link rel="stylesheet" href="vendors/datatables.net-bs4/dataTables.bootstrap4.css">
     <!-- End plugin css for this page -->
     <!-- inject:css -->
     <link rel="stylesheet" href="css/style.css">
@@ -127,9 +126,6 @@ $_POST = array();
 <script src="vendors/base/vendor.bundle.base.js"></script>
 <!-- endinject -->
 <!-- Plugin js for this page-->
-<script src="vendors/chart.js/Chart.min.js"></script>
-<script src="vendors/datatables.net/jquery.dataTables.js"></script>
-<script src="vendors/datatables.net-bs4/dataTables.bootstrap4.js"></script>
 <!-- End plugin js for this page-->
 <!-- inject:js -->
 <script src="js/off-canvas.js"></script>

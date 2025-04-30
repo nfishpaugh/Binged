@@ -16,7 +16,7 @@ $page_name = "Show Add";
 if ($_SERVER['REQUEST_METHOD'] == "POST") {
 
 
-    $mysqli->show_insert($_POST['show_name'], $_POST['year'], $_POST['runtime'], $_POST['votes'], $_POST['genres'], $_POST['description']);
+    //$mysqli->show_insert($_POST['show_name'], $_POST['year'], $_POST['description']);
 
     $mysqli->actions_insert("Added Show: " . $_POST['show_name'] . " " . $_POST['year'], $_SESSION[PREFIX . '_user_id']);
 
@@ -41,7 +41,6 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
     <link rel="stylesheet" href="vendors/base/vendor.bundle.base.css">
     <!-- endinject -->
     <!-- plugin css for this page -->
-    <link rel="stylesheet" href="vendors/datatables.net-bs4/dataTables.bootstrap4.css">
     <!-- End plugin css for this page -->
     <!-- inject:css -->
     <link rel="stylesheet" href="css/style.css">

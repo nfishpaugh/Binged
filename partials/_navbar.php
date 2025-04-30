@@ -41,8 +41,7 @@ if (isset($pf_result['profile_pic_src'])) {
                                placeholder="Search now">
                         <input type="submit" name="sub" id="sub" hidden>
                     </form>
-                    <script src="https://code.jquery.com/jquery-1.9.1.js"></script>
-                    <script>
+                    <script src="https://code.jquery.com/jquery-1.9.1.js">
                         $(function ())
                         {
                             $("form").submit(function (e) {

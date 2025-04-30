@@ -24,7 +24,6 @@ $img_url = 'https://image.tmdb.org/t/p/original';
     <link rel="stylesheet" href="vendors/base/vendor.bundle.base.css">
     <!-- endinject -->
     <!-- plugin css for this page -->
-    <link rel="stylesheet" href="vendors/datatables.net-bs4/dataTables.bootstrap4.css">
     <!-- End plugin css for this page -->
     <!-- inject:css -->
     <link rel="stylesheet" href="css/style.css">

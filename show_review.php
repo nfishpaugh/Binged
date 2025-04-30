@@ -131,9 +131,6 @@ $img_url = 'https://image.tmdb.org/t/p/original/' . $show_info['show_poster_path
     <script src="vendors/base/vendor.bundle.base.js"></script>
     <!-- endinject -->
     <!-- Plugin js for this page-->
-    <script src="vendors/chart.js/Chart.min.js"></script>
-    <script src="vendors/datatables.net/jquery.dataTables.js"></script>
-    <script src="vendors/datatables.net-bs4/dataTables.bootstrap4.js"></script>
     <!-- End plugin js for this page-->
     <!-- inject:js -->
     <script src="js/off-canvas.js"></script>

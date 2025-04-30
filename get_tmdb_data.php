@@ -68,13 +68,10 @@ foreach ($page_array as $page) {
         $back_path = $page['results'][$i]['backdrop_path'];
         $api_id = $page['results'][$i]['id'];
         //$mysqli->show_update_back($api_id, $back_path);
-        $pop = $page['results'][$i]['popularity'];
         $date = $page['results'][$i]['first_air_date'];
         $name = $page['results'][$i]['name'];
-        $vote_avg = $page['results'][$i]['vote_average'];
-        $votes = $page['results'][$i]['vote_count'];
 
-        $mysqli->show_insert($api_id, $name, $orig_lang, $over, $vote_avg, $votes, $poster, $date, $orig_lang, $pop, $back_path);
+        $mysqli->show_insert($api_id, $name, $orig_lang, $over, $poster, $date, $orig_lang, $back_path);
 
         // variables for genre_insert
         $genres = $page['results'][$i]['genre_ids'];

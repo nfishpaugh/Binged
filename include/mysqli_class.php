@@ -6,7 +6,7 @@
 class mysqli_class extends mysqli
 {
     // Used to whitelist columns in the show table
-    private array $column_arr = array("api_id", "show_name", "show_language", "show_overview", "show_vote_average", "show_votes", "show_poster_path", "show_air_date", "show_original_lang", "show_popularity", "show_backdrop_path", "review_avg", "review_amt");
+    private array $column_arr = array("api_id", "show_name", "show_language", "show_overview", "show_poster_path", "show_air_date", "show_original_lang", "show_backdrop_path", "review_avg", "review_amt");
 
     /** Constructor function */
     public function __construct()
@@ -449,7 +449,6 @@ class mysqli_class extends mysqli
 				*	
 			FROM 
 				shows
-			ORDER BY show_votes DESC
 			LIMIT " . $limit;
 
         if ($stmt = parent::prepare($query)) {
@@ -563,7 +562,7 @@ class mysqli_class extends mysqli
     }
 
     /** Inserts show with the specified params */
-    public function show_insert($api_id, $show_name, $lang, $overview, $vote_avg, $votes, $poster, $air_date, $orig_lang, $pop, $back_path): int|string
+    public function show_insert($api_id, $show_name, $lang, $overview, $poster, $air_date, $orig_lang, $back_path): int|string
     {
         $query = "
 			INSERT INTO shows
@@ -571,17 +570,14 @@ class mysqli_class extends mysqli
 				show_name,
 				show_language,
 				show_overview,
-				show_vote_average,
-				show_votes,
 				show_poster_path,
 				show_air_date,
 				show_original_lang,
-				show_popularity,
 				show_backdrop_path)
 			VALUES
-				(?,?,?,?,?,?,?,?,?,?,?)";
+				(?,?,?,?,?,?,?,?)";
         if ($stmt = parent::prepare($query)) {
-            $stmt->bind_param("isssdisssds", $api_id, $show_name, $lang, $overview, $vote_avg, $votes, $poster, $air_date, $orig_lang, $pop, $back_path);
+            $stmt->bind_param("isssssss", $api_id, $show_name, $lang, $overview, $poster, $air_date, $orig_lang, $back_path);
             if (!$stmt->execute()) {
                 trigger_error($this->error, E_USER_WARNING);
             }
@@ -728,7 +724,6 @@ class mysqli_class extends mysqli
             FROM shows 
             WHERE show_name 
             LIKE ?
-            ORDER BY show_votes DESC
             LIMIT 72";
 
         if ($stmt = parent::prepare($query)) {
