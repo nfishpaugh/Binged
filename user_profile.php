@@ -15,7 +15,7 @@ if (!$in_id) {
 
 $user_pf_info = $mysqli->user_pf_info($in_id);
 $user_info = $mysqli->user_info($in_id);
-$pf_img = $user_pf_info['profile_pic_src'];
+$pf_img = $user_pf_info['profile_pic_src'] ?? 'dummy_pfp.jpg';
 $pf_desc = $user_pf_info['user_description'];
 $pf_name = $user_info['user_name'];
 $pf_joined = $user_pf_info['user_join_date'];
@@ -40,7 +40,7 @@ $img_url = 'https://image.tmdb.org/t/p/original';
     <!-- inject:css -->
     <link rel="stylesheet" href="css/style.css">
     <!-- endinject -->
-    <link rel="shortcut icon" href="images/favicon.png"/>
+    <link rel="shortcut icon" href="images/binged_logo.svg"/>
 
 </head>
 <body>
@@ -54,11 +54,14 @@ $img_url = 'https://image.tmdb.org/t/p/original';
                     <div class="col-md-12 grid-margin">
                         <div class="dashboard-tabs p-0">
                             <ul class="nav nav-tabs px-4">
+                                <!-- TODO - refactor these into one page w/ 2 tabs -->
                                 <li class="nav-item">
                                     <a id="profile-tab" class="nav-link active">Profile</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a id="review-tab" class="nav-link" href="user_reviews.php?id=<?php echo $in_id ?>">Reviews</a>
+                                    <a id="review-tab" class="nav-link"
+                                       href="user_reviews.php?id=<?php echo $in_id ?>"><?php echo $pf_name; ?>'s
+                                        Reviews</a>
                                 </li>
                             </ul>
                         </div>
@@ -122,13 +125,14 @@ $img_url = 'https://image.tmdb.org/t/p/original';
                                         </div>
                                     </div>
 
-                                        <div class="card-description">
-                                            <a href="show_page.php?id=<?php echo $result['id']; ?>"
-                                               style="text-decoration: none; color: inherit">
-                                                <p class="card-title" style="flex-wrap: wrap; white-space: normal; overflow: visible; height: 6vh"><?php echo $result['show_name'] ?></p>
-                                                <!-- <p class="card-text" style=""><?php //echo $result['show_overview']; ?></p> -->
-                                            </a>
-                                        </div>
+                                    <div class="card-description">
+                                        <a href="show_page.php?id=<?php echo $result['id']; ?>"
+                                           style="text-decoration: none; color: inherit">
+                                            <p class="card-title"
+                                               style="flex-wrap: wrap; white-space: normal; overflow: visible; height: 6vh"><?php echo $result['show_name'] ?></p>
+                                            <!-- <p class="card-text" style=""><?php //echo $result['show_overview']; ?></p> -->
+                                        </a>
+                                    </div>
                                 </div>
                             </div>
                             <?php

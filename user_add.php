@@ -4,17 +4,6 @@
 <?php
 include "include/config.inc";
 
-/*
-if ($_SESSION[PREFIX . '_username'] == "") {
-    header("Location: login.php");
-    exit;
-}
-if ($_SESSION[PREFIX . '_security'] < 10) {
-    header("location:index.php?action=5");
-    exit;
-}
-*/
-
 $page_name = "User Add";
 
 if (isset($_POST['back'])) {
@@ -22,23 +11,26 @@ if (isset($_POST['back'])) {
     exit;
 }
 
-if ($_SERVER['REQUEST_METHOD'] == "POST" && !$mysqli->user_field_check($_POST['user_email'], "email") && !$mysqli->user_field_check($_POST['user_name'], "user_name")) {
-    var_dump($_POST);
+if ($_SERVER['REQUEST_METHOD'] === "POST" && !$mysqli->user_field_check($_POST['user_email'], "email") && !$mysqli->user_field_check($_POST['user_name'], "user_name")) {
+    //var_dump($_POST);
 
-    $mysqli->user_insert($_POST['user_email'], $_POST['user_name'], $_POST['user_password'], 5);
+    $uid = $mysqli->user_insert($_POST['user_email'], $_POST['user_name'], $_POST['user_password'], 5);
 
-    $mysqli->actions_insert("Added User: " . $_POST['user_email'], $_SESSION[PREFIX . '_user_id']);
+    // Generate profile data
+    $mysqli->user_pf_insert($uid, date('Y-m-d'));
+
+    $mysqli->actions_insert("Added User: " . $_POST['user_email'], $uid);
 
     $_SESSION[PREFIX . '_action'][] = 'added';
 
     header("location: login.php");
     exit;
-} elseif ($_SERVER['REQUEST_METHOD'] == "POST" && $mysqli->user_field_check($_POST['user_email'], "email")) {
+} elseif ($_SERVER['REQUEST_METHOD'] === "POST" && $mysqli->user_field_check($_POST['user_email'], "email")) {
     ?>
     <script> alert("Email has been taken, please choose another."); </script>
 <?php
 $_POST = array();
-} elseif ($_SERVER['REQUEST_METHOD'] == "POST" && $mysqli->user_field_check($_POST['user_name'], "user_name")) {
+} elseif ($_SERVER['REQUEST_METHOD'] === "POST" && $mysqli->user_field_check($_POST['user_name'], "user_name")) {
 ?>
     <script> alert("User name has been taken, please choose another."); </script>
     <?php
@@ -61,7 +53,7 @@ $_POST = array();
     <!-- inject:css -->
     <link rel="stylesheet" href="css/style.css">
     <!-- endinject -->
-    <link rel="shortcut icon" href="images/favicon.png"/>
+    <link rel="shortcut icon" href="images/binged_logo.svg"/>
 
 </head>
 

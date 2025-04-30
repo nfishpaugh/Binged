@@ -1,5 +1,6 @@
 <?php
 include "include/config.inc";
+include "include/utils.php";
 
 $_SESSION[PREFIX . "_ppage"] = $_SERVER['REQUEST_URI'];
 if ($_SESSION[PREFIX . '_username'] == "") {
@@ -15,17 +16,21 @@ if (!$in_id) {
 
 $show_info = $mysqli->show_info($in_id);
 
+$img_url = 'https://image.tmdb.org/t/p/original';
+
+$temp_url = $img_url . $show_info['show_poster_path'];
+
+$back_url = $img_url . $show_info['show_backdrop_path'];
+
+$year = substr($show_info['show_air_date'], 0, 4);
+
 $page_name = $show_info['show_name'];
 
 $reviews = $mysqli->show_reviews($show_info['id'], -1);
+
 $review_count = count($reviews);
 
-$img_url = 'https://image.tmdb.org/t/p/original';
-$temp_url = $img_url . $show_info['show_poster_path'];
-
 $genres = $mysqli->show_genres($in_id);
-
-$year = substr($show_info['show_air_date'], 0, 4);
 
 $r_str = '';
 ?>
@@ -47,7 +52,7 @@ $r_str = '';
     <!-- inject:css -->
     <link rel="stylesheet" href="css/style.css">
     <!-- endinject -->
-    <link rel="shortcut icon" href="images/favicon.png"/>
+    <link rel="shortcut icon" href="images/binged_logo.svg"/>
 
 </head>
 <body>
@@ -71,7 +76,6 @@ $r_str = '';
                             <h4 class="flex-wrap" style="padding-bottom:10px"><?php echo $year; ?></h4>
                             <p class="flex-wrap"
                                style="padding-bottom:10px"><?php echo $show_info['show_overview']; ?></p>
-                            <p class="flex-wrap"><?php echo $review_count ?> reviews</p>
                         </div>
                         <div class="d-flex justify-content-between align-items-end flex-lg-column"
                              style="float:right">
@@ -94,15 +98,12 @@ $r_str = '';
                             <?php
                         } else {
                             foreach ($genres as $genre) {
-                                $g_name = $genre['genre_name'];
-                                switch ($genre['genre_name']) {
-                                    case "Action & Adventure":
-                                        $g_name = "Action";
-                                        break;
-                                    case "Sci-Fi & Fantasy":
-                                        $g_name = "SciFi";
-                                        break;
-                                }
+                                $g_name = match ($genre['genre_name']) {
+                                    "Action & Adventure" => "Action",
+                                    "Sci-Fi & Fantasy" => "SciFi",
+                                    "War & Politics" => "War",
+                                    default => $genre['genre_name'],
+                                };
                                 ?>
                                 <p style="flex-direction: row">
                                     <b>
@@ -126,7 +127,8 @@ $r_str = '';
                                        href="show_page.php?id=<?php echo $in_id; ?>">Recent reviews</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a id="all-review-tab" class="nav-link active">All reviews</a>
+                                    <a id="all-review-tab" class="nav-link active">All reviews
+                                        (<?php echo $review_count ?>)</a>
                                 </li>
                             </ul>
                         </div>
@@ -149,29 +151,7 @@ $r_str = '';
                                 </div>
                             <?php } else {
                                 foreach ($reviews as $review) {
-                                    switch ($review["review_value"]) {
-                                        case 0:
-                                            $r_str = "No Rating";
-                                            break;
-                                        case 1:
-                                            $r_str = "★";
-                                            break;
-                                        case 2:
-                                            $r_str = "★★";
-                                            break;
-                                        case 3:
-                                            $r_str = "★★★";
-                                            break;
-                                        case 4:
-                                            $r_str = "★★★★";
-                                            break;
-                                        case 5:
-                                            $r_str = "★★★★★";
-                                            break;
-                                        default:
-                                            $r_str = "None";
-                                            break;
-                                    } ?>
+                                    $r_str = starify($review["review_value"]); ?>
                                     <p>
                                         <b><a class="one" style="color: #282f3a"
                                               href="review_page.php?rid=<?php echo $review["review_id"] ?>&sid=<?php echo $review["show_id"] ?>&uid=<?php echo $review["user_id"] ?>"><?php

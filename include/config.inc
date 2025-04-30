@@ -1,6 +1,8 @@
 <?php
 ini_set('display_errors', 1);
 error_reporting(E_ALL & ~E_NOTICE);
+
+// Only define constant once, otherwise warnings will populate the page
 if (!defined("PREFIX")) define('PREFIX', 'boiler');
 
 //THIS IS JUST TO REDUCE PHP ERRORS

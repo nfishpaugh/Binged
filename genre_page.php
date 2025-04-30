@@ -48,7 +48,7 @@ $results = $mysqli->show_list_genre($genre, 72);
     <!-- inject:css -->
     <link rel="stylesheet" href="css/style.css">
     <!-- endinject -->
-    <link rel="shortcut icon" href="images/favicon.png"/>
+    <link rel="shortcut icon" href="images/binged_logo.svg"/>
 
 </head>
 <body>

@@ -1,5 +1,6 @@
 <?php
 include "include/config.inc";
+include "include/utils.php";
 
 $_SESSION[PREFIX . "_ppage"] = $_SERVER['REQUEST_URI'];
 if ($_SESSION[PREFIX . '_username'] == "") {
@@ -35,6 +36,22 @@ $user_info = $mysqli->user_info($user_id);
 
 $user_pf = $mysqli->user_pf_info($review['user_id']);
 
+if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['delete'], $_SESSION[PREFIX . '_user_id']) && $_SESSION[PREFIX . '_user_id'] == $user_info['user_id'] && $_SESSION[PREFIX . '_security'] > 1) {
+    $mysqli->review_delete($rev_id);
+    if (!$review_count = $mysqli->get_show_column($show_id, "review_amt")) {
+        $review_count = 0;
+    }
+    update_avg($show_id, $review['review_value'], $review_count, $mysqli, true);
+    header("location: show_page.php?id=" . $show_id);
+    exit;
+} elseif ($_SERVER["REQUEST_METHOD"] === "POST" && (!isset($_SESSION[PREFIX . '_user_id']) || $_SESSION[PREFIX . '_user_id'] !== $user_info['user_id'])) {
+    ?>
+    <script>
+        alert("Invalid user id");
+    </script><?php
+    $_POST = array();
+}
+
 if (isset($user_pf['profile_pic_src'])) {
     $pfp = $user_pf['profile_pic_src'];
 } else {
@@ -45,31 +62,7 @@ $page_name = $user_info['user_name'] . "'" . "s review of " . $show_info['show_n
 
 $year = substr($show_info['show_air_date'], 0, 4);
 
-$r_str = '';
-
-switch ($review["review_value"]) {
-    case 0:
-        $r_str = "No Rating";
-        break;
-    case 1:
-        $r_str = "★";
-        break;
-    case 2:
-        $r_str = "★★";
-        break;
-    case 3:
-        $r_str = "★★★";
-        break;
-    case 4:
-        $r_str = "★★★★";
-        break;
-    case 5:
-        $r_str = "★★★★★";
-        break;
-    default:
-        $r_str = "None";
-        break;
-}
+$r_str = starify($review["review_value"]);
 
 ?>
 <!DOCTYPE html>
@@ -83,14 +76,13 @@ switch ($review["review_value"]) {
     <link rel="stylesheet" href="vendors/mdi/css/materialdesignicons.min.css">
     <link rel="stylesheet" href="vendors/base/vendor.bundle.base.css">
     <link rel="stylesheet" href="css/style.css">
-    <link rel="shortcut icon" href="images/favicon.png"/>
+    <link rel="shortcut icon" href="images/binged_logo.svg"/>
 </head>
 <body>
 <div class="container-scroller">
 
     <?php require_once 'partials/_navbar.php'; ?>
     <div class="container-fluid page-body-wrapper">
-        <?php //require_once 'partials/_sidebar.php'; ?>
         <div class="main-panel">
             <div class="content-wrapper">
 
@@ -131,6 +123,16 @@ switch ($review["review_value"]) {
                                     <p class="flex-wrap"
                                        style="padding-bottom: 10px; padding-top: 10px;"><?php echo $review['review_content']; ?></p>
                                 </div>
+                                <div>
+                                    <?php if (isset($user_info['user_id']) && $user_info['user_id'] == $_SESSION[PREFIX . '_user_id']) { ?>
+                                        <form method="POST" action="">
+                                            <button class="d-inline btn btn-primary mt-2 mt-xl-0" name="edit">Edit
+                                            </button>
+                                            <button class="d-inline btn btn-primary mt-2 mt-xl-0" name="delete">Delete
+                                            </button>
+                                        </form>
+                                    <?php } ?>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -157,12 +159,6 @@ switch ($review["review_value"]) {
 <script src="js/data-table.js"></script>
 <script src="js/jquery.dataTables.js"></script>
 <script src="js/dataTables.bootstrap4.js"></script>
-
-<script>
-    $(document).ready(function () {
-        $('.datatable').DataTable();
-    });
-</script>
 
 
 <!-- End custom js for this page-->

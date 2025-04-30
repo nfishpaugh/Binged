@@ -77,13 +77,13 @@ if (isset($pf_result['profile_pic_src'])) {
                     <span class="nav-profile-name"><?php echo $_SESSION[PREFIX . '_fullname']; ?></span>
                 </a>
                 <div class="dropdown-menu dropdown-menu-right navbar-dropdown" aria-labelledby="profileDropdown">
-
-                    <a class="dropdown-item"
-                       href="user_profile.php?id=<?php echo $_SESSION[PREFIX . '_user_id']; ?>">
-                        <i class="mdi mdi-logout text-secondary"></i>
-                        Profile
-                    </a>
-
+                    <?php if (!$_SESSION[PREFIX . '_user_id'] == 0) { ?>
+                        <a class="dropdown-item"
+                           href="user_profile.php?id=<?php echo $_SESSION[PREFIX . '_user_id']; ?>">
+                            <i class="mdi mdi-logout text-secondary"></i>
+                            Profile
+                        </a>
+                    <?php } ?>
                     <a class="dropdown-item" href="logout.php">
                         <i class="mdi mdi-logout text-primary"></i>
                         Logout

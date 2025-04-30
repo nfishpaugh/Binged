@@ -1,15 +1,18 @@
 <?php
 include "include/config.inc";
 
-$_SESSION[PREFIX . "_ppage"] = $_SERVER['REQUEST_URI'];
 if ($_SESSION[PREFIX . '_username'] == "") {
+    $_POST = array();
     header("Location: login.php");
     exit;
 }
-if ($_SESSION[PREFIX . '_security'] < 5) {
+if ($_SESSION[PREFIX . '_security'] < 10) {
+    $_POST = array();
     header("location:index.php?action=5");
     exit;
 }
+
+$_SESSION[PREFIX . "_ppage"] = $_SERVER['REQUEST_URI'];
 
 $page_name = "Show Edit";
 $in_id = (int)$_GET['id'];
@@ -21,7 +24,7 @@ $show_info = $mysqli->show_info($in_id);
 
 if ($_SERVER['REQUEST_METHOD'] == "POST") {
 
-    $mysqli->show_edit($in_id, $_POST['show_name'], $_POST['year'], $_POST['runtime'], $_POST['votes'], $_POST['genres'], $_POST['description']);
+    $mysqli->show_edit($in_id, $_POST['show_name'], $_POST['description'], $_POST['year']);
 
     $mysqli->actions_insert("Updated Show (" . $_GET['id'] . "): " . $_POST['show_name'] . " " . $_POST['year'], $_SESSION[PREFIX . '_user_id']);
 
@@ -51,7 +54,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
     <!-- inject:css -->
     <link rel="stylesheet" href="css/style.css">
     <!-- endinject -->
-    <link rel="shortcut icon" href="images/favicon.png"/>
+    <link rel="shortcut icon" href="images/binged_logo.svg"/>
 
 </head>
 <body>
@@ -104,34 +107,6 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
                                             <input type="number" class="form-control" id="year"
                                                    name="year" max="2030" min="1950" required
                                                    value="<?php echo $show_info['year']; ?>">
-                                        </div>
-                                    </div>
-
-                                    <div class="form-group row">
-                                        <label for="runtime" class="col-sm-3 col-form-label">Runtime (minutes)</label>
-                                        <div class="col-sm-9">
-                                            <input type="number" class="form-control" id="runtime"
-                                                   name="runtime" max="10000" min="1"
-                                                   value="<?php echo $show_info['runtime']; ?>">
-                                        </div>
-                                    </div>
-
-                                    <div class="form-group row">
-                                        <label for="votes" class="col-sm-3 col-form-label">Votes</label>
-                                        <div class="col-sm-9">
-                                            <input type="number" class="form-control" id="votes"
-                                                   name="votes" max="1000000" min="1"
-                                                   value="<?php echo $show_info['votes']; ?>">
-                                        </div>
-                                    </div>
-
-                                    <div class="form-group row">
-                                        <label for="genres" class="col-sm-3 col-form-label">Genres</label>
-                                        <div class="col-sm-9">
-                                            <input type="text" class="form-control" id="genres"
-                                                   name="genres" maxlength="256"
-                                                   placeholder="Genres"
-                                                   value="<?php echo $show_info['genres']; ?>">
                                         </div>
                                     </div>
 

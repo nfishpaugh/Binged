@@ -20,7 +20,7 @@ if ($count == 1) {
     $page_name = "1 result found for " . "'" . $searchstr . "'";
 }
 
-if($count == 72){
+if ($count == 72) {
     $page_name = "At least 72 results found for " . "'" . $searchstr . "'";
 }
 ?>
@@ -42,7 +42,7 @@ if($count == 72){
     <!-- inject:css -->
     <link rel="stylesheet" href="css/style.css">
     <!-- endinject -->
-    <link rel="shortcut icon" href="images/favicon.png"/>
+    <link rel="shortcut icon" href="images/binged_logo.svg"/>
 
 </head>
 <body>
@@ -96,7 +96,8 @@ if($count == 72){
                                     <div class="card-description">
                                         <a href="show_page.php?id=<?php echo $result['id']; ?>"
                                            style="text-decoration: none; color: inherit">
-                                            <p class="card-title" style="flex-wrap: wrap; white-space: normal; overflow: visible"><?php echo $result['show_name'] ?></p>
+                                            <p class="card-title"
+                                               style="flex-wrap: wrap; white-space: normal; overflow: visible"><?php echo $result['show_name'] ?></p>
                                             <!-- <p class="card-text" style=""><?php //echo $result['show_overview']; ?></p> -->
                                         </a>
                                     </div>

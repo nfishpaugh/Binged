@@ -4,12 +4,16 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="1ad80be8-bf78-4fa9-909f-9cb64c15dd65" name="Changes" comment="user login ready">
-      <change beforePath="$PROJECT_DIR$/.idea/dataSources.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources.xml" afterDir="false" />
+    <list default="true" id="1ad80be8-bf78-4fa9-909f-9cb64c15dd65" name="Changes" comment="- Implemented review editing and deleting&#10;- Added review averages for shows&#10;- Collated common functions into one file for future ease of use&#10;- Reworked guest functionality&#10;- Fixed sessions not destroying themselves after they timed out&#10;- Fixed multiple session warnings related to accidental re-initialization&#10;- Fixed user profiles being inserted multiple times&#10;- Removed unnecessary/deprecated files and images&#10;-">
+      <changelist_data name="Nathan Fishpaugh" email="nrfishpaugh@gmail.com" />
+      <change afterPath="$PROJECT_DIR$/include/utils.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/review_edit.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/all_reviews.php" beforeDir="false" afterPath="$PROJECT_DIR$/all_reviews.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/genre_page.php" beforeDir="false" afterPath="$PROJECT_DIR$/genre_page.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/get_tmdb_data.php" beforeDir="false" afterPath="$PROJECT_DIR$/get_tmdb_data.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/guest_login.php" beforeDir="false" afterPath="$PROJECT_DIR$/guest_login.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/logocustom.jpg" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/include/config.inc" beforeDir="false" afterPath="$PROJECT_DIR$/include/config.inc" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/include/mysqli_class.php" beforeDir="false" afterPath="$PROJECT_DIR$/include/mysqli_class.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/index.php" beforeDir="false" afterPath="$PROJECT_DIR$/index.php" afterDir="false" />
@@ -21,11 +25,16 @@
       <change beforePath="$PROJECT_DIR$/logout.php" beforeDir="false" afterPath="$PROJECT_DIR$/logout.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/partials/_navbar.php" beforeDir="false" afterPath="$PROJECT_DIR$/partials/_navbar.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/review_page.php" beforeDir="false" afterPath="$PROJECT_DIR$/review_page.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/sand.php" beforeDir="false" afterPath="$PROJECT_DIR$/sand.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/show_add.php" beforeDir="false" afterPath="$PROJECT_DIR$/show_add.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/show_edit.php" beforeDir="false" afterPath="$PROJECT_DIR$/show_edit.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/show_list.php" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/show_page.php" beforeDir="false" afterPath="$PROJECT_DIR$/show_page.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/show_review.php" beforeDir="false" afterPath="$PROJECT_DIR$/show_review.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/show_search.php" beforeDir="false" afterPath="$PROJECT_DIR$/show_search.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/user_add.php" beforeDir="false" afterPath="$PROJECT_DIR$/user_add.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/user_list.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/user_edit.php" beforeDir="false" afterPath="$PROJECT_DIR$/user_edit.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/user_profile.php" beforeDir="false" afterPath="$PROJECT_DIR$/user_profile.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/user_reviews.php" beforeDir="false" afterPath="$PROJECT_DIR$/user_reviews.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/vendors/chart.js/Chart.min.js" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/vendors/datatables.net-bs4/dataTables.bootstrap4.css" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/vendors/datatables.net-bs4/dataTables.bootstrap4.js" beforeDir="false" />
@@ -55,6 +64,7 @@
   <component name="Git.Settings">
     <option name="PREVIOUS_COMMIT_AUTHORS">
       <list>
+        <option value="Nathan Fishpaugh &lt;nrfishpaugh@gmail.com&gt;" />
         <option value="nrfishpaugh@eiu.edu" />
         <option value="nrfishpaugh" />
       </list>
@@ -96,6 +106,17 @@
       <path value="$PROJECT_DIR$/vendor/psr/http-client" />
     </include_path>
   </component>
+  <component name="ProblemsViewState">
+    <hideBySeverity>
+      <option value="11" />
+      <option value="12" />
+      <option value="13" />
+      <option value="14" />
+      <option value="15" />
+      <option value="16" />
+    </hideBySeverity>
+    <option name="selectedTabId" value="CurrentFile" />
+  </component>
   <component name="ProjectColorInfo">{
   &quot;customColor&quot;: &quot;&quot;,
   &quot;associatedIndex&quot;: 0
@@ -123,6 +144,7 @@
     &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
     &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
     &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;run.code.analysis.last.selected.profile&quot;: &quot;pProject Default&quot;,
     &quot;settings.editor.selected.configurable&quot;: &quot;reference.webide.settings.project.settings.php.composer&quot;,
     &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   },
@@ -189,7 +211,22 @@
       <workItem from="1743791303697" duration="7842000" />
       <workItem from="1744051119060" duration="10484000" />
       <workItem from="1744135819081" duration="2977000" />
-      <workItem from="1744228757352" duration="335000" />
+      <workItem from="1744228757352" duration="1774000" />
+      <workItem from="1744312383345" duration="2044000" />
+      <workItem from="1744744185405" duration="7267000" />
+      <workItem from="1744830016983" duration="12223000" />
+      <workItem from="1744920908672" duration="9149000" />
+      <workItem from="1745007137157" duration="7467000" />
+      <workItem from="1745264106067" duration="5349000" />
+      <workItem from="1745353717833" duration="626000" />
+      <workItem from="1745430454365" duration="7167000" />
+      <workItem from="1745524900023" duration="5835000" />
+      <workItem from="1745531076671" duration="599000" />
+      <workItem from="1745531940282" duration="602000" />
+      <workItem from="1745608116855" duration="3880000" />
+      <workItem from="1745864612281" duration="6132000" />
+      <workItem from="1745953347085" duration="9680000" />
+      <workItem from="1746037675802" duration="4658000" />
     </task>
     <task id="LOCAL-00001" summary="this baby is ready to go!">
       <option name="closed" value="true" />
@@ -239,7 +276,15 @@
       <option name="project" value="LOCAL" />
       <updated>1701369686824</updated>
     </task>
-    <option name="localTasksCounter" value="7" />
+    <task id="LOCAL-00007" summary="updated for php 8.3, nearly ready for deployment">
+      <option name="closed" value="true" />
+      <created>1744229293116</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1744229293116</updated>
+    </task>
+    <option name="localTasksCounter" value="8" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -259,7 +304,8 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="this baby is ready to go!" />
     <MESSAGE value="user login ready" />
-    <option name="LAST_COMMIT_MESSAGE" value="user login ready" />
+    <MESSAGE value="updated for php 8.3, nearly ready for deployment" />
+    <option name="LAST_COMMIT_MESSAGE" value="updated for php 8.3, nearly ready for deployment" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />

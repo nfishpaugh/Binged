@@ -1,11 +1,17 @@
 <?php
+// TODO - Install composer and Cloudinary packages to use for user PFP storage instead of storing them on the web server
 
 /*********************************************************************
  * /*## Portal class extends mysqli */
 class mysqli_class extends mysqli
 {
+    // Used to whitelist columns in the show table
+    private array $column_arr = array("api_id", "show_name", "show_language", "show_overview", "show_vote_average", "show_votes", "show_poster_path", "show_air_date", "show_original_lang", "show_popularity", "show_backdrop_path", "review_avg", "review_amt");
+
+    /** Constructor function */
     public function __construct()
     {
+        // TODO - Implement environment variables instead of storing them in a file
         require "../private/dbconf.php";
         mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
         @parent::__construct(DBHost, DBUser, DBPass, DBName, DBPort);
@@ -66,18 +72,28 @@ class mysqli_class extends mysqli
     /*** LOG LOGINS ******************************************************************
      * /*## Logs user logins  */
     public
-    function logins_insert($user_id)
+    function logins_insert($user_id): int|string
     {
         $agent = $_SERVER['HTTP_USER_AGENT'];
-        $ip = explode(',', $_SERVER['HTTP_X_FORWARDED_FOR'] ?? '')[0];
-        $refer = $_SERVER['HTTP_REFERER'];
+
+        if (array_key_exists('HTTP_X_FORWARDED_FOR', $_SERVER)) {
+            $ip = $_SERVER['HTTP_X_FORWARDED_FOR'];
+        } else if (array_key_exists('REMOTE_ADDR', $_SERVER)) {
+            $ip = $_SERVER['REMOTE_ADDR'];
+        } else if (array_key_exists('HTTP_CLIENT_IP', $_SERVER)) {
+            $ip = $_SERVER['HTTP_CLIENT_IP'];
+        } else {
+            $ip = '';
+        }
+
         $query = "
 			INSERT INTO logins 
 				(user_id,
 				login_ip,
-				login_browser)	
+				login_browser,
+				timestamp)	
 			VALUES
-				(?,?,?)";
+				(?,?,?, CURRENT_TIMESTAMP())";
         if ($stmt = parent::prepare($query)) {
             $stmt->bind_param("iss", $user_id, $ip, $agent);
             if (!$stmt->execute()) {
@@ -93,7 +109,8 @@ class mysqli_class extends mysqli
         return $last_id;
     }
 
-    public function login_remove($id)
+    /*** Removes selected id from the logins table */
+    public function login_remove($id): void
     {
         $query = "DELETE FROM logins WHERE user_id = ?";
 
@@ -110,13 +127,23 @@ class mysqli_class extends mysqli
         }
     }
 
-    //ADD actions logging
+    /** Logs an action committed by the specified user */
     public
-    function actions_insert($action, $user_id)
+    function actions_insert($action, $user_id): int|string
     {
         $page = $_SERVER['REQUEST_URI'];
         $agent = $_SERVER['HTTP_USER_AGENT'];
-        $ip = explode(',', $_SERVER['HTTP_X_FORWARDED_FOR'])[0];
+
+        if (array_key_exists('HTTP_X_FORWARDED_FOR', $_SERVER)) {
+            $ip = $_SERVER['HTTP_X_FORWARDED_FOR'];
+        } else if (array_key_exists('REMOTE_ADDR', $_SERVER)) {
+            $ip = $_SERVER['REMOTE_ADDR'];
+        } else if (array_key_exists('HTTP_CLIENT_IP', $_SERVER)) {
+            $ip = $_SERVER['HTTP_CLIENT_IP'];
+        } else {
+            $ip = '';
+        }
+
         $refer = $_SERVER['HTTP_REFERER'];
         $query = "
 			INSERT INTO actions 
@@ -152,7 +179,7 @@ class mysqli_class extends mysqli
     /*** INFO ******************************************************************
      * /*## Gets info for a row */
     public
-    function user_info($user_id)
+    function user_info($user_id): array
     {
 
         $results = array();
@@ -187,7 +214,8 @@ class mysqli_class extends mysqli
         return $results;
     }
 
-    public function user_pf_info($user_id)
+    /** Gets a user's profile information based on their ID */
+    public function user_pf_info($user_id): array
     {
         $results = array();
         $query = "
@@ -209,84 +237,8 @@ class mysqli_class extends mysqli
             call_user_func_array(array($stmt, 'bind_result'), $parameters);
 
             $stmt->fetch();
-            $x = array();
             foreach ($row as $key => $val) {
                 $results[$key] = $val;
-            }
-            $stmt->close();
-        }//END PREPARE
-        else {
-            trigger_error($this->error, E_USER_WARNING);
-        }
-        return $results;
-    }
-
-    public function user_pf_info_lim($user_id, $limit)
-    {
-        $results = array();
-        $query = "
-			SELECT
-				*
-			FROM
-				user_pf_data
-			WHERE
-				user_id = ?
-			LIMIT ?";
-        if ($stmt = parent::prepare($query)) {
-            $stmt->bind_param("ii", $user_id, $limit);
-            if (!$stmt->execute()) {
-                trigger_error($this->error, E_USER_WARNING);
-            }
-            $meta = $stmt->result_metadata();
-            while ($field = $meta->fetch_field()) {
-                $parameters[] = &$row[$field->name];
-            }
-            call_user_func_array(array($stmt, 'bind_result'), $parameters);
-
-            $stmt->fetch();
-            $x = array();
-            foreach ($row as $key => $val) {
-                $results[$key] = $val;
-            }
-            $stmt->close();
-        }//END PREPARE
-        else {
-            trigger_error($this->error, E_USER_WARNING);
-        }
-        return $results;
-    }
-
-    /*** USER LIST ******************************************************************
-     * /*## List all data */
-    public
-    function user_list()
-    {
-        $results = array();
-        $query = "
-			SELECT
-				*
-			FROM
-				users,
-				user_levels
-			WHERE users.user_level_id = user_levels.user_level_id
-			ORDER BY user_id";
-        //echo $query;
-        if ($stmt = parent::prepare($query)) {
-            if (!$stmt->execute()) {
-                trigger_error($this->error, E_USER_WARNING);
-            }
-            $meta = $stmt->result_metadata();
-            while ($field = $meta->fetch_field()) {
-                $parameters[] = &$row[$field->name];
-            }
-            call_user_func_array(array($stmt, 'bind_result'), $parameters);
-
-            while ($stmt->fetch()) {
-                $x = array();
-                foreach ($row as $key => $val) {
-                    $x[$key] = $val;
-                }
-                $results[] = $x;
             }
             $stmt->close();
         }//END PREPARE
@@ -299,7 +251,7 @@ class mysqli_class extends mysqli
     /*** USER ADD  ******************************************************************
      * /*## adds row  data */
     public
-    function user_insert($email, $name, $password, $level)
+    function user_insert($email, $name, $password, $level): int|string
     {
         $pass_hash = password_hash($password, PASSWORD_DEFAULT);
         $query = "
@@ -329,7 +281,8 @@ class mysqli_class extends mysqli
 
     }
 
-    public function user_pf_insert($user_id, $join_date)
+    /** Creates a user's profile information. Description is optional */
+    public function user_pf_insert($user_id, $join_date, $desc = "This user has not added a description yet."): void
     {
         $query = "
             INSERT INTO user_pf_data(user_id, user_description, user_join_date) 
@@ -337,7 +290,6 @@ class mysqli_class extends mysqli
         ";
 
         if ($stmt = parent::prepare($query)) {
-            $desc = "This user has not added a description yet.";
             $stmt->bind_param("iss", $user_id, $desc, $join_date);
             if (!$stmt->execute()) {
                 trigger_error($this->error, E_USER_WARNING);
@@ -350,6 +302,10 @@ class mysqli_class extends mysqli
         }
     }
 
+    /** Checks if the email/username already exists
+     ** $field - the email/username to check
+     ** $column - which column in the DB to check, e.g. 'email' to check an email and 'username' to check a username
+     */
     public function user_field_check($field, $column): bool
     {
         $query = "SELECT email FROM users WHERE " . $column . " = ?";
@@ -386,7 +342,7 @@ class mysqli_class extends mysqli
     /*** USER EDIT  ******************************************************************
      * /*## Updates row */
     public
-    function user_edit($user_id, $email, $name, $password, $level)
+    function user_edit($user_id, $email, $name, $password, $level): void
     {
         // if password is given via the function parameter above, hash it,
         // otherwise, get already hashed password from sql table
@@ -420,7 +376,7 @@ class mysqli_class extends mysqli
     /*** USER REMOVE  ******************************************************************
      * /*## removes row */
     public
-    function user_remove($user_id)
+    function user_remove($user_id): void
     {
 
         $query = "
@@ -444,7 +400,7 @@ class mysqli_class extends mysqli
     /*** USER LEVEL LIST ******************************************************************
      * /*## List all data */
     public
-    function user_level_list()
+    function user_level_list(): array
     {
         $results = array();
         $query = "
@@ -481,9 +437,12 @@ class mysqli_class extends mysqli
         return $results;
     }
 
-    /** SHOWS START HERE */
-    public function show_list()
+    // SHOW FUNCTIONS START HERE
+
+    /** Creates an array with the top $limit shows (stick to factors of 6 please) */
+    public function show_list(): array
     {
+        $limit = 30;
         $results = array();
         $query = "
 			SELECT 
@@ -491,7 +450,7 @@ class mysqli_class extends mysqli
 			FROM 
 				shows
 			ORDER BY show_votes DESC
-			LIMIT 24";
+			LIMIT " . $limit;
 
         if ($stmt = parent::prepare($query)) {
             if (!$stmt->execute()) {
@@ -518,7 +477,8 @@ class mysqli_class extends mysqli
         return $results;
     }
 
-    public function show_list_genre($genre, $limit)
+    /** Retrieves $limit amt of shows with the $genre genre name (stick to factors of 6) */
+    public function show_list_genre($genre, $limit): array
     {
         $results = array();
         $query = "
@@ -561,17 +521,19 @@ class mysqli_class extends mysqli
         return $results;
     }
 
-    public function show_genres($id)
+    /** Retrieves genre tags for the show with the specified id */
+    public function show_genres($id): array
     {
         $results = array();
         // limit results just in case a show has like 20 genres
+        $limit = 5;
         $query = "
             SELECT genres.genre_name
             FROM show_genres
             JOIN genres ON show_genres.genre_id = genres.genre_id
             JOIN shows ON show_genres.show_id = shows.id
             WHERE shows.id = ?
-            LIMIT 5 ";
+            LIMIT " . $limit;
 
         if ($stmt = parent::prepare($query)) {
             $stmt->bind_param("i", $id);
@@ -600,7 +562,8 @@ class mysqli_class extends mysqli
         return $results;
     }
 
-    public function show_insert($apiid, $showname, $lang, $overview, $vote_avg, $votes, $poster, $air_date, $orig_lang, $pop, $back_path)
+    /** Inserts show with the specified params */
+    public function show_insert($api_id, $show_name, $lang, $overview, $vote_avg, $votes, $poster, $air_date, $orig_lang, $pop, $back_path): int|string
     {
         $query = "
 			INSERT INTO shows
@@ -618,7 +581,7 @@ class mysqli_class extends mysqli
 			VALUES
 				(?,?,?,?,?,?,?,?,?,?,?)";
         if ($stmt = parent::prepare($query)) {
-            $stmt->bind_param("isssdisssds", $apiid, $showname, $lang, $overview, $vote_avg, $votes, $poster, $air_date, $orig_lang, $pop, $back_path);
+            $stmt->bind_param("isssdisssds", $api_id, $show_name, $lang, $overview, $vote_avg, $votes, $poster, $air_date, $orig_lang, $pop, $back_path);
             if (!$stmt->execute()) {
                 trigger_error($this->error, E_USER_WARNING);
             }
@@ -634,49 +597,8 @@ class mysqli_class extends mysqli
 
     }
 
-    public function show_update_desc($show_id, $desc)
-    {
-        $query = "
-			UPDATE shows SET 
-				show_overview = ?
-			WHERE
-				api_id=?";
-
-        if ($stmt = parent::prepare($query)) {
-            $stmt->bind_param("si", $desc, $show_id);
-            if (!$stmt->execute()) {
-                trigger_error($this->error, E_USER_WARNING);
-            }
-
-            $stmt->close();
-        }//END PREPARE
-        else {
-            trigger_error($this->error, E_USER_WARNING);
-        }
-    }
-
-    public function show_update_back($show_id, $back)
-    {
-        $query = "
-			UPDATE shows SET 
-				show_backdrop_path = ?
-			WHERE
-				api_id=?";
-
-        if ($stmt = parent::prepare($query)) {
-            $stmt->bind_param("si", $back, $show_id);
-            if (!$stmt->execute()) {
-                trigger_error($this->error, E_USER_WARNING);
-            }
-
-            $stmt->close();
-        }//END PREPARE
-        else {
-            trigger_error($this->error, E_USER_WARNING);
-        }
-    }
-
-    public function show_genre_insert($show_id, $genre_id)
+    /** Links the specified show with the specified genre */
+    public function show_genre_insert($show_id, $genre_id): int|string
     {
         $query = "
 			INSERT INTO show_genres
@@ -701,7 +623,8 @@ class mysqli_class extends mysqli
 
     }
 
-    public function show_info($id)
+    /** Retrieves information about the specified show based on the id */
+    public function show_info($id): array
     {
 
         $results = array();
@@ -724,7 +647,6 @@ class mysqli_class extends mysqli
             call_user_func_array(array($stmt, 'bind_result'), $parameters);
 
             $stmt->fetch();
-            $x = array();
             foreach ($row as $key => $val) {
                 $results[$key] = $val;
             }
@@ -737,7 +659,8 @@ class mysqli_class extends mysqli
         return $results;
     }
 
-    public function show_info_name($name)
+    /** Retrieves information about the specified show based on the name */
+    public function show_info_name($name): array
     {
         $results = array();
         $query = "
@@ -768,25 +691,21 @@ class mysqli_class extends mysqli
         return $results;
     }
 
-    public function show_edit($id, $showname, $api_id = null, $lang = null, $overview = null, $vote_avg = null, $votes = null, $poster = null, $air_date = null, $orig_lang = null, $pop = null)
+    /** Updates a show based on the params
+     ** Only $id and $showname are required
+     */
+    public function show_edit($id, $showname, $overview, $air_date): void
     {
 
         $query = "
 			UPDATE shows SET 
 				show_name = ?,
-				api_id = ?,
-				show_language = ?,
 				show_overview = ?,
-				show_vote_average = ?,
-				show_votes = ?,
-				show_poster_path = ?,
-				show_air_date = ?,
-				show_original_lang = ?,
-				show_popularity = ?
+				show_air_date = ?
 			WHERE
 				id=?";
         if ($stmt = parent::prepare($query)) {
-            $stmt->bind_param("sissdisssdi", $showname, $api_id, $lang, $overview, $vote_avg, $votes, $poster, $air_date, $orig_lang, $pop, $id);
+            $stmt->bind_param("sssi", $showname, $overview, $air_date, $id);
             if (!$stmt->execute()) {
                 trigger_error($this->error, E_USER_WARNING);
             }
@@ -799,7 +718,8 @@ class mysqli_class extends mysqli
 
     }
 
-    public function show_search($searchstr)
+    /** Searches for a show based on the input string */
+    public function show_search($searchstr): array
     {
         $results = [];
         $searchstr = "%" . $searchstr . "%";
@@ -834,99 +754,146 @@ class mysqli_class extends mysqli
         else {
             trigger_error($this->error, E_USER_WARNING);
         }
-        /*
-        $result = parent::query($query);
-        $rows = mysqli_num_rows($result);
-        $i = 0;
-
-        if ($rows > 0) {
-            while ($row = mysqli_fetch_assoc($result)) {
-                $results[$i]['id'] = $row['id'];
-                $results[$i]['show_name'] = $row['show_name'];
-                $results[$i]['year'] = $row['year'];
-                //$results[$i]['runtime'] = $row['runtime'];
-                //$results[$i]['votes'] = $row['votes'];
-                $results[$i]['genres'] = $row['genres'];
-                $results[$i]['description'] = $row['description'];
-                $i++;
-            }
-        } else {
-            $results = 0;
-        }
-        */
         return $results;
     }
 
-    public function tmdb_api($showname)
+    /** Retrieves a single column from the shows table based on the row id and column name
+     * Returns null if the column is null/empty
+     */
+    public function get_show_column($id, $column): int|float|string|null
     {
-        $page_name = $showname;
-        $url_str = urlencode($page_name);
-        $url = 'https://api.themoviedb.org/3/search/tv?query=' . $url_str . '&include_adult=true&language=en-US&page=1&api_key=' . $key;
-        $img_url = 'https://www.themoviedb.org/t/p/w600_and_h900_bestv2';
-
-        //CURL REQUEST START
-        $cin = curl_init();
-        curl_setopt($cin, CURLOPT_URL, $url);
-        //curl_setopt($cin, CURLOPT_HTTPHEADER, $header);
-        curl_setopt($cin, CURLOPT_TIMEOUT, 30);
-        curl_setopt($cin, CURLOPT_RETURNTRANSFER, true);
-        $rstr = curl_exec($cin);
-        curl_close($cin);
-        //CURL REQUEST END
-
-        $api_data = json_decode($rstr, 1);
-
-        if (count($api_data['results']) === 0) {
-            $img_url = 'images/qmark.jpg';
-        } else {
-            $img_url = $img_url . $api_data['results'][0]['poster_path'];
-
-            // if img_url is not a valid url, display placeholder img
-            if (!filter_var($img_url, FILTER_VALIDATE_URL)) {
-                $img_url = 'images/qmark.jpg';
-            }
+        if (!in_array($column, $this->column_arr)) {
+            trigger_error("The specified column was not found in the show table", E_USER_WARNING);
         }
+        $query = "
+            SELECT $column
+            FROM shows
+            WHERE id = ?";
 
-        return $img_url;
-    }
-
-//    public function show_list_home()
-//    {
-//        $results = array();
-//        $query = "
-//			SELECT
-//				*
-//			FROM
-//				shows
-//			ORDER BY show_votes DESC
-//			LIMIT 10";
-//
-//        if ($stmt = parent::prepare($query)) {
-//            if (!$stmt->execute()) {
-//                trigger_error($this->error, E_USER_WARNING);
-//            }
+        if ($stmt = parent::prepare($query)) {
+            $stmt->bind_param("i", $id);
+            if (!$stmt->execute()) {
+                trigger_error($this->error, E_USER_WARNING);
+            }
 //            $meta = $stmt->result_metadata();
 //            while ($field = $meta->fetch_field()) {
 //                $parameters[] = &$row[$field->name];
 //            }
 //            call_user_func_array(array($stmt, 'bind_result'), $parameters);
 //
-//            while ($stmt->fetch()) {
-//                $x = array();
-//                foreach ($row as $key => $val) {
-//                    $x[$key] = $val;
-//                }
-//                $results[] = $x;
+//            $stmt->fetch();
+//            $x = array();
+//            foreach ($row as $key => $val) {
+//                $results[$key] = $val;
 //            }
-//            $stmt->close();
-//        }//END PREPARE
-//        else {
-//            trigger_error($this->error, E_USER_WARNING);
-//        }
-//        return $results;
-//    }
+            $result = $stmt->get_result();
+            $data = $result->fetch_assoc();
+            $stmt->close();
+        } else {
+            trigger_error($this->error, E_USER_WARNING);
+        }
 
-    public function review_insert($review_value, $review_content, $show_id, $user_id)
+        return $data[$column];
+    }
+
+    /** Adds one to a star column based on the review rating, e.g. a 1 star review means the column 1_stars = 1_stars + 1
+     ** id - Int, the ID of the show the review is for
+     ** value - Int, the review's rating
+     ** add - Optional boolean, assign false to subtract from the column instead of adding
+     */
+    public function star_update($id, $value, $add = true): void
+    {
+        if (!is_int($value) || $value > 5 || $value < 1) {
+            trigger_error("Cannot insert into star column, value is out of bounds or is not an integer", E_USER_WARNING);
+        }
+
+        $starcol = $value . "_stars";
+        if ($add) {
+            $query = "
+            UPDATE shows
+            SET $starcol = $starcol + 1
+            WHERE id = ?";
+        } else {
+            $query = "
+            UPDATE shows
+            SET $starcol = $starcol - 1
+            WHERE id = ?";
+        }
+
+        if ($stmt = parent::prepare($query)) {
+            $stmt->bind_param("i", $id);
+            if (!$stmt->execute()) {
+                trigger_error($this->error, E_USER_WARNING);
+            } else {
+                $stmt->close();
+            }
+        } else {
+            trigger_error($this->error, E_USER_WARNING);
+        }
+    }
+
+    /** Returns all star columns for the specified show */
+    public function get_star_cols($id): array
+    {
+        $results = array();
+        $query = "
+            SELECT 1_stars, 2_stars, 3_stars, 4_stars, 5_stars
+            FROM shows
+            WHERE id = ?";
+
+        if ($stmt = parent::prepare($query)) {
+            $stmt->bind_param("i", $id);
+            if (!$stmt->execute()) {
+                trigger_error($this->error, E_USER_WARNING);
+            }
+
+            $meta = $stmt->result_metadata();
+            while ($field = $meta->fetch_field()) {
+                $parameters[] = &$row[$field->name];
+            }
+            call_user_func_array(array($stmt, 'bind_result'), $parameters);
+
+            while ($stmt->fetch()) {
+                $x = array();
+                foreach ($row as $key => $val) {
+                    $x[$key] = $val;
+                }
+                $results[] = $x;
+            }
+            $stmt->close();
+        } else {
+            trigger_error($this->error, E_USER_WARNING);
+        }
+        return $results;
+    }
+
+    /** Updates a single column of a show entry based on the row id and column name */
+    public function update_show_column($id, $newval, $column): void
+    {
+        if (!in_array($column, $this->column_arr)) {
+            trigger_error($this->error, E_USER_WARNING);
+        }
+        $query = "
+            UPDATE shows 
+            SET $column = ? 
+            WHERE id = ?";
+
+        if ($stmt = parent::prepare($query)) {
+            $stmt->bind_param("ii", $newval, $id);
+            if ($stmt->execute()) {
+                $stmt->close();
+            } else {
+                trigger_error($this->error, E_USER_WARNING);
+            }
+        } else {
+            trigger_error($this->error, E_USER_WARNING);
+        }
+    }
+
+    // REVIEW FUNCTIONS START HERE
+
+    /** Creates a review for a show by the specified user. Returns the ID of the inserted row */
+    public function review_insert($review_value, $review_content, $show_id, $user_id): int|string
     {
         $query = "
 			INSERT INTO reviews
@@ -953,8 +920,47 @@ class mysqli_class extends mysqli
         return $last_id;
     }
 
-    public
-    function user_review_info($user_id)
+    /** Updates a review based on new content and/or value */
+    public function review_update($review_id, $value, $content): void
+    {
+        $query = "
+            UPDATE reviews
+            SET review_value = ?, review_content = ?, review_date = CURDATE()
+            WHERE review_id = ?";
+
+        if ($stmt = parent::prepare($query)) {
+            $stmt->bind_param("isi", $value, $content, $review_id);
+            if (!$stmt->execute()) {
+                trigger_error($this->error, E_USER_WARNING);
+            }
+
+            $stmt->close();
+        } else {
+            trigger_error($this->error, E_USER_WARNING);
+        }
+    }
+
+    /** Removes a review based on its id */
+    public function review_delete($review_id): void
+    {
+        $query = "
+        DELETE FROM reviews
+        WHERE review_id=?";
+
+        if ($stmt = parent::prepare($query)) {
+            $stmt->bind_param("i", $review_id);
+            if ($stmt->execute()) {
+                trigger_error($this->error, E_USER_WARNING);
+            }
+
+            $stmt->close();
+        } else {
+            trigger_error($this->error, E_USER_WARNING);
+        }
+    }
+
+    /** Retrieves all reviews owned by a user */
+    public function user_review_info($user_id): array
     {
 
         $results = array();
@@ -997,52 +1003,8 @@ class mysqli_class extends mysqli
         return $results;
     }
 
-//    public
-//    function show_review_info($show_id)
-//    {
-//
-//        $results = array();
-//        $query = "
-//			SELECT shows.show_name,
-//			       shows.id,
-//			       shows.show_poster_path,
-//			       reviews.review_id,
-//			       reviews.review_content,
-//			       reviews.review_value,
-//			       reviews.review_date ,
-//			       reviews.user_id
-//            FROM reviews
-//            JOIN shows ON reviews.show_id = shows.id
-//            WHERE reviews.show_id = ?
-//            ORDER BY review_date DESC";
-//        if ($stmt = parent::prepare($query)) {
-//            $stmt->bind_param("i", $show_id);
-//            if (!$stmt->execute()) {
-//                trigger_error($this->error, E_USER_WARNING);
-//            }
-//            $meta = $stmt->result_metadata();
-//            while ($field = $meta->fetch_field()) {
-//                $parameters[] = &$row[$field->name];
-//            }
-//            call_user_func_array(array($stmt, 'bind_result'), $parameters);
-//
-//            while ($stmt->fetch()) {
-//                $x = array();
-//                foreach ($row as $key => $val) {
-//                    $x[$key] = $val;
-//                }
-//                $results[] = $x;
-//            }
-//            $stmt->close();
-//        }//END PREPARE
-//        else {
-//            trigger_error($this->error, E_USER_WARNING);
-//        }
-//        return $results;
-//    }
-
-    public
-    function user_review_info_lim($user_id, $limit)
+    /** Retrieves a $limit amt of reviews owned by a user */
+    public function user_review_info_lim($user_id, $limit): array
     {
 
         $results = array();
@@ -1086,7 +1048,8 @@ class mysqli_class extends mysqli
         return $results;
     }
 
-    public function review_info($id)
+    /** Retrieves a review based on its id */
+    public function review_info($id): array
     {
         $results = array();
         $query = "
@@ -1121,7 +1084,8 @@ class mysqli_class extends mysqli
         return $results;
     }
 
-    public function show_reviews($id, $limit)
+    /** Retrieves $limit reviews of a show */
+    public function show_reviews($id, $limit): array
     {
         $results = array();
         $query = "

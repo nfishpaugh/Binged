@@ -1,7 +1,7 @@
 <?php
 include "include/config.inc";
 
-function setlogin($response)
+function setlogin($response): void
 {
     if ($response[0] == 1) {
         $_SESSION[PREFIX . '_username'] = $response[1]['email'];
@@ -22,7 +22,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         $login_response = $mysqli->login($_POST['email'], $_POST['password']);
         setlogin($login_response);
-        $mysqli->user_pf_insert($_SESSION[PREFIX . '_user_id'], date('Y-m-d'));
+        //$mysqli->user_pf_insert($_SESSION[PREFIX . '_user_id'], date('Y-m-d'));
         if ($_SESSION[PREFIX . "_ppage"] != '') {
             $redirect = $_SESSION[PREFIX . "_ppage"];
             header("location: $redirect");
@@ -61,7 +61,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <!-- inject:css -->
     <link rel="stylesheet" href="css/style.css">
     <!-- endinject -->
-    <link rel="shortcut icon" href="images/favicon.png"/>
+    <link rel="shortcut icon" href="images/binged_logo.svg"/>
 </head>
 
 <body>
@@ -79,7 +79,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                         <form id="subform" class="pt-3" action="" method="POST">
                             <div class="form-group">
                                 <input type="email" class="form-control form-control-lg" id="email" name="email"
-                                       placeholder="Username" autofocus>
+                                       placeholder="Email" autofocus>
                             </div>
                             <div class="form-group">
                                 <input type="password" class="form-control form-control-lg" id="password"
