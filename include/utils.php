@@ -35,40 +35,20 @@ function debug_to_console($data): void
     echo "<script>console.log('Debug Objects: " . $output . "' );</script>";
 }
 
-/** Algo for moving average of a show/user's score
- ** oldavg - The old average
- ** n - The amount of reviews
- ** value - Int: the value of the new review
- ** remove - Optional, boolean: set to true to return the new average with $value removed, or false to return it with $value added
- ** Might need to edit later based on how often this will be called, e.g. if multiple reviews need to be accounted for
- */
-function new_avg($oldavg, $n, $value, $remove = false): float
-{
-    if ($value > 5 || $value < 0 || $n < 1) {
-        trigger_error("Averaging param error: Value: " . $value . ", N: " . $n, E_USER_WARNING);
-    }
-
-    if (!$remove) {
-        return $oldavg + (($value - $oldavg) / $n);
-    } else {
-        return (($oldavg * $n) - $value) / ($n - 1);
-    }
-}
-
 /** Returns the weighted total of a star column array, e.g if there are 5 1 star reviews and 10 3 star reviews,
  * total = (5 * 1) + (10 * 3). Based on the names of the array keys, so beware of changing the column names in the DB
  */
-function weighted_amt($arr): float
+function weighted_amt($arr): int
 {
     if (!is_numeric(substr(array_key_first($arr), 0, 1))) trigger_error("Array key does not start with a numeric value. Key: " . array_key_first($arr));
 
     $total = 0.0;
     foreach ($arr as $key => $val) {
         // Get first character of the key to determine the multiplier, e.g. '5_stars' -> mult = 5.0
-        $mult = floatval(substr($key, 0, 1));
+        $mult = (int)(substr($key, 0, 1));
         $total += ($mult * $val);
     }
-
+    debug_to_console("Total: " . $total);
     return $total;
 }
 
@@ -76,15 +56,19 @@ function weighted_amt($arr): float
  ** remove - Optional boolean, true = remove a value from the average, false (default) = add a value to the average
  ** edit - Optional boolean, true = do not add to the review count, false (default) = add to the review count
  */
-function update_avg($show_id, $rating, $review_count, $mysqli, $remove = false, $edit = false): void
+function update_avg($show_id, $rating, $review_count, $mysqli, $remove = false, $edit = false, $old_rating = null): void
 {
-    // subtract/add one from/to related star column
-    $mysqli->star_update($show_id, $rating, $remove);
-
     // only change review count if a new review has been inserted
     if (!$edit) {
+        // subtract/add one from/to related star column
+        $mysqli->star_update($show_id, $rating, $remove);
+
         $remove ? $review_count-- : $review_count++;
         $mysqli->update_show_column($show_id, $review_count, "review_amt");
+    } else {
+        // subtract from
+        $mysqli->star_update($show_id, $rating);
+        $mysqli->star_update($show_id, $old_rating, true);
     }
 
     // place all star columns in an array
@@ -94,7 +78,8 @@ function update_avg($show_id, $rating, $review_count, $mysqli, $remove = false, 
     $star_sum = array_sum($star_arr[0]) ?: 1.0;
 
     $weighted = weighted_amt($star_arr[0]);
-    $avg = $weighted / $star_sum;
+    $avg = (float)$weighted / $star_sum;
+    debug_to_console("Average: " . $avg);
 
-    $mysqli->update_show_column($show_id, $avg, "review_avg");
+    $mysqli->update_show_column($show_id, $avg, "review_avg", "d");
 }

@@ -4,25 +4,12 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="1ad80be8-bf78-4fa9-909f-9cb64c15dd65" name="Changes" comment="- Implemented review edits and deletions&#10;- Added review averages for shows&#10;- Collated similar functions in utils.php&#10;- Reworked guest functionality&#10;- Fixed sessions not destroying themselves after they timed out&#10;- Fixed multiple session warnings related to accidental re-initialization&#10;- Fixed user profile pictures not defaulting to the placeholder if empty&#10;- Fixed show edit using outdated params&#10;- Fixed user profiles being overwritten on login&#10;- Fixed ampersands in genre strings being inserted into the URL&#10;- Fixed problems with action logging using the user's IP address&#10;- Removed unnecessary and deprecated files">
+    <list default="true" id="1ad80be8-bf78-4fa9-909f-9cb64c15dd65" name="Changes" comment="Removed unnecessary external scripts and deprecated DB column usages">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/all_reviews.php" beforeDir="false" afterPath="$PROJECT_DIR$/all_reviews.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/genre_page.php" beforeDir="false" afterPath="$PROJECT_DIR$/genre_page.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/get_tmdb_data.php" beforeDir="false" afterPath="$PROJECT_DIR$/get_tmdb_data.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/include/mysqli_class.php" beforeDir="false" afterPath="$PROJECT_DIR$/include/mysqli_class.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/index.php" beforeDir="false" afterPath="$PROJECT_DIR$/index.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/partials/_navbar.php" beforeDir="false" afterPath="$PROJECT_DIR$/partials/_navbar.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/include/utils.php" beforeDir="false" afterPath="$PROJECT_DIR$/include/utils.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/review_edit.php" beforeDir="false" afterPath="$PROJECT_DIR$/review_edit.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/review_page.php" beforeDir="false" afterPath="$PROJECT_DIR$/review_page.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/show_add.php" beforeDir="false" afterPath="$PROJECT_DIR$/show_add.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/show_edit.php" beforeDir="false" afterPath="$PROJECT_DIR$/show_edit.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/show_page.php" beforeDir="false" afterPath="$PROJECT_DIR$/show_page.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/show_review.php" beforeDir="false" afterPath="$PROJECT_DIR$/show_review.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/show_search.php" beforeDir="false" afterPath="$PROJECT_DIR$/show_search.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/user_add.php" beforeDir="false" afterPath="$PROJECT_DIR$/user_add.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/user_edit.php" beforeDir="false" afterPath="$PROJECT_DIR$/user_edit.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/user_profile.php" beforeDir="false" afterPath="$PROJECT_DIR$/user_profile.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/user_reviews.php" beforeDir="false" afterPath="$PROJECT_DIR$/user_reviews.php" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -210,7 +197,7 @@
       <workItem from="1745608116855" duration="3880000" />
       <workItem from="1745864612281" duration="6132000" />
       <workItem from="1745953347085" duration="9680000" />
-      <workItem from="1746037675802" duration="5777000" />
+      <workItem from="1746037675802" duration="11109000" />
     </task>
     <task id="LOCAL-00001" summary="this baby is ready to go!">
       <option name="closed" value="true" />
@@ -276,7 +263,15 @@
       <option name="project" value="LOCAL" />
       <updated>1746047247695</updated>
     </task>
-    <option name="localTasksCounter" value="9" />
+    <task id="LOCAL-00009" summary="Removed unnecessary external scripts and deprecated DB column usages">
+      <option name="closed" value="true" />
+      <created>1746048414686</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1746048414686</updated>
+    </task>
+    <option name="localTasksCounter" value="10" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -298,7 +293,8 @@
     <MESSAGE value="user login ready" />
     <MESSAGE value="updated for php 8.3, nearly ready for deployment" />
     <MESSAGE value="- Implemented review edits and deletions&#10;- Added review averages for shows&#10;- Collated similar functions in utils.php&#10;- Reworked guest functionality&#10;- Fixed sessions not destroying themselves after they timed out&#10;- Fixed multiple session warnings related to accidental re-initialization&#10;- Fixed user profile pictures not defaulting to the placeholder if empty&#10;- Fixed show edit using outdated params&#10;- Fixed user profiles being overwritten on login&#10;- Fixed ampersands in genre strings being inserted into the URL&#10;- Fixed problems with action logging using the user's IP address&#10;- Removed unnecessary and deprecated files" />
-    <option name="LAST_COMMIT_MESSAGE" value="- Implemented review edits and deletions&#10;- Added review averages for shows&#10;- Collated similar functions in utils.php&#10;- Reworked guest functionality&#10;- Fixed sessions not destroying themselves after they timed out&#10;- Fixed multiple session warnings related to accidental re-initialization&#10;- Fixed user profile pictures not defaulting to the placeholder if empty&#10;- Fixed show edit using outdated params&#10;- Fixed user profiles being overwritten on login&#10;- Fixed ampersands in genre strings being inserted into the URL&#10;- Fixed problems with action logging using the user's IP address&#10;- Removed unnecessary and deprecated files" />
+    <MESSAGE value="Removed unnecessary external scripts and deprecated DB column usages" />
+    <option name="LAST_COMMIT_MESSAGE" value="Removed unnecessary external scripts and deprecated DB column usages" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />

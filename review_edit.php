@@ -26,17 +26,16 @@ if ($_SERVER['REQUEST_METHOD'] === "POST" && isset($_POST['review_sub'])) {
 
     $mysqli->review_update($rid, $rating, $_POST['review_content']);
 
+    // only update the average if the rating changes
     if ($rating != $_SESSION[$rid . "_review_content"]['review_value']) {
-        if (!$old_avg = $mysqli->get_show_column($show_id, "review_avg")) {
-            $old_avg = $_SESSION[$rid . "_review_content"]['review_value'];
-        }
-        if (!$review_count = $mysqli->get_show_column($show_id, "review_amt")) {
+        $review_count = $mysqli->get_show_column($show_id, "review_amt");
+
+        // can just set the avg to the user's rating if it's the only review
+        if (!$review_count || $review_count === 1) {
             $mysqli->update_show_column($show_id, $rating, "review_avg");
             $mysqli->update_show_column($show_id, 1, "review_amt");
         } else {
-            $avg = new_avg($old_avg, $review_count, $rating);
-            $mysqli->update_show_column($show_id, $avg, "review_avg");
-            $mysqli->update_show_column($show_id, $review_count, "review_amt");
+            update_avg($show_id, $rating, $review_count, $mysqli, false, true, $_SESSION[$rid . "_review_content"]['review_value']);
         }
     }
 

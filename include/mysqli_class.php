@@ -794,25 +794,30 @@ class mysqli_class extends mysqli
     /** Adds one to a star column based on the review rating, e.g. a 1 star review means the column 1_stars = 1_stars + 1
      ** id - Int, the ID of the show the review is for
      ** value - Int, the review's rating
-     ** add - Optional boolean, assign false to subtract from the column instead of adding
+     ** remove - Optional boolean, assign false to subtract from the column instead of adding
+     ** edit - Optional boolean, assign false for default behavior and true to add one to the new rating and subtract one from $old_rating
      */
-    public function star_update($id, $value, $add = true): void
+    public function star_update($id, $value, $remove = false, $edit = false, $old_value = 1): void
     {
         if (!is_int($value) || $value > 5 || $value < 1) {
             trigger_error("Cannot insert into star column, value is out of bounds or is not an integer", E_USER_WARNING);
         }
 
         $starcol = $value . "_stars";
-        if ($add) {
+        if (!$edit) {
+            $op = $remove ? '-' : '+';
             $query = "
-            UPDATE shows
-            SET $starcol = $starcol + 1
-            WHERE id = ?";
+                UPDATE shows
+                SET $starcol = $starcol $op 1
+                WHERE id = ?
+            ";
         } else {
+            $oldcol = $old_value . "_stars";
             $query = "
-            UPDATE shows
-            SET $starcol = $starcol - 1
-            WHERE id = ?";
+                UPDATE shows
+                SET $starcol = $starcol + 1, $oldcol = $oldcol - 1
+                WHERE id = ?
+            ";
         }
 
         if ($stmt = parent::prepare($query)) {
@@ -862,8 +867,14 @@ class mysqli_class extends mysqli
         return $results;
     }
 
-    /** Updates a single column of a show entry based on the row id and column name */
-    public function update_show_column($id, $newval, $column): void
+    /** Updates a single column of a show entry based on the row id and column name
+     ** column_type = Optional string, used to determine what data type is being inserted into the column
+     *** i -> integer
+     *** d -> double/float
+     *** s -> string
+     *** b -> blob, sent in packets (not used)
+     */
+    public function update_show_column($id, $newval, $column, $column_type = "i"): void
     {
         if (!in_array($column, $this->column_arr)) {
             trigger_error($this->error, E_USER_WARNING);
@@ -874,7 +885,7 @@ class mysqli_class extends mysqli
             WHERE id = ?";
 
         if ($stmt = parent::prepare($query)) {
-            $stmt->bind_param("ii", $newval, $id);
+            $stmt->bind_param($column_type . "i", $newval, $id);
             if ($stmt->execute()) {
                 $stmt->close();
             } else {
@@ -898,7 +909,7 @@ class mysqli_class extends mysqli
 				 show_id,
 				 user_id)	
 			VALUES
-				(?,?,CURDATE(),?,?)";
+				(?,?,CURRENT_TIMESTAMP(),?,?)";
         if ($stmt = parent::prepare($query)) {
             $stmt->bind_param("isii", $review_value, $review_content, $show_id, $user_id);
             if (!$stmt->execute()) {
@@ -920,7 +931,7 @@ class mysqli_class extends mysqli
     {
         $query = "
             UPDATE reviews
-            SET review_value = ?, review_content = ?, review_date = CURDATE()
+            SET review_value = ?, review_content = ?, review_date = CURRENT_TIMESTAMP()
             WHERE review_id = ?";
 
         if ($stmt = parent::prepare($query)) {

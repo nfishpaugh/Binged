@@ -32,7 +32,7 @@ if (!isset($avg)) {
     $avg = 0.0;
 }
 
-$review_count = count($reviews);
+$review_count = $mysqli->get_show_column($show_info['id'], "review_amt");
 
 $genres = $mysqli->show_genres($in_id);
 
