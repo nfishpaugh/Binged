@@ -1090,8 +1090,10 @@ class mysqli_class extends mysqli
         return $results;
     }
 
-    /** Retrieves $limit reviews of a show */
-    public function show_reviews($id, $limit): array
+    /** Retrieves $limit reviews of a show
+     *** offset - Optional integer, adds an offset for pagination. Defaults to 0
+     */
+    public function show_reviews($id, $limit, $offset = 0): array
     {
         $results = array();
         $query = "
@@ -1099,13 +1101,13 @@ class mysqli_class extends mysqli
             FROM reviews 
             WHERE show_id=?
             ORDER BY review_date DESC
-            LIMIT ?";
+            LIMIT ? OFFSET ?";
         if ($stmt = parent::prepare($query)) {
             if ($limit > 0) {
-                $stmt->bind_param("ii", $id, $limit);
+                $stmt->bind_param("iii", $id, $limit, $offset);
             } else {
                 $z = 99;
-                $stmt->bind_param("ii", $id, $z);
+                $stmt->bind_param("iii", $id, $z, $offset);
             }
 
             if (!$stmt->execute()) {
@@ -1130,6 +1132,31 @@ class mysqli_class extends mysqli
             trigger_error($this->error, E_USER_WARNING);
         }
         return $results;
+    }
+
+    /** Returns the amount of reviews for the specified show
+     */
+    public function review_count($show_id)
+    {
+        $query = "
+        SELECT count(review_id) 
+        FROM reviews 
+        WHERE show_id=?
+        ";
+
+        if ($stmt = parent::prepare($query)) {
+            $stmt->bind_param("i", $show_id);
+            if (!$stmt->execute()) {
+                trigger_error($this->error, E_USER_WARNING);
+            }
+            $result = $stmt->get_result();
+            $data = $result->fetch_column(0);
+            $stmt->close();
+        } else {
+            trigger_error($this->error, E_USER_WARNING);
+        }
+
+        return $data;
     }
 
 }//END CLASS

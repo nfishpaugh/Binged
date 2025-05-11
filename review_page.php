@@ -60,9 +60,13 @@ if (isset($user_pf['profile_pic_src'])) {
 
 $page_name = $user_info['user_name'] . "'" . "s review of " . $show_info['show_name'];
 
-$year = substr($show_info['show_air_date'], 0, 4);
+//$year = substr($show_info['show_air_date'], 0, 4);
 
 $r_str = starify($review["review_value"]);
+
+// don't need to display full timestamp, just the date
+$d = date_create($review['review_date']);
+$d = date_format($d, "d M Y");
 
 ?>
 <!DOCTYPE html>
@@ -85,12 +89,12 @@ $r_str = starify($review["review_value"]);
     <div class="container-fluid page-body-wrapper">
         <div class="main-panel">
             <div class="content-wrapper">
-
+                <!-- TODO - Fix responsive issues, image is cut off and the title of the show stacks on top of itself -->
                 <div class="row">
                     <div class="col-md-12 grid-margin stretch-card">
                         <div class="card">
                             <div class="card-body">
-                                <div class="container-md-1" style="float:left; max-width:20vw;">
+                                <div class="container-md" style="float:left;">
                                     <div class="card-img-2">
                                         <a href="show_page.php?id=<?php echo $show_id ?>">
                                             <img src="<?php echo $img_url . $show_info['show_poster_path'] ?>"
@@ -113,13 +117,13 @@ $r_str = starify($review["review_value"]);
                                     </a>
                                     <a class="one" href="show_page.php?id=<?php echo $show_id ?>">
                                         <h2 class="flex-wrap"
-                                            style="padding-bottom: 20px; line-height: 0.5;"><?php echo $show_info['show_name'] . " (" . $year . ")"; ?>
+                                            style="padding-bottom: 20px; line-height: 0.5;"><?php echo $show_info['show_name']; ?>
                                             <span class="flex-wrap"
                                                   style="padding-bottom: 20px; line-height: 0.5; color: #0072ff"><?php echo $r_str; ?></span>
                                         </h2>
                                     </a>
                                     <h5 class="flex-wrap"
-                                        style=" color: darkgrey"><?php echo "Watched on " . $review['review_date']; ?></h5>
+                                        style=" color: darkgrey"><?php echo "Watched on " . $d; ?></h5>
                                     <p class="flex-wrap"
                                        style="padding-bottom: 10px; padding-top: 10px;"><?php echo $review['review_content']; ?></p>
                                 </div>

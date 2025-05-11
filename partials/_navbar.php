@@ -8,11 +8,7 @@ if ($_SESSION[PREFIX . '_username'] == "") {
 
 $pf_result = $mysqli->user_pf_info($_SESSION[PREFIX . '_user_id']);
 
-if (isset($pf_result['profile_pic_src'])) {
-    $pf_img_nav = $pf_result['profile_pic_src'];
-} else {
-    $pf_img_nav = 'dummy_pfp.jpg';
-}
+$pf_img_nav = $pf_result['profile_pic_src'] ?? 'dummy_pfp.jpg';
 ?>
 <nav class="navbar col-lg-12 col-12 p-0 fixed-top d-flex flex-row">
     <div class="navbar-brand-wrapper d-flex justify-content-center">
@@ -41,7 +37,7 @@ if (isset($pf_result['profile_pic_src'])) {
                                placeholder="Search now">
                         <input type="submit" name="sub" id="sub" hidden>
                     </form>
-                    <script src="https://code.jquery.com/jquery-1.9.1.js">
+                    <script src="js/jquery-1.9.1.js">
                         $(function ())
                         {
                             $("form").submit(function (e) {

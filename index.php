@@ -1,5 +1,6 @@
 <?php
 include "include/config.inc";
+//TODO - implement routing to avoid pathing errors
 
 $_SESSION[PREFIX . "_ppage"] = $_SERVER['REQUEST_URI'];
 if ($_SESSION[PREFIX . '_username'] == "") {
@@ -13,20 +14,19 @@ $img_url = 'https://image.tmdb.org/t/p/original';
 ?>
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <title><?php echo $app_name; ?> - <?php echo $page_name; ?></title>
     <!-- plugins:css -->
-    <link rel="stylesheet" href="vendors/mdi/css/materialdesignicons.min.css">
-    <link rel="stylesheet" href="vendors/base/vendor.bundle.base.css">
+    <link rel="stylesheet" type="text/css" href="vendors/mdi/css/materialdesignicons.min.css">
+    <link rel="stylesheet" type="text/css" href="vendors/base/vendor.bundle.base.css">
     <!-- endinject -->
     <!-- plugin css for this page -->
     <!-- End plugin css for this page -->
     <!-- inject:css -->
-    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" type="text/css" href="css/style.css">
     <!-- endinject -->
     <link rel="shortcut icon" href="images/binged_logo.svg"/>
 

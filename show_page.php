@@ -8,92 +8,140 @@ if ($_SESSION[PREFIX . '_username'] == "") {
     exit;
 }
 
-$in_id = (int)$_GET['id'];
-if (!$in_id) {
+$in_id = intval($_GET['id']);
+if (!$in_id || $in_id < 1) {
     header("location: index.php");
     exit;
 }
+
 $show_info = $mysqli->show_info($in_id);
+if (!$show_info['id']) {
+    header("location: index.php");
+    exit;
+}
+
+$page = (isset($_GET['page']) && is_numeric($_GET['page'])) ? intval($_GET['page']) : 1;
+
+$all_bool = $_GET['all'] ?? 'nobool';
+if ($all_bool === '1' || $all_bool === '0') {
+    $all_bool = (int)$all_bool;
+} else {
+    $all_bool = 0;
+}
 
 $img_url = 'https://image.tmdb.org/t/p/original';
-
 $temp_url = $img_url . $show_info['show_poster_path'];
-
 $back_url = $img_url . $show_info['show_backdrop_path'];
 
 $year = substr($show_info['show_air_date'], 0, 4);
 
 $page_name = $show_info['show_name'];
 
-$reviews = $mysqli->show_reviews($show_info['id'], 5);
+$amt_per_page = 10;
+$reviews = $mysqli->show_reviews($show_info['id'], $amt_per_page);
 
-$avg = $mysqli->get_show_column($show_info['id'], "review_avg");
-if (!isset($avg)) {
-    $avg = 0.0;
+$avg = $_SESSION[$in_id . "_avg"] ?? $mysqli->get_show_column($in_id, "review_avg") ?? 0.0;
+
+// forces 1 decimal point
+$avg = number_format($avg, 1);
+
+$review_count = $mysqli->review_count($in_id);
+if ($review_count <= 0) {
+    $review_count = 0;
+    $num_pages = 1;
+} else {
+    // find the number of pages needed to display all reviews, add one extra if it doesn't divide cleanly
+    $num_pages = ($amt_per_page % $review_count) === 0 ? intval($review_count / $amt_per_page) : intval($review_count / $amt_per_page) + 1;
+
+    if ($page > $num_pages) {
+        $page = $num_pages;
+    }
 }
-
-$review_count = $mysqli->get_show_column($show_info['id'], "review_amt");
 
 $genres = $mysqli->show_genres($in_id);
 
 $r_str = '';
 
-if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_SESSION[PREFIX . '_user_id'])) {
-    foreach ($_POST as $key => $val) {
-        if (preg_match("/(delete|edit)[0-9]./", $key)) {
-            // retrieves the command (delete or edit)
-            $cmd = substr($key, 0, strcspn($key, "0123456789"));
+if ($_SERVER["REQUEST_METHOD"] === "POST") {
+    if (isset($_SESSION[PREFIX . '_user_id']) && $_POST['modify'] === "1") {
+        foreach ($_POST as $key => $val) {
+            if (preg_match("/(delete|edit)[0-9]./", $key)) {
+                // retrieves the command (delete or edit)
+                $cmd = substr($key, 0, strcspn($key, "0123456789"));
 
-            // creates a substring starting at the first numeric character of $val
-            $ids = substr($key, strcspn($key, "0123456789"));
+                // creates a substring starting at the first numeric character of $val
+                $ids = substr($key, strcspn($key, "0123456789"));
 
-            // get indices of hyphen characters to use as starting points for ids
-            $first = strpos($ids, "-");
-            $second = strposX($ids, "-", 2);
+                // get indices of hyphen characters to use as starting points for ids
+                $first = strpos($ids, "-");
+                $second = strposX($ids, "-", 2);
 
-            // arrid = id in array
-            // rid = review id
-            // uid = author's user id
-            $arrid = substr($ids, 0, $first);
-            $rid = substr($ids, $first + 1, $second - 2);
-            $uid = substr($ids, $second + 1);
+                // arrid = id in array
+                // rid = review id
+                // uid = author's user id
+                $arrid = substr($ids, 0, $first);
+                $rid = substr($ids, $first + 1, $second - 2);
+                $uid = substr($ids, $second + 1);
 
-            $sid = $show_info['id'];
+                $sid = $show_info['id'];
+                unset($_POST['modify']);
 
-            if ($_SESSION[PREFIX . '_user_id'] == $uid && $cmd === "delete") {
-                $mysqli->review_delete($rid);
-                update_avg($sid, $reviews[$arrid]["review_value"], $review_count, $mysqli, true);
+                if ($_SESSION[PREFIX . '_user_id'] == $uid && $cmd === "delete") {
+                    $mysqli->review_delete($rid);
+                    update_avg($sid, $reviews[$arrid]["review_value"], $review_count, $mysqli, true);
 
-                header("location: show_page.php?id=" . $in_id);
-            } else {
-                $_SESSION["edit_review_content"] = $reviews[$arrid]["review_content"];
-                $_SESSION["edit_review_value"] = $reviews[$arrid]["review_value"];
-                $_SESSION["edit_review_date"] = $reviews[$arrid]["review_date"];
-                $_SESSION["edit_show_id"] = $in_id;
-                header("location: review_edit.php?rid=" . $rid . "&uid=" . $uid);
+                    header("location: show_page.php?id=" . $in_id);
+                } else {
+                    $_SESSION["edit_review_content"] = $reviews[$arrid]["review_content"];
+                    $_SESSION["edit_review_value"] = $reviews[$arrid]["review_value"];
+                    $_SESSION["edit_review_date"] = $reviews[$arrid]["review_date"];
+                    $_SESSION["edit_show_id"] = $in_id;
+                    header("location: review_edit.php?rid=" . $rid . "&uid=" . $uid);
+                }
+                exit;
             }
-            exit;
         }
+    } elseif (!isset($_SESSION[PREFIX . '_user_id'])) {
+        ?>
+        <script>
+            alert("Invalid user id");
+        </script><?php
+    } elseif (!isset($_POST['modify']) && $_POST['modal-submit'] === "1") {
+        unset($_POST['modal-submit']);
+
+        $rating = match ($_POST['rate']) {
+            "5" => 5,
+            "4" => 4,
+            "3" => 3,
+            "2" => 2,
+            default => 1,
+        };
+
+        if (!isset($review_count)) {
+            $review_count = 0;
+        }
+        update_avg($in_id, $rating, $review_count, $mysqli);
+
+        $mysqli->review_insert($rating, $_POST['review-input'], $in_id, $_SESSION[PREFIX . '_user_id']);
+
+        $mysqli->actions_insert("Added Review: " . date("Y-m-d") . " SID: " . $in_id, $_SESSION[PREFIX . '_user_id']);
+
+        $_SESSION[PREFIX . '_action'][] = 'added';
+        header("location: show_page.php?id=" . $in_id);
+        exit;
     }
-    //$mysqli->review_delete($reviews);
-} elseif ($_SERVER["REQUEST_METHOD"] == "POST" && (!isset($_SESSION[PREFIX . '_user_id']))) {
-    ?>
-    <script>
-        alert("Invalid user id");
-    </script><?php
 }
 ?>
 <!DOCTYPE html>
-<html lang="en">
-
+<html lang="en" class="no-mobile">
 <head>
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <title><?php echo $page_name; ?></title>
-    <link rel="stylesheet" href="vendors/mdi/css/materialdesignicons.min.css">
-    <link rel="stylesheet" href="vendors/base/vendor.bundle.base.css">
-    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" type="text/css" href="vendors/mdi/css/materialdesignicons.min.css">
+    <link rel="stylesheet" type="text/css" href="vendors/base/vendor.bundle.base.css">
+    <link rel="stylesheet" type="text/css" href="css/style.css">
     <link rel="shortcut icon" href="images/binged_logo.svg"/>
 </head>
 <body>
@@ -122,14 +170,14 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_SESSION[PREFIX . '_user_id'
                                 </div>
                                 <div class="d-flex justify-content-between align-items-end flex-lg-column"
                                      style="float:right">
-                                    <a href="show_review.php?id=<?php echo $in_id ?>"
-                                       id="review_button" class="btn btn-primary mt-2 mt-xl-0">Write a
-                                        review</a>
+                                    <button type="button" class="btn btn-primary mt-2 mt-xl-0" data-bs-toggle="modal"
+                                            data-bs-target="#review-modal" id="modal_open_review">Write a review
+                                    </button>
                                     <script>
                                         // removes review button if user is guest
                                         let check = parseInt('<?php echo $_SESSION[PREFIX . '_security']?>');
                                         if (check < 5) {
-                                            document.getElementById('review_button').remove();
+                                            document.getElementById('modal_open_review').remove();
                                         }
                                     </script>
                                 </div>
@@ -167,15 +215,17 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_SESSION[PREFIX . '_user_id'
                     <div class="row">
                         <div class="col-md-12 grid-margin">
                             <div class="dashboard-tabs p-0">
-                                <ul class="nav nav-tabs px-4">
-                                    <li class="nav-item active">
-                                        <a id="rec-review-tab" class="nav-link active">Recent reviews</a>
+                                <ul class="nav nav-tabs px-4" id="review-nav-tabs">
+                                    <li class="nav-item <?php if (!$all_bool) echo 'active'; ?>" id="review-tab-recent">
+                                        <a id="review-link-recent"
+                                           class="nav-link <?php if (!$all_bool) echo 'active'; ?>"
+                                           href="#recent-reviews">Recent
+                                            reviews</a>
                                     </li>
-                                    <!-- TODO - Refactor into different tabs on the same page, not two separate pages -->
                                     <!-- TODO - Pagination for the All Reviews tab -->
-                                    <li class="nav-item">
-                                        <a id="all-review-tab" class="nav-link"
-                                           href="all_reviews.php?id=<?php echo $in_id; ?>">All reviews
+                                    <li class="nav-item <?php if ($all_bool) echo 'active'; ?>" id="review-tab-all">
+                                        <a id="review-link-all" class="nav-link <?php if ($all_bool) echo 'active'; ?>"
+                                           href="#all-reviews">All reviews
                                             (<?php echo $review_count ?>)</a>
                                     </li>
                                 </ul>
@@ -184,7 +234,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_SESSION[PREFIX . '_user_id'
                     </div>
 
                     <div class="col-lg-12 grid-margin stretch-card">
-                        <div class="card">
+                        <div class="card" id="recent-reviews" <?php if ($all_bool) echo 'hidden'; ?>>
                             <div class="card-body">
                                 <?php
                                 if (empty($reviews)) {
@@ -197,49 +247,51 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_SESSION[PREFIX . '_user_id'
                                         </div>
                                     </div>
                                 <?php } else {
-                                    $max = 5;
-                                    // make sure to not go loop past the limit
+                                    $max = $amt_per_page;
+                                    // make sure to not loop out of bounds
                                     if ($review_count < $max) {
                                         $max = $review_count;
                                     }
                                     $i = 0;
                                     while ($i < $max) {
-                                        $rev_id = $reviews[$i]["review_id"];
-                                        $show_id = $reviews[$i]["show_id"];
-                                        $user_id = $reviews[$i]["user_id"];
-                                        $r_str = starify($reviews[$i]["review_value"]); ?>
-                                        <p>
-                                            <b><a class="one" style="color: #282f3a"
-                                                  href="review_page.php?rid=<?php echo $rev_id ?>&sid=<?php echo $show_id ?>&uid=<?php echo $user_id ?>"><?php
-                                                    $user_info = $mysqli->user_info($user_id);
-                                                    $user_pf = $mysqli->user_pf_info($user_id);
-                                                    $pfp = $user_pf['profile_pic_src'] ?? 'dummy_pfp.jpg';
-                                                    ?>
-                                                    <img src="images/faces/<?php echo $pfp ?>"
-                                                         onerror="this.onerror=null; this.src='images/faces/dummy_pfp.jpg';"
-                                                         style="width: 50px; height: 50px; border-radius: 100%;"
-                                                    />
-                                                    <span><?php echo $user_info['user_name'] . "'s review" ?></span>
-                                                    <span style="color: #0072ff"><?php echo $r_str; ?></span></a></b>
-                                        </p>
-                                        <p><?php echo $reviews[$i]['review_content']; ?></p>
-                                        <?php if (isset($user_info['user_id']) && $user_info['user_id'] == $_SESSION[PREFIX . '_user_id']) { ?>
-                                            <form action="" method="POST">
-                                                <button class="d-inline btn btn-secondary"
-                                                        name="edit<?php echo $i; ?>-<?php echo $reviews[$i]["review_id"]; ?>-<?php echo $user_info['user_id']; ?>">
-                                                    Edit
-                                                </button>
-                                                <button class="d-inline btn btn-primary"
-                                                        name="delete<?php echo $i; ?>-<?php echo $reviews[$i]["review_id"]; ?>-<?php echo $user_info['user_id']; ?>">
-                                                    Delete
-                                                </button>
-                                            </form>
-                                        <?php } ?>
-                                        <p style="padding-bottom:10px; border-bottom: 2px solid grey;"></p>
-                                        <?php
+                                        review_temp($i, $reviews, $mysqli, $in_id);
                                         $i++;
                                     }
                                 } ?>
+                            </div>
+                        </div>
+                        <div class="card" id="all-reviews" <?php if (!$all_bool) echo 'hidden'; ?>>
+                            <div class="card-body">
+                                <div class="d-flex justify-content-center">
+                                    <div class="spinner-border text-primary"
+                                         role="status" id="spinner" <?php if ($all_bool) echo 'hidden'; ?>>
+                                        <span class="visually-hidden">Loading...</span>
+                                    </div>
+                                </div>
+                                <div id="load-content" <?php if (!$all_bool) echo 'hidden'; ?>>
+                                    <?php if ($page > 1) {
+                                        $new_reviews = $mysqli->show_reviews($in_id, $amt_per_page, ($amt_per_page * ($page - 1)));
+                                        $page_rev_count = count($new_reviews);
+                                        $i = 0;
+
+                                        while ($i < $page_rev_count) {
+                                            review_temp($i, $new_reviews, $mysqli, $in_id);
+                                            $i++;
+                                        }
+                                    } else {
+                                        $max = $amt_per_page;
+                                        if ($review_count < $max) {
+                                            $max = $review_count;
+                                        }
+                                        $i = 0;
+                                        while ($i < $max) {
+                                            review_temp($i, $reviews, $mysqli, $in_id);
+                                            $i++;
+                                        }
+
+                                    }
+                                    if ($review_count > 0) pagination_temp($page, $num_pages, $in_id); ?>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -250,7 +302,192 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_SESSION[PREFIX . '_user_id'
         </div>
     </div>
 </div>
+
+<!-- TODO - have this be the modal for editing as well -->
+<div class="modal fade reviewModal hideModal" id="review-modal" data-bs-backdrop="static" data-bs-keyboard="false"
+     tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content" style="height: 60%">
+            <div class="modal-header">
+                <h5 class="modal-title" id="review_modal_title">
+                    <span data-title-label="submit">I watched...</span>
+                    <span data-title-label="edit" hidden>Edit review</span>
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" id="modal_close_review"></button>
+            </div>
+            <div class="modal-body">
+                <form id="review-form" class="reviewForm" method="post">
+                    <section class="reviewStep submit fields-reversed">
+                        <header class="header">
+                            <div class="prod inline film">
+                                <h3 class="primaryname">
+                                    <span class="name"><?php echo $page_name; ?></span>
+                                </h3>
+                            </div>
+                        </header>
+                        <aside class="figure">
+                            <figure>
+                                <img src="<?php echo $temp_url; ?>" width="150" height="225" alt=""/>
+                            </figure>
+                        </aside>
+                        <div class="body">
+                            <input type="hidden" name="modal-submit" id="modal-submit-hidden" value="1">
+                            <input type="hidden" name="modal-data-review" id="modal-edit-hidden" value="0">
+                            <div class="reviewfields">
+                                <div class="inner">
+                                    <textarea id="review-input" class="field reviewfield" name="review-input"
+                                              placeholder="Add a review..."></textarea>
+                                </div>
+                            </div>
+                            <div class="rating">
+                                <div class="rate">
+                                    <h4 class="rating-label">Rating: </h4>
+                                    <?php for ($i = 5; $i >= 1; $i--) { ?>
+                                        <input type="radio" id="star<?php echo $i; ?>" name="rate"
+                                               value="<?php echo $i; ?>"/>
+                                        <label for="star<?php echo $i; ?>" title="text"><?php echo $i; ?>
+                                            stars</label>
+                                    <?php } ?>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-primary" type="submit" form="review-form">Submit</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade alertModal hideModal" id="alert-modal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content" style="height: 30%">
+            <div class="modal-header">
+                <h5 class="modal-title" id="alert_modal_title">
+                    Are you sure you want to delete this review?
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" id="modal_close_alert"></button>
+            </div>
+            <div class="modal-footer">
+                <form action="" method="post" id="alert-form">
+                    <input type="hidden" name="modify" id="modify-field-hidden-modal" value="1">
+                    <button class="btn btn-danger" type="submit">DELETE</button>
+                    <button class="btn btn-primary" type="button" data-bs-dismiss="modal">Cancel</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- php functions -->
+<?php
+function review_temp($i, $arr, $mysqli, $in_id): void
+{
+    $user_id = $arr[$i]["user_id"];
+    $user_info = $mysqli->user_info($user_id);
+    $user_pf = $mysqli->user_pf_info($user_id);
+    $r_str = starify($arr[$i]["review_value"]);
+    $is_user = (isset($user_info['user_id']) && $user_info['user_id'] == $_SESSION[PREFIX . '_user_id']);
+
+    // get html from template
+    echo review_template($arr[$i], $user_pf, $i, $user_info, $in_id, $r_str, $is_user);
+}
+
+function pagination_temp($page, $num_pages, $in_id): void
+{
+    $prev = $page - 1;
+    $next = $page + 1;
+
+    if ($page > 1) {
+        $previous = <<<TEMPLATE
+            <li class="page-item">
+                <a class="page-link" href="show_page.php?id=$in_id&page=$prev&all=1">Previous</a>
+            </li>
+            TEMPLATE;
+    } else {
+        $previous = <<<TEMPLATE
+            <li class="page-item disabled">
+              <a class="page-link">Previous</a>
+            </li>
+            TEMPLATE;
+    }
+
+    if ($page === $num_pages) {
+        $next_page = <<<TEMPLATE
+                <li class="page-item disabled">
+                  <a class="page-link">Next</a>
+                </li>
+            TEMPLATE;
+    } else {
+        $next_page = <<<TEMPLATE
+                <li class="page-item">
+                  <a class="page-link" href="show_page.php?id=$in_id&page=$next&all=1">Next</a>
+                </li>
+            TEMPLATE;
+    }
+
+    $pages = <<<TEMPLATE
+    
+    TEMPLATE;
+
+    $i = 1;
+    while ($i <= $num_pages) {
+        if ($i === $page) {
+            $pages = $pages . <<<TEMPLATE
+            <li class="page-item disabled"><a class="page-link" href="show_page.php?id=$in_id&page=$i&all=1">$i</a></li>
+            TEMPLATE;
+        } else {
+            $pages = $pages . <<<TEMPLATE
+            <li class="page-item"><a class="page-link" href="show_page.php?id=$in_id&page=$i&all=1">$i</a></li>
+            TEMPLATE;
+        }
+        $i++;
+    }
+
+    // pagination template
+    $pagination = <<<TEMPLATE
+        <nav aria-label="Review navigation">
+          <ul class="pagination justify-content-center">
+            {$previous}
+            {$pages}
+            {$next_page}
+          </ul>
+        </nav>
+        TEMPLATE;
+
+    echo $pagination;
+} ?>
+<!-- end php -->
 <!-- plugins:js -->
+<script src="js/eventListeners.js"></script>
+<script>
+    // get all buttons with ids that start with 'modal_'
+    for (let i of document.querySelectorAll("button[id^=modal_]")) {
+        let sub = i.id.substring(i.id.lastIndexOf('_') + 1);
+        let modalId = sub + '-modal';
+
+        i.addEventListener('click', function () {
+            changeModalDisplay(document.getElementById(modalId));
+        });
+    }
+
+    for (let i of document.querySelectorAll("button[id^=modal_open_alert")) {
+        i.addEventListener('click', function () {
+            transferName(i);
+        })
+    }
+
+    for (let i of document.querySelectorAll("li[id^=review-tab-]")) {
+        i.addEventListener('click', function () {
+            changeActive(i);
+        });
+    }
+
+    document.getElementById('review-tab-all').addEventListener('click', function () {
+        showOnLoad(document.getElementById('load-content'));
+    });
+</script>
 <script src="vendors/base/vendor.bundle.base.js"></script>
 <!-- endinject -->
 <!-- Plugin js for this page-->

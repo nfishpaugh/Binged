@@ -1,4 +1,5 @@
 <?php
+include "config.inc";
 
 /** Finds the position of the $num-th occurrence of a substring in a string */
 function strposX($hay, $needle, $num): bool|int
@@ -66,9 +67,8 @@ function update_avg($show_id, $rating, $review_count, $mysqli, $remove = false, 
         $remove ? $review_count-- : $review_count++;
         $mysqli->update_show_column($show_id, $review_count, "review_amt");
     } else {
-        // subtract from
-        $mysqli->star_update($show_id, $rating);
-        $mysqli->star_update($show_id, $old_rating, true);
+        // remove old rating, add new one
+        $mysqli->star_update($show_id, $rating, false, true, $old_rating);
     }
 
     // place all star columns in an array
@@ -82,4 +82,65 @@ function update_avg($show_id, $rating, $review_count, $mysqli, $remove = false, 
     debug_to_console("Average: " . $avg);
 
     $mysqli->update_show_column($show_id, $avg, "review_avg", "d");
+    $_SESSION[$show_id . "_avg"] = $avg;
+}
+
+/** @description Heredoc HTML template for review tabs
+ * @param $review - Review data array
+ * @param $user_pf - User profile array
+ * @param $i - Iteration variable, needed for array indexing in main doc
+ * @param $user_info - User info array
+ * @param $in_id - Show id (int)
+ * @param $r_str - Review content string
+ * @param $is_user - Boolean that determines if the current user is allowed to see the edit/delete buttons for the review
+ * @return string
+ */
+function review_template($review, $user_pf, $i, $user_info, $in_id, $r_str, $is_user): string
+{
+    $rev_id = $review['review_id'];
+    $rev_content = $review['review_content'];
+    $pfp = $user_pf["profile_pic_src"] ?? "dummy_pfp.jpg";
+    $user_name = $user_info['user_name'];
+    $user_id = $user_info['user_id'];
+    $buttonstr = $i . '-' . $review['review_id'] . '-' . $user_info['user_id'];
+
+    // Need an anon function as an alternative to if conditionals inside HEREDOC templates
+    $hereif = function ($condition, $true, $false) {
+        return $condition ? $true : $false;
+    };
+
+    $set = <<<TEMPLATE
+    <form action="" method="POST">
+        <input type="hidden" name="modify" id="modify-field-hidden" value="1">
+        <button class="d-inline btn btn-primary" type="submit"
+            name="edit$buttonstr">
+            Edit
+        </button>
+        <button class="d-inline btn btn-secondary" type="button"
+            id="modal_open_alert$i"
+            name="delete$i-$rev_id-$user_id"
+            data-bs-toggle="modal"
+            data-bs-target="#alert-modal">
+          Delete
+        </button>
+    </form>
+    TEMPLATE;
+
+    $empty = <<<TEMPLATE
+    
+    TEMPLATE;
+
+    return <<<TEMPLATE
+    <p>
+        <b><a class="one" style="color: #282f3a"
+        href="review_page.php?rid=$rev_id&sid=$in_id&uid=$user_id">
+        <img src="images/faces/$pfp"
+            style="width: 50px; height: 50px; border-radius: 100%;"/>
+        <span>$user_name's review</span>
+        <span style="color: #0072ff">$r_str</span></a></b>
+    </p>
+    <p>$rev_content</p>
+        {$hereif($is_user, $set, $empty)}
+    <p style="padding-bottom:10px; border-bottom: 2px solid grey;"></p>
+    TEMPLATE;
 }
