@@ -4,20 +4,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="1ad80be8-bf78-4fa9-909f-9cb64c15dd65" name="Changes" comment="&#10;- Fixed review averages being stored as integers&#10;- Fixed review count on show_page.php not counting past 5&#10;- Optimized star column updates&#10;- Changed review dates to timestamps to correctly sort by the most recent reviews">
-      <change afterPath="$PROJECT_DIR$/js/eventListeners.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/js/jquery-1.9.1.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/all_reviews.php" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/css/style.css" beforeDir="false" afterPath="$PROJECT_DIR$/css/style.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/include/mysqli_class.php" beforeDir="false" afterPath="$PROJECT_DIR$/include/mysqli_class.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/include/utils.php" beforeDir="false" afterPath="$PROJECT_DIR$/include/utils.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/index.php" beforeDir="false" afterPath="$PROJECT_DIR$/index.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/partials/_navbar.php" beforeDir="false" afterPath="$PROJECT_DIR$/partials/_navbar.php" afterDir="false" />
+    <list default="true" id="1ad80be8-bf78-4fa9-909f-9cb64c15dd65" name="Changes" comment="&#10;- Added a modal for new reviews instead of the horrid separate page I had before&#10;- Refactor the contents of show_page and all_reviews into one page (show_page). Now to see all reviews, just click on the All Reviews tab on the show page&#10;- Removed all_reviews and show_review&#10;- Added pagination for the All Review tab on show_page&#10;- Made local copies of all remaining external dependencies &#10;- Added eventListeners.js, whose name is self-explanatory">
       <change beforePath="$PROJECT_DIR$/review_page.php" beforeDir="false" afterPath="$PROJECT_DIR$/review_page.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/show_page.php" beforeDir="false" afterPath="$PROJECT_DIR$/show_page.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/show_review.php" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -217,7 +205,7 @@
       <workItem from="1746819433535" duration="6833000" />
       <workItem from="1746933379237" duration="9495000" />
       <workItem from="1746980959943" duration="1313000" />
-      <workItem from="1746982369596" duration="313000" />
+      <workItem from="1746982369596" duration="482000" />
     </task>
     <task id="LOCAL-00001" summary="this baby is ready to go!">
       <option name="closed" value="true" />
@@ -299,7 +287,15 @@
       <option name="project" value="LOCAL" />
       <updated>1746054915524</updated>
     </task>
-    <option name="localTasksCounter" value="11" />
+    <task id="LOCAL-00011" summary="&#10;- Added a modal for new reviews instead of the horrid separate page I had before&#10;- Refactor the contents of show_page and all_reviews into one page (show_page). Now to see all reviews, just click on the All Reviews tab on the show page&#10;- Removed all_reviews and show_review&#10;- Added pagination for the All Review tab on show_page&#10;- Made local copies of all remaining external dependencies &#10;- Added eventListeners.js, whose name is self-explanatory">
+      <option name="closed" value="true" />
+      <created>1746982805912</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1746982805912</updated>
+    </task>
+    <option name="localTasksCounter" value="12" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -323,7 +319,8 @@
     <MESSAGE value="- Implemented review edits and deletions&#10;- Added review averages for shows&#10;- Collated similar functions in utils.php&#10;- Reworked guest functionality&#10;- Fixed sessions not destroying themselves after they timed out&#10;- Fixed multiple session warnings related to accidental re-initialization&#10;- Fixed user profile pictures not defaulting to the placeholder if empty&#10;- Fixed show edit using outdated params&#10;- Fixed user profiles being overwritten on login&#10;- Fixed ampersands in genre strings being inserted into the URL&#10;- Fixed problems with action logging using the user's IP address&#10;- Removed unnecessary and deprecated files" />
     <MESSAGE value="Removed unnecessary external scripts and deprecated DB column usages" />
     <MESSAGE value="&#10;- Fixed review averages being stored as integers&#10;- Fixed review count on show_page.php not counting past 5&#10;- Optimized star column updates&#10;- Changed review dates to timestamps to correctly sort by the most recent reviews" />
-    <option name="LAST_COMMIT_MESSAGE" value="&#10;- Fixed review averages being stored as integers&#10;- Fixed review count on show_page.php not counting past 5&#10;- Optimized star column updates&#10;- Changed review dates to timestamps to correctly sort by the most recent reviews" />
+    <MESSAGE value="&#10;- Added a modal for new reviews instead of the horrid separate page I had before&#10;- Refactor the contents of show_page and all_reviews into one page (show_page). Now to see all reviews, just click on the All Reviews tab on the show page&#10;- Removed all_reviews and show_review&#10;- Added pagination for the All Review tab on show_page&#10;- Made local copies of all remaining external dependencies &#10;- Added eventListeners.js, whose name is self-explanatory" />
+    <option name="LAST_COMMIT_MESSAGE" value="&#10;- Added a modal for new reviews instead of the horrid separate page I had before&#10;- Refactor the contents of show_page and all_reviews into one page (show_page). Now to see all reviews, just click on the All Reviews tab on the show page&#10;- Removed all_reviews and show_review&#10;- Added pagination for the All Review tab on show_page&#10;- Made local copies of all remaining external dependencies &#10;- Added eventListeners.js, whose name is self-explanatory" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />

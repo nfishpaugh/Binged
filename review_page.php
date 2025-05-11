@@ -110,7 +110,6 @@ $d = date_format($d, "d M Y");
                                         <h4 class="flex-wrap"
                                             style="padding-bottom: 10px;">
                                             <img src="images/faces/<?php echo $pfp ?>"
-                                                 onerror="this.onerror=null; this.src='images/faces/dummy_pfp.jpg';"
                                                  style="width: 25px; height: 25px; border-radius: 100%;"/>
                                             <?php echo " Review by " . $user_info['user_name'] ?>
                                         </h4>
