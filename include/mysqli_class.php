@@ -715,7 +715,7 @@ class mysqli_class extends mysqli
     }
 
     /** Searches for a show based on the input string */
-    public function show_search($searchstr): array
+    public function show_search($searchstr, $amt_per_page = 72, $offset = 0): array
     {
         $results = [];
         $searchstr = "%" . $searchstr . "%";
@@ -724,10 +724,10 @@ class mysqli_class extends mysqli
             FROM shows 
             WHERE show_name 
             LIKE ?
-            LIMIT 72";
+            LIMIT ? OFFSET ?";
 
         if ($stmt = parent::prepare($query)) {
-            $stmt->bind_param("s", $searchstr);
+            $stmt->bind_param("sii", $searchstr, $amt_per_page, $offset);
             if (!$stmt->execute()) {
                 trigger_error($this->error, E_USER_WARNING);
             }
@@ -750,6 +750,27 @@ class mysqli_class extends mysqli
             trigger_error($this->error, E_USER_WARNING);
         }
         return $results;
+    }
+    
+    /** Returns the amount of results for a search string */
+    public function search_count($searchstr): float|false|int|string|null
+    {
+        $data = 0;
+        $searchstr = "%" . $searchstr . "%";
+        $query = "SELECT count(*) FROM shows WHERE show_name LIKE ?";
+
+        if ($stmt = parent::prepare($query)) {
+            $stmt->bind_param("s", $searchstr);
+            if (!$stmt->execute()) trigger_error($this->error, E_USER_WARNING);
+
+            $result = $stmt->get_result();
+            $data = $result->fetch_column(0);
+            $stmt->close();
+        } else {
+            trigger_error($this->error, E_USER_WARNING);
+        }
+
+        return $data;
     }
 
     /** Retrieves a single column from the shows table based on the row id and column name

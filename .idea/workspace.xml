@@ -4,8 +4,12 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="1ad80be8-bf78-4fa9-909f-9cb64c15dd65" name="Changes" comment="&#10;- Added a modal for new reviews instead of the horrid separate page I had before&#10;- Refactor the contents of show_page and all_reviews into one page (show_page). Now to see all reviews, just click on the All Reviews tab on the show page&#10;- Removed all_reviews and show_review&#10;- Added pagination for the All Review tab on show_page&#10;- Made local copies of all remaining external dependencies &#10;- Added eventListeners.js, whose name is self-explanatory">
-      <change beforePath="$PROJECT_DIR$/review_page.php" beforeDir="false" afterPath="$PROJECT_DIR$/review_page.php" afterDir="false" />
+    <list default="true" id="1ad80be8-bf78-4fa9-909f-9cb64c15dd65" name="Changes" comment="&#10;- Removed obsolete HTML attributes">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/include/mysqli_class.php" beforeDir="false" afterPath="$PROJECT_DIR$/include/mysqli_class.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/include/utils.php" beforeDir="false" afterPath="$PROJECT_DIR$/include/utils.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/show_page.php" beforeDir="false" afterPath="$PROJECT_DIR$/show_page.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/show_search.php" beforeDir="false" afterPath="$PROJECT_DIR$/show_search.php" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -205,7 +209,8 @@
       <workItem from="1746819433535" duration="6833000" />
       <workItem from="1746933379237" duration="9495000" />
       <workItem from="1746980959943" duration="1313000" />
-      <workItem from="1746982369596" duration="482000" />
+      <workItem from="1746982369596" duration="545000" />
+      <workItem from="1747078560396" duration="4999000" />
     </task>
     <task id="LOCAL-00001" summary="this baby is ready to go!">
       <option name="closed" value="true" />
@@ -295,7 +300,15 @@
       <option name="project" value="LOCAL" />
       <updated>1746982805912</updated>
     </task>
-    <option name="localTasksCounter" value="12" />
+    <task id="LOCAL-00012" summary="&#10;- Removed obsolete HTML attributes">
+      <option name="closed" value="true" />
+      <created>1746982877342</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1746982877342</updated>
+    </task>
+    <option name="localTasksCounter" value="13" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -320,7 +333,8 @@
     <MESSAGE value="Removed unnecessary external scripts and deprecated DB column usages" />
     <MESSAGE value="&#10;- Fixed review averages being stored as integers&#10;- Fixed review count on show_page.php not counting past 5&#10;- Optimized star column updates&#10;- Changed review dates to timestamps to correctly sort by the most recent reviews" />
     <MESSAGE value="&#10;- Added a modal for new reviews instead of the horrid separate page I had before&#10;- Refactor the contents of show_page and all_reviews into one page (show_page). Now to see all reviews, just click on the All Reviews tab on the show page&#10;- Removed all_reviews and show_review&#10;- Added pagination for the All Review tab on show_page&#10;- Made local copies of all remaining external dependencies &#10;- Added eventListeners.js, whose name is self-explanatory" />
-    <option name="LAST_COMMIT_MESSAGE" value="&#10;- Added a modal for new reviews instead of the horrid separate page I had before&#10;- Refactor the contents of show_page and all_reviews into one page (show_page). Now to see all reviews, just click on the All Reviews tab on the show page&#10;- Removed all_reviews and show_review&#10;- Added pagination for the All Review tab on show_page&#10;- Made local copies of all remaining external dependencies &#10;- Added eventListeners.js, whose name is self-explanatory" />
+    <MESSAGE value="&#10;- Removed obsolete HTML attributes" />
+    <option name="LAST_COMMIT_MESSAGE" value="&#10;- Removed obsolete HTML attributes" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />

@@ -144,3 +144,87 @@ function review_template($review, $user_pf, $i, $user_info, $in_id, $r_str, $is_
     <p style="padding-bottom:10px; border-bottom: 2px solid grey;"></p>
     TEMPLATE;
 }
+
+/**
+ * @param $page - The current page number
+ * @param $num_pages - The total number of pages
+ * @param $in_id - ID of the show, only used for the review template
+ * @param string $type - Determines the template string returned:
+ * review - returns the review pagination template
+ * search - returns the search pagination template
+ * none - default pagination template with inactive hrefs
+ * @param string $searchstr - The string used if type = search
+ * @return string
+ */
+function pagination_template($page, $num_pages, $in_id, string $type = "none", string $searchstr = ""): string
+{
+    $prev = $page - 1;
+    $next = $page + 1;
+
+    if ($type === "review") {
+        $url = array("show_page.php?id=" . $in_id . "&page=", "&all=1");
+    } elseif ($type === "search") {
+        $url = array("show_search.php?searchbar=" . $searchstr . "&sub=Submit+Query&page=", "");
+    } else {
+        $url = array("#", "");
+    }
+
+    if ($page > 1) {
+        $previous = <<<TEMPLATE
+            <li class="page-item">
+                <a class="page-link" href="$url[0]$prev$url[1]">Previous</a>
+            </li>
+            TEMPLATE;
+    } else {
+        $previous = <<<TEMPLATE
+            <li class="page-item disabled">
+              <a class="page-link">Previous</a>
+            </li>
+            TEMPLATE;
+    }
+
+    if ($page === $num_pages) {
+        $next_page = <<<TEMPLATE
+                <li class="page-item disabled">
+                  <a class="page-link">Next</a>
+                </li>
+            TEMPLATE;
+    } else {
+        $next_page = <<<TEMPLATE
+                <li class="page-item">
+                  <a class="page-link" href="$url[0]$next$url[1]">Next</a>
+                </li>
+            TEMPLATE;
+    }
+
+    $pages = <<<TEMPLATE
+        
+        TEMPLATE;
+
+    $i = 1;
+    while ($i <= $num_pages) {
+        if ($i === $page) {
+            $pages = $pages . <<<TEMPLATE
+            <li class="page-item disabled"><a class="page-link" href="$url[0]$i$url[1]">$i</a></li>
+            TEMPLATE;
+        } else {
+            $pages = $pages . <<<TEMPLATE
+            <li class="page-item"><a class="page-link" href="$url[0]$i$url[1]">$i</a></li>
+            TEMPLATE;
+        }
+        $i++;
+    }
+
+    // pagination template
+    $pagination = <<<TEMPLATE
+        <nav aria-label="Review pagination">
+          <ul class="pagination justify-content-center">
+            {$previous}
+            {$pages}
+            {$next_page}
+          </ul>
+        </nav>
+        TEMPLATE;
+
+    return $pagination;
+}

@@ -275,7 +275,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                                         $i = 0;
 
                                         while ($i < $page_rev_count) {
-                                            review_temp($i, $new_reviews, $mysqli, $in_id);
+                                            echo review_temp($i, $new_reviews, $mysqli, $in_id);
                                             $i++;
                                         }
                                     } else {
@@ -285,12 +285,12 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                                         }
                                         $i = 0;
                                         while ($i < $max) {
-                                            review_temp($i, $reviews, $mysqli, $in_id);
+                                            echo review_temp($i, $reviews, $mysqli, $in_id);
                                             $i++;
                                         }
 
                                     }
-                                    if ($review_count > 0) pagination_temp($page, $num_pages, $in_id); ?>
+                                    if ($review_count > 0) echo pagination_template($page, $num_pages, $in_id, "review"); ?>
                                 </div>
                             </div>
                         </div>
@@ -382,7 +382,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 </div>
 <!-- php functions -->
 <?php
-function review_temp($i, $arr, $mysqli, $in_id): void
+function review_temp($i, $arr, $mysqli, $in_id): string
 {
     $user_id = $arr[$i]["user_id"];
     $user_info = $mysqli->user_info($user_id);
@@ -391,73 +391,10 @@ function review_temp($i, $arr, $mysqli, $in_id): void
     $is_user = (isset($user_info['user_id']) && $user_info['user_id'] == $_SESSION[PREFIX . '_user_id']);
 
     // get html from template
-    echo review_template($arr[$i], $user_pf, $i, $user_info, $in_id, $r_str, $is_user);
+    return review_template($arr[$i], $user_pf, $i, $user_info, $in_id, $r_str, $is_user);
 }
 
-function pagination_temp($page, $num_pages, $in_id): void
-{
-    $prev = $page - 1;
-    $next = $page + 1;
-
-    if ($page > 1) {
-        $previous = <<<TEMPLATE
-            <li class="page-item">
-                <a class="page-link" href="show_page.php?id=$in_id&page=$prev&all=1">Previous</a>
-            </li>
-            TEMPLATE;
-    } else {
-        $previous = <<<TEMPLATE
-            <li class="page-item disabled">
-              <a class="page-link">Previous</a>
-            </li>
-            TEMPLATE;
-    }
-
-    if ($page === $num_pages) {
-        $next_page = <<<TEMPLATE
-                <li class="page-item disabled">
-                  <a class="page-link">Next</a>
-                </li>
-            TEMPLATE;
-    } else {
-        $next_page = <<<TEMPLATE
-                <li class="page-item">
-                  <a class="page-link" href="show_page.php?id=$in_id&page=$next&all=1">Next</a>
-                </li>
-            TEMPLATE;
-    }
-
-    $pages = <<<TEMPLATE
-    
-    TEMPLATE;
-
-    $i = 1;
-    while ($i <= $num_pages) {
-        if ($i === $page) {
-            $pages = $pages . <<<TEMPLATE
-            <li class="page-item disabled"><a class="page-link" href="show_page.php?id=$in_id&page=$i&all=1">$i</a></li>
-            TEMPLATE;
-        } else {
-            $pages = $pages . <<<TEMPLATE
-            <li class="page-item"><a class="page-link" href="show_page.php?id=$in_id&page=$i&all=1">$i</a></li>
-            TEMPLATE;
-        }
-        $i++;
-    }
-
-    // pagination template
-    $pagination = <<<TEMPLATE
-        <nav aria-label="Review navigation">
-          <ul class="pagination justify-content-center">
-            {$previous}
-            {$pages}
-            {$next_page}
-          </ul>
-        </nav>
-        TEMPLATE;
-
-    echo $pagination;
-} ?>
+?>
 <!-- end php -->
 <!-- plugins:js -->
 <script src="js/eventListeners.js"></script>

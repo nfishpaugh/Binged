@@ -1,28 +1,36 @@
 <?php
 include "include/config.inc";
+include "include/utils.php";
 
 $_SESSION[PREFIX . "_ppage"] = $_SERVER['REQUEST_URI'];
 if ($_SESSION[PREFIX . '_username'] == "") {
     header("Location: login.php");
     exit;
 }
+
 $searchstr = (string)$_GET['searchbar'];
+$page = (isset($_GET['page']) && is_numeric($_GET['page'])) ? intval($_GET['page']) : 1;
 
 // base url to grab poster images from
 $img_url = 'https://image.tmdb.org/t/p/original';
 
-$results = $mysqli->show_search($searchstr);
-$count = count($results);
+$amt_per_page = 30;
+$results = $mysqli->show_search($searchstr, $amt_per_page, ($amt_per_page * ($page - 1)));
+$count = $mysqli->search_count($searchstr);
 
-$page_name = $count . " results found for " . "'" . $searchstr . "'";
+if ($count <= 0) {
+    $count = 0;
+    $num_pages = 1;
+} else {
+    // find the number of pages needed to display all results, add one if it doesn't divide cleanly
+    $num_pages = ($amt_per_page % $count) === 0 ? intval($count / $amt_per_page) : intval($count / $amt_per_page) + 1;
 
-if ($count == 1) {
-    $page_name = "1 result found for " . "'" . $searchstr . "'";
+    if ($page > $num_pages) {
+        $page = $num_pages;
+    }
 }
 
-if ($count == 72) {
-    $page_name = "At least 72 results found for " . "'" . $searchstr . "'";
-}
+$page_name = $count . " result" . ($count === 1 ? "" : "s") . " found for " . "'" . $searchstr . "'";
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -102,9 +110,9 @@ if ($count == 72) {
                                     </div>
                                 </div>
                             </div>
-
                             <?php
                         }
+                        if ($count > $amt_per_page) echo pagination_template($page, $num_pages, 0, "search", $searchstr);
                     }
                     ?>
                 </div>
