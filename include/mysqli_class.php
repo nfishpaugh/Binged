@@ -1,5 +1,5 @@
 <?php
-// TODO - Install composer and Cloudinary packages to use for user PFP storage instead of storing them on the web server
+// TODO optional - Install Cloudinary packages to use for user PFP storage instead of storing them on the web server
 
 /*********************************************************************
  * /*## Portal class extends mysqli */
@@ -11,10 +11,15 @@ class mysqli_class extends mysqli
     /** Constructor function */
     public function __construct()
     {
-        // TODO - Implement environment variables instead of storing them in a file
-        require "../private/dbconf.php";
         mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
-        @parent::__construct(DBHost, DBUser, DBPass, DBName, DBPort);
+
+        $os = strtolower(php_uname('s'));
+        if (str_contains($os, 'windows')) {
+            $env = parse_ini_file($_SERVER['DOCUMENT_ROOT'] . "/.env");
+            @parent::__construct($env["DBHost"], $env["DBUser"], $env["DBPass"], $env["DBName"], (int)$env["DBPort"]);
+        } else {
+            @parent::__construct(getenv("DBHost"), getenv("DBUser"), getenv("DBPass"), getenv("DBName"), (int)getenv("DBPort"));
+        }
         // check if connect errno is set
 
         //IF THE CONNECTION DOES NOT WORK - REDIRECT TO OUR "DB DOWN" PAGE, BUT PASS THE URL TO THE APPLICATION
@@ -751,7 +756,7 @@ class mysqli_class extends mysqli
         }
         return $results;
     }
-    
+
     /** Returns the amount of results for a search string */
     public function search_count($searchstr): float|false|int|string|null
     {
@@ -987,7 +992,7 @@ class mysqli_class extends mysqli
     }
 
     /** Retrieves all reviews owned by a user */
-    public function user_review_info($user_id): array
+    public function user_review_info($user_id, $limit, $offset): array
     {
 
         $results = array();
@@ -1003,9 +1008,10 @@ class mysqli_class extends mysqli
             FROM reviews
             JOIN shows ON reviews.show_id = shows.id
             WHERE reviews.user_id = ?
-            ORDER BY review_date DESC";
+            ORDER BY review_date DESC
+            LIMIT ? OFFSET ?";
         if ($stmt = parent::prepare($query)) {
-            $stmt->bind_param("i", $user_id);
+            $stmt->bind_param("iii", $user_id, $limit, $offset);
             if (!$stmt->execute()) {
                 trigger_error($this->error, E_USER_WARNING);
             }
@@ -1157,7 +1163,7 @@ class mysqli_class extends mysqli
 
     /** Returns the amount of reviews for the specified show
      */
-    public function review_count($show_id)
+    public function review_count($show_id): float|false|int|string|null
     {
         $query = "
         SELECT count(review_id) 
@@ -1167,6 +1173,30 @@ class mysqli_class extends mysqli
 
         if ($stmt = parent::prepare($query)) {
             $stmt->bind_param("i", $show_id);
+            if (!$stmt->execute()) {
+                trigger_error($this->error, E_USER_WARNING);
+            }
+            $result = $stmt->get_result();
+            $data = $result->fetch_column(0);
+            $stmt->close();
+        } else {
+            trigger_error($this->error, E_USER_WARNING);
+        }
+
+        return $data;
+    }
+
+    public function user_review_count($uid): float|false|int|string|null
+    {
+        $query = "
+            SELECT count(reviews.review_id)
+            FROM reviews
+            JOIN shows ON reviews.show_id = shows.id
+            WHERE reviews.user_id = ?
+        ";
+
+        if ($stmt = parent::prepare($query)) {
+            $stmt->bind_param("i", $uid);
             if (!$stmt->execute()) {
                 trigger_error($this->error, E_USER_WARNING);
             }

@@ -148,7 +148,8 @@ function review_template($review, $user_pf, $i, $user_info, $in_id, $r_str, $is_
 /**
  * @param $page - The current page number
  * @param $num_pages - The total number of pages
- * @param $in_id - ID of the show, only used for the review template
+ * @param int $in_id - Optional, ID of the show, only used for the review template
+ * @param int $uid - Optional, user ID, only used for user-review template
  * @param string $type - Determines the template string returned:
  * review - returns the review pagination template
  * search - returns the search pagination template
@@ -156,18 +157,17 @@ function review_template($review, $user_pf, $i, $user_info, $in_id, $r_str, $is_
  * @param string $searchstr - The string used if type = search
  * @return string
  */
-function pagination_template($page, $num_pages, $in_id, string $type = "none", string $searchstr = ""): string
+function pagination_template($page, $num_pages, int $in_id = 0, int $uid = 0, string $type = "none", string $searchstr = ""): string
 {
     $prev = $page - 1;
     $next = $page + 1;
 
-    if ($type === "review") {
-        $url = array("show_page.php?id=" . $in_id . "&page=", "&all=1");
-    } elseif ($type === "search") {
-        $url = array("show_search.php?searchbar=" . $searchstr . "&sub=Submit+Query&page=", "");
-    } else {
-        $url = array("#", "");
-    }
+    $url = match ($type) {
+        "review" => array("show_page.php?id=" . $in_id . "&page=", "&all=1"),
+        "search" => array("show_search.php?searchbar=" . $searchstr . "&sub=Submit+Query&page=", ""),
+        "user-review" => array("user_reviews.php?id=" . $uid . "&page=", ""),
+        default => array("#", ""),
+    };
 
     if ($page > 1) {
         $previous = <<<TEMPLATE
@@ -216,7 +216,7 @@ function pagination_template($page, $num_pages, $in_id, string $type = "none", s
     }
 
     // pagination template
-    $pagination = <<<TEMPLATE
+    return <<<TEMPLATE
         <nav aria-label="Review pagination">
           <ul class="pagination justify-content-center">
             {$previous}
@@ -225,6 +225,4 @@ function pagination_template($page, $num_pages, $in_id, string $type = "none", s
           </ul>
         </nav>
         TEMPLATE;
-
-    return $pagination;
 }

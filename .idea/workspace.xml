@@ -4,12 +4,18 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="1ad80be8-bf78-4fa9-909f-9cb64c15dd65" name="Changes" comment="&#10;- Removed obsolete HTML attributes">
+    <list default="true" id="1ad80be8-bf78-4fa9-909f-9cb64c15dd65" name="Changes" comment="&#10;- Added search page pagination">
+      <change afterPath="$PROJECT_DIR$/composer.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.env.example" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/css/style.css" beforeDir="false" afterPath="$PROJECT_DIR$/css/style.css" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/include/mysqli_class.php" beforeDir="false" afterPath="$PROJECT_DIR$/include/mysqli_class.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/include/utils.php" beforeDir="false" afterPath="$PROJECT_DIR$/include/utils.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/js/eventListeners.js" beforeDir="false" afterPath="$PROJECT_DIR$/js/eventListeners.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/show_page.php" beforeDir="false" afterPath="$PROJECT_DIR$/show_page.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/show_search.php" beforeDir="false" afterPath="$PROJECT_DIR$/show_search.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/user_profile.php" beforeDir="false" afterPath="$PROJECT_DIR$/user_profile.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/user_reviews.php" beforeDir="false" afterPath="$PROJECT_DIR$/user_reviews.php" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -19,14 +25,14 @@
   <component name="ComposerSettings" synchronizationState="SYNCHRONIZE">
     <pharConfigPath>$PROJECT_DIR$/composer.json</pharConfigPath>
     <execution>
-      <phar pharPath="$PROJECT_DIR$/composer.phar" interpreterId="ec158861-4830-4488-b10d-578cebb76639" />
+      <phar pharPath="$PROJECT_DIR$/composer.phar" interpreterId="5ffe3da6-bd1f-46b2-bde7-15850970f5fd" />
     </execution>
   </component>
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
-        <option value="composer.json" />
         <option value="JavaScript File" />
+        <option value="composer.json" />
       </list>
     </option>
   </component>
@@ -98,35 +104,35 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.laravel-idea.search-composer-json&quot;: &quot;true&quot;,
-    &quot;WebServerToolWindowFactoryState&quot;: &quot;true&quot;,
-    &quot;WebServerToolWindowPanel.toolwindow.highlight.mappings&quot;: &quot;true&quot;,
-    &quot;WebServerToolWindowPanel.toolwindow.highlight.symlinks&quot;: &quot;true&quot;,
-    &quot;WebServerToolWindowPanel.toolwindow.show.date&quot;: &quot;false&quot;,
-    &quot;WebServerToolWindowPanel.toolwindow.show.permissions&quot;: &quot;false&quot;,
-    &quot;WebServerToolWindowPanel.toolwindow.show.size&quot;: &quot;false&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
-    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/Users/Nathan/PhpstormProjects/Binged/show_page.php&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;run.code.analysis.last.selected.profile&quot;: &quot;pProject Default&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;reference.webide.settings.project.settings.php.composer&quot;,
-    &quot;two.files.diff.last.used.file&quot;: &quot;C:/Users/Nathan/PhpstormProjects/Binged/show_page.php&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.laravel-idea.search-composer-json": "true",
+    "WebServerToolWindowFactoryState": "true",
+    "WebServerToolWindowPanel.toolwindow.highlight.mappings": "true",
+    "WebServerToolWindowPanel.toolwindow.highlight.symlinks": "true",
+    "WebServerToolWindowPanel.toolwindow.show.date": "false",
+    "WebServerToolWindowPanel.toolwindow.show.permissions": "false",
+    "WebServerToolWindowPanel.toolwindow.show.size": "false",
+    "git-widget-placeholder": "main",
+    "ignore.virus.scanning.warn.message": "true",
+    "last_opened_file_path": "C:/Users/Nathan/PhpstormProjects/private/dbconf.php",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "run.code.analysis.last.selected.profile": "pProject Default",
+    "settings.editor.selected.configurable": "reference.webide.settings.project.settings.php.composer",
+    "two.files.diff.last.used.file": "C:/Users/Nathan/PhpstormProjects/Binged/show_page.php",
+    "vue.rearranger.settings.migration": "true"
   },
-  &quot;keyToStringList&quot;: {
-    &quot;DatabaseDriversLRU&quot;: [
-      &quot;mysql&quot;
+  "keyToStringList": {
+    "DatabaseDriversLRU": [
+      "mysql"
     ]
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="D:\mis4770\mis4770" />
@@ -210,7 +216,9 @@
       <workItem from="1746933379237" duration="9495000" />
       <workItem from="1746980959943" duration="1313000" />
       <workItem from="1746982369596" duration="545000" />
-      <workItem from="1747078560396" duration="4999000" />
+      <workItem from="1747078560396" duration="13329000" />
+      <workItem from="1747162992427" duration="1965000" />
+      <workItem from="1747165700516" duration="3384000" />
     </task>
     <task id="LOCAL-00001" summary="this baby is ready to go!">
       <option name="closed" value="true" />
@@ -308,7 +316,15 @@
       <option name="project" value="LOCAL" />
       <updated>1746982877342</updated>
     </task>
-    <option name="localTasksCounter" value="13" />
+    <task id="LOCAL-00013" summary="&#10;- Added search page pagination">
+      <option name="closed" value="true" />
+      <created>1747085231758</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL-00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1747085231758</updated>
+    </task>
+    <option name="localTasksCounter" value="14" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -334,7 +350,8 @@
     <MESSAGE value="&#10;- Fixed review averages being stored as integers&#10;- Fixed review count on show_page.php not counting past 5&#10;- Optimized star column updates&#10;- Changed review dates to timestamps to correctly sort by the most recent reviews" />
     <MESSAGE value="&#10;- Added a modal for new reviews instead of the horrid separate page I had before&#10;- Refactor the contents of show_page and all_reviews into one page (show_page). Now to see all reviews, just click on the All Reviews tab on the show page&#10;- Removed all_reviews and show_review&#10;- Added pagination for the All Review tab on show_page&#10;- Made local copies of all remaining external dependencies &#10;- Added eventListeners.js, whose name is self-explanatory" />
     <MESSAGE value="&#10;- Removed obsolete HTML attributes" />
-    <option name="LAST_COMMIT_MESSAGE" value="&#10;- Removed obsolete HTML attributes" />
+    <MESSAGE value="&#10;- Added search page pagination" />
+    <option name="LAST_COMMIT_MESSAGE" value="&#10;- Added search page pagination" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />

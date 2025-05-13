@@ -14,6 +14,7 @@ if (!$in_id) {
 }
 
 $user_pf_info = $mysqli->user_pf_info($in_id);
+$review_count = $mysqli->user_review_count($in_id);
 $user_info = $mysqli->user_info($in_id);
 $pf_img = $user_pf_info['profile_pic_src'] ?? 'dummy_pfp.jpg';
 $pf_desc = $user_pf_info['user_description'];
@@ -53,14 +54,13 @@ $img_url = 'https://image.tmdb.org/t/p/original';
                     <div class="col-md-12 grid-margin">
                         <div class="dashboard-tabs p-0">
                             <ul class="nav nav-tabs px-4">
-                                <!-- TODO - refactor these into one page w/ 2 tabs -->
-                                <li class="nav-item">
-                                    <a id="profile-tab" class="nav-link active">Profile</a>
+                                <li class="nav-item active">
+                                    <a id="profile-tab" class="nav-link active" href="#profile">Profile</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a id="review-tab" class="nav-link"
-                                       href="user_reviews.php?id=<?php echo $in_id ?>"><?php echo $pf_name; ?>'s
-                                        Reviews</a>
+                                    <a id="review-tab" class="nav-link "
+                                       href="user_reviews.php?id=<?php echo $in_id; ?>"><?php echo $pf_name; ?>'s
+                                        Reviews (<?php echo $review_count; ?>)</a>
                                 </li>
                             </ul>
                         </div>
@@ -69,11 +69,11 @@ $img_url = 'https://image.tmdb.org/t/p/original';
 
                 <div class="row no-gutters mx-lg-5 mb-lg-2">
                     <div class="col-md-12 grid-margin stretch-card" style="height: 100%">
-                        <div class="card flex-wrap" style="flex-direction: row; padding-bottom: 0;">
+                        <div class="card flex-wrap" id="profile" style="flex-direction: row; padding-bottom: 0;">
                             <div class="card-body">
                                 <img src="images/faces/<?php echo $pf_img; ?>"
-                                     onerror="this.onerror=null; this.src='images/faces/dummy_pfp.jpg';"
-                                     style="border-radius: 100%" height="150vh" width="150vw"/>
+                                     style="border-radius: 100%" height="150vh" width="150vw"
+                                     alt="Profile picture could not be loaded."/>
                             </div>
                             <div class="card-body mt-3" style="width: 60%">
                                 <h2 style="color: grey"><?php echo $pf_name; ?></h2>

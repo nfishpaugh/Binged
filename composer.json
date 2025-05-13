@@ -1,0 +1,14 @@
+{
+  "homepage": "https://github.com/nfishpaugh/Binged",
+  "minimum-stability": "stable",
+  "license": "proprietary",
+  "authors": [
+    {
+      "name": "Nathan",
+      "email": "nrfishpaugh@gmail.com"
+    }
+  ],
+  "require": {
+    "ext-mysqli": "*"
+  }
+}

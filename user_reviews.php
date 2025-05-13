@@ -1,5 +1,6 @@
 <?php
 include "include/config.inc";
+include "include/utils.php";
 
 $_SESSION[PREFIX . "_ppage"] = $_SERVER['REQUEST_URI'];
 if ($_SESSION[PREFIX . '_username'] == "") {
@@ -13,7 +14,24 @@ if (!$in_id) {
     exit;
 }
 
+$page = (isset($_GET['page']) && is_numeric($_GET['page'])) ? intval($_GET['page']) : 1;
+$amt_per_page = 12;
+
 $user_info = $mysqli->user_info($in_id);
+
+$results = $mysqli->user_review_info($in_id, $amt_per_page, ($amt_per_page * ($page - 1)));
+$review_count = $mysqli->user_review_count($in_id);
+if ($review_count <= 0) {
+    $review_count = 0;
+    $num_pages = 1;
+} else {
+    // find the number of pages needed to display all reviews, add one extra if it doesn't divide cleanly
+    $num_pages = ($amt_per_page % $review_count) === 0 ? intval($review_count / $amt_per_page) : intval($review_count / $amt_per_page) + 1;
+
+    if ($page > $num_pages) {
+        $page = $num_pages;
+    }
+}
 
 $page_name = "" . $user_info['user_name'] . "'" . "s Reviews";
 
@@ -58,7 +76,8 @@ $img_url = 'https://image.tmdb.org/t/p/original';
                                        href="user_profile.php?id=<?php echo $in_id; ?>">Profile</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a id="review-tab" class="nav-link active">Reviews</a>
+                                    <a id="review-tab" class="nav-link active"><?php echo $user_info['user_name']; ?>'s
+                                        Reviews (<?php echo $review_count; ?>)</a>
                                 </li>
                             </ul>
                         </div>
@@ -80,7 +99,6 @@ $img_url = 'https://image.tmdb.org/t/p/original';
 
                 <div class="row no-gutters">
                     <?php
-                    $results = $mysqli->user_review_info($in_id);
                     if (empty($results)) { ?>
                         <div class="col-sm-12 grid-margin stretch-card">
                             <div class="card">
@@ -107,29 +125,15 @@ $img_url = 'https://image.tmdb.org/t/p/original';
                                         <a href="review_page.php?rid=<?php echo $result['review_id']; ?>&sid=<?php echo $result['id']; ?>&uid=<?php echo $in_id; ?>"
                                            style="text-decoration: none; color: inherit">
                                             <p class="card-title"><?php echo $result['show_name']; ?>
-                                                <span style="color: #0072ff"><?php switch ($result['review_value']) {
-                                                        case 0:
-                                                            $r_str = "No Rating";
-                                                            break;
-                                                        case 1:
-                                                            $r_str = "★";
-                                                            break;
-                                                        case 2:
-                                                            $r_str = "★★";
-                                                            break;
-                                                        case 3:
-                                                            $r_str = "★★★";
-                                                            break;
-                                                        case 4:
-                                                            $r_str = "★★★★";
-                                                            break;
-                                                        case 5:
-                                                            $r_str = "★★★★★";
-                                                            break;
-                                                        default:
-                                                            $r_str = "No rating";
-                                                            break;
-                                                    }
+                                                <span style="color: #0072ff"><?php $r_str = match ($result['review_value']) {
+                                                        0 => "No Rating",
+                                                        1 => "★",
+                                                        2 => "★★",
+                                                        3 => "★★★",
+                                                        4 => "★★★★",
+                                                        5 => "★★★★★",
+                                                        default => "No rating",
+                                                    };
                                                     echo nl2br("\n") . $r_str; ?></span>
                                             </p>
                                             <p class="card-text"><?php echo $result['review_content']; ?></p>
@@ -139,6 +143,7 @@ $img_url = 'https://image.tmdb.org/t/p/original';
                             </div>
                             <?php
                         }
+                        if ($review_count > $amt_per_page) echo pagination_template($page, $num_pages, 0, $in_id);
                     }
                     ?>
                 </div>

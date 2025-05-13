@@ -22,29 +22,30 @@ function transferName(i) {
 }
 
 /** @description Switches the li tab element with the 'active' class and hides the other related cards (e.g. review-tab-recent has a related card with the id of recent-reviews)
- ** TODO - need to make more modular, as currently it only works for two tabs with specific ids
  *
  * @param i - The li element object to add the 'active' class to
+ * @param iHref - The element that i displays when clicked
+ * @param otherElement - The other li in a group of two nav tabs to remove the 'active' class from
+ * @param otherHref - The element that otherElement displays when clicked
+ * @param extraArr - Optional, an array of any ancilliary elements to hide/show
  * @return void
  */
-function changeActive(i) {
-    const otherStr = ['all', 'recent'];
+function changeActive(i, iHref, otherElement, otherHref, extraArr = []) {
     // to make more modular, just swap the logic around: use the index of the li to add active to instead of the one not to add it to
-    let otherIdx;
-    i.id === 'review-tab-recent' ? otherIdx = 0 : otherIdx = 1;
     if (!i.classList.contains('active')) {
         i.classList.add('active');
         i.children.item(0).classList.add('active');
+        if (iHref.hidden) iHref.hidden = false;
 
-        // adds the hidden attribute to the opposite card and removes it from the related card
-        // only works for two entries, will need to refactor if adding more tabs
-        for (const [index, value] of otherStr.entries()) {
-            document.getElementById(value + '-reviews').hidden = (otherIdx === index);
+        if (otherElement.classList.contains("active")) otherElement.classList.remove("active");
+        if (otherElement.children.item(0).classList.contains("active")) otherElement.children.item(0).classList.remove('active');
+        if (!otherHref.hidden) otherHref.hidden = true;
+    }
+
+    if (extraArr.length !== 0) {
+        for (let x of extraArr) {
+            x.hidden = !x.hidden;
         }
-
-        let otherli = document.getElementById('review-tab-' + otherStr[otherIdx]);
-        otherli.classList.remove('active');
-        otherli.children.item(0).classList.remove('active');
     }
 }
 

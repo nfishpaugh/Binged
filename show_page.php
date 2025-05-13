@@ -64,6 +64,8 @@ $r_str = '';
 
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
     if (isset($_SESSION[PREFIX . '_user_id']) && $_POST['modify'] === "1") {
+        unset($_POST['modify']);
+        $sid = $show_info['id'];
         foreach ($_POST as $key => $val) {
             if (preg_match("/(delete|edit)[0-9]./", $key)) {
                 // retrieves the command (delete or edit)
@@ -82,9 +84,6 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                 $arrid = substr($ids, 0, $first);
                 $rid = substr($ids, $first + 1, $second - 2);
                 $uid = substr($ids, $second + 1);
-
-                $sid = $show_info['id'];
-                unset($_POST['modify']);
 
                 if ($_SESSION[PREFIX . '_user_id'] == $uid && $cmd === "delete") {
                     $mysqli->review_delete($rid);
@@ -106,29 +105,39 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         <script>
             alert("Invalid user id");
         </script><?php
-    } elseif (!isset($_POST['modify']) && $_POST['modal-submit'] === "1") {
+        unset($_POST);
+    } elseif (!isset($_POST['modify']) && $_POST['modal-submit'] === "1" && $_SESSION[PREFIX . '_security'] > 0) {
         unset($_POST['modal-submit']);
 
-        $rating = match ($_POST['rate']) {
-            "5" => 5,
-            "4" => 4,
-            "3" => 3,
-            "2" => 2,
-            default => 1,
-        };
+        if (isset($_POST['review-input'])) {
+            $rating = match ($_POST['rate']) {
+                "5" => 5,
+                "4" => 4,
+                "3" => 3,
+                "2" => 2,
+                default => 1,
+            };
 
-        if (!isset($review_count)) {
-            $review_count = 0;
+            if (!isset($review_count)) {
+                $review_count = 0;
+            }
+            update_avg($in_id, $rating, $review_count, $mysqli);
+
+            $mysqli->review_insert($rating, $_POST['review-input'], $in_id, $_SESSION[PREFIX . '_user_id']);
+
+            $mysqli->actions_insert("Added Review: " . date("Y-m-d") . " SID: " . $in_id, $_SESSION[PREFIX . '_user_id']);
+
+            $_SESSION[PREFIX . '_action'][] = 'added';
+            header("location: show_page.php?id=" . $in_id);
+            exit;
+        } else {
+            ?>
+            <script>
+                alert("Review text cannot be empty.");
+            </script>
+            <?php
+            unset($_POST);
         }
-        update_avg($in_id, $rating, $review_count, $mysqli);
-
-        $mysqli->review_insert($rating, $_POST['review-input'], $in_id, $_SESSION[PREFIX . '_user_id']);
-
-        $mysqli->actions_insert("Added Review: " . date("Y-m-d") . " SID: " . $in_id, $_SESSION[PREFIX . '_user_id']);
-
-        $_SESSION[PREFIX . '_action'][] = 'added';
-        header("location: show_page.php?id=" . $in_id);
-        exit;
     }
 }
 ?>
@@ -145,6 +154,9 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     <link rel="shortcut icon" href="images/binged_logo.svg"/>
 </head>
 <body>
+<!-- a nothing script that just prevents a flash of unstyled content on Firefox -->
+<script>let z = 0;</script>
+
 <div class="container-scroller">
 
     <?php require_once 'partials/_navbar.php'; ?>
@@ -222,7 +234,6 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                                            href="#recent-reviews">Recent
                                             reviews</a>
                                     </li>
-                                    <!-- TODO - Pagination for the All Reviews tab -->
                                     <li class="nav-item <?php if ($all_bool) echo 'active'; ?>" id="review-tab-all">
                                         <a id="review-link-all" class="nav-link <?php if ($all_bool) echo 'active'; ?>"
                                            href="#all-reviews">All reviews
@@ -254,7 +265,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                                     }
                                     $i = 0;
                                     while ($i < $max) {
-                                        review_temp($i, $reviews, $mysqli, $in_id);
+                                        echo review_temp($i, $reviews, $mysqli, $in_id);
                                         $i++;
                                     }
                                 } ?>
@@ -290,7 +301,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                                         }
 
                                     }
-                                    if ($review_count > 0) echo pagination_template($page, $num_pages, $in_id, "review"); ?>
+                                    if ($review_count > $amt_per_page) echo pagination_template($page, $num_pages, $in_id, 0, "review"); ?>
                                 </div>
                             </div>
                         </div>
@@ -336,7 +347,8 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                             <div class="reviewfields">
                                 <div class="inner">
                                     <textarea id="review-input" class="field reviewfield" name="review-input"
-                                              placeholder="Add a review..."></textarea>
+                                              placeholder="Add a review..." autofocus></textarea>
+                                    <span id="review-input-msg" class="alert-msg"></span>
                                 </div>
                             </div>
                             <div class="rating">
@@ -355,7 +367,8 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                 </form>
             </div>
             <div class="modal-footer">
-                <button class="btn btn-primary" type="submit" form="review-form">Submit</button>
+                <button class="btn btn-primary" type="submit" form="review-form" id="review-modal-submit-btn">Submit
+                </button>
             </div>
         </div>
     </div>
@@ -405,6 +418,7 @@ function review_temp($i, $arr, $mysqli, $in_id): string
         let modalId = sub + '-modal';
 
         i.addEventListener('click', function () {
+            console.log(i.id + " was clicked");
             changeModalDisplay(document.getElementById(modalId));
         });
     }
@@ -415,11 +429,26 @@ function review_temp($i, $arr, $mysqli, $in_id): string
         })
     }
 
-    for (let i of document.querySelectorAll("li[id^=review-tab-]")) {
-        i.addEventListener('click', function () {
-            changeActive(i);
-        });
-    }
+    document.getElementById('review-modal-submit-btn').addEventListener('click', function (evt) {
+        let el = document.getElementById('review-input-msg');
+        if (document.getElementById('review-input').value === '') {
+            evt.preventDefault();
+            el.style.color = 'red';
+            el.innerHTML = 'Review content must not be empty.';
+            this.prop('disabled', true);
+        } else {
+            el.innerHTML = '';
+            this.prop('disabled', true);
+        }
+    });
+
+    document.getElementById('review-tab-recent').addEventListener('click', function () {
+        changeActive(this, document.getElementById('recent-reviews'), document.getElementById('review-tab-all'), document.getElementById('all-reviews'));
+    });
+
+    document.getElementById('review-tab-all').addEventListener('click', function () {
+        changeActive(this, document.getElementById('all-reviews'), document.getElementById('review-tab-recent'), document.getElementById('recent-reviews'));
+    });
 
     document.getElementById('review-tab-all').addEventListener('click', function () {
         showOnLoad(document.getElementById('load-content'));

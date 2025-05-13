@@ -24847,6 +24847,10 @@ div.showModal {
     padding-left: 0;
 }
 
+.alert-msg {
+    padding-top: var(--padding-top);
+}
+
 .rating {
 
 }

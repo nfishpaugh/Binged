@@ -112,7 +112,7 @@ $page_name = $count . " result" . ($count === 1 ? "" : "s") . " found for " . "'
                             </div>
                             <?php
                         }
-                        if ($count > $amt_per_page) echo pagination_template($page, $num_pages, 0, "search", $searchstr);
+                        if ($count > $amt_per_page) echo pagination_template($page, $num_pages, 0, 0, "search", $searchstr);
                     }
                     ?>
                 </div>
