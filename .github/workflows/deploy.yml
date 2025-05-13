@@ -1,0 +1,44 @@
+name: Deploy PHP App to Prod
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    env: 
+      COMPOSER_NO_DEV: 1
+
+    steps:
+    - name: Checkout Code
+      uses: actions/checkout@v4
+
+    - name: Setup PHP
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: 8.3
+
+    - name: Install Composer Dependencies
+      run: composer install --optimize-autoloader --no-dev --no-progress --no-interaction --prefer-dist
+
+    - name: Install Nodejs
+      uses: actions/setup-node@v4
+      with:
+        node-version: 22
+
+    - name: Install NPM Dependencies
+      run: npm ci
+
+    - name: Build NPM Assets
+      run: npm run build
+
+    - name: Sync Files to Server
+      uses: easingthemes/ssh-deploy@main
+      env:
+        SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+        SOURCE: "."
+        REMOTE_HOST: ${{ secrets.REMOTE_HOST }}
+        REMOTE_USER: ${{ secrets.REMOTE_USER }}
+        TARGET: "/var/www/html/Binged"
