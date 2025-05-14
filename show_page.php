@@ -2,7 +2,6 @@
 require "include/config.inc";
 require "include/utils.php";
 
-
 $_SESSION[PREFIX . "_ppage"] = $_SERVER['REQUEST_URI'];
 if ($_SESSION[PREFIX . '_username'] == "") {
     header("location: login.php");
