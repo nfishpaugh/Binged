@@ -4,10 +4,17 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="1ad80be8-bf78-4fa9-909f-9cb64c15dd65" name="Changes" comment="Updated package.json">
+    <list default="true" id="1ad80be8-bf78-4fa9-909f-9cb64c15dd65" name="Changes" comment="Fixed show posters being tiny on extra small/mobile">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/index.php" beforeDir="false" afterPath="$PROJECT_DIR$/index.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/show_search.php" beforeDir="false" afterPath="$PROJECT_DIR$/show_search.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/js/dashboard.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/js/file-upload.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/js/hoverable-collapse.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/js/jquery.dataTables.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/js/off-canvas.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/js/tabs.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/js/template.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -211,7 +218,7 @@
       <workItem from="1747078560396" duration="13329000" />
       <workItem from="1747162992427" duration="1965000" />
       <workItem from="1747165700516" duration="6872000" />
-      <workItem from="1747246075875" duration="1015000" />
+      <workItem from="1747246075875" duration="2048000" />
     </task>
     <task id="LOCAL-00001" summary="this baby is ready to go!">
       <option name="closed" value="true" />
@@ -349,7 +356,15 @@
       <option name="project" value="LOCAL" />
       <updated>1747246447241</updated>
     </task>
-    <option name="localTasksCounter" value="18" />
+    <task id="LOCAL-00018" summary="Fixed show posters being tiny on extra small/mobile">
+      <option name="closed" value="true" />
+      <created>1747247240594</created>
+      <option name="number" value="00018" />
+      <option name="presentableId" value="LOCAL-00018" />
+      <option name="project" value="LOCAL" />
+      <updated>1747247240594</updated>
+    </task>
+    <option name="localTasksCounter" value="19" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -380,7 +395,8 @@
     <MESSAGE value="&#10;- Forgot to commit composer.lock" />
     <MESSAGE value="&#10;- Removed outdated pages&#10;- Updated composer.json" />
     <MESSAGE value="Updated package.json" />
-    <option name="LAST_COMMIT_MESSAGE" value="Updated package.json" />
+    <MESSAGE value="Fixed show posters being tiny on extra small/mobile" />
+    <option name="LAST_COMMIT_MESSAGE" value="Fixed show posters being tiny on extra small/mobile" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />
