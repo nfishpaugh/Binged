@@ -89,7 +89,8 @@ $page_name = $count . " result" . ($count === 1 ? "" : "s") . " found for " . "'
                     <?php } else {
                         foreach ($results as $result) {
                             $temp_url = $img_url . $result['show_poster_path']; ?>
-                            <div class="col-4 col-md-3 col-lg-2 grid-margin stretch-card" style="border-radius: 0">
+                            <div class="col-6 col-sm-4 col-md-3 col-lg-2 grid-margin stretch-card"
+                                 style="border-radius: 0">
                                 <div class="card flex-wrap" style="border-radius: 0">
                                     <div class="container-lg">
                                         <div class="card-img">

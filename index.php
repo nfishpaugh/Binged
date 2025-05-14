@@ -60,7 +60,7 @@ $img_url = 'https://image.tmdb.org/t/p/original';
                     $results = $mysqli->show_list();
                     foreach ($results as $result) {
                         $temp_url = $img_url . $result['show_poster_path']; ?>
-                        <div class="col-sm-4 col-3 col-md-3 col-lg-2 grid-margin stretch-card" style="border-radius: 0">
+                        <div class="col-6 col-sm-4 col-md-3 col-lg-2 grid-margin stretch-card" style="border-radius: 0">
                             <div class="card flex-wrap" style="border-radius: 0">
                                 <div class="container-lg">
                                     <div class="card-img">
@@ -107,7 +107,7 @@ $img_url = 'https://image.tmdb.org/t/p/original';
                     foreach ($results as $result) {
                         $temp_url = $img_url . $result['show_poster_path'];
                         //$year = substr($result['show_air_date'], 0, 4); ?>
-                        <div class="col-sm-3 col-3 col-md-3 col-lg-2 grid-margin stretch-card" style="border-radius: 0">
+                        <div class="col-6 col-sm-4 col-md-3 col-lg-2 grid-margin stretch-card" style="border-radius: 0">
                             <div class="card flex-wrap" style="border-radius: 0; outline: 0;">
                                 <div class="container-lg">
                                     <div class="card-img" style="overflow: hidden; object-fit: fill">
@@ -151,7 +151,7 @@ $img_url = 'https://image.tmdb.org/t/p/original';
                     foreach ($results as $result) {
                         $temp_url = $img_url . $result['show_poster_path'];
                         //$year = substr($result['show_air_date'], 0, 4); ?>
-                        <div class="col-sm-3 col-3 col-md-3 col-lg-2 grid-margin stretch-card" style="border-radius: 0">
+                        <div class="col-6 col-sm-4 col-md-3 col-lg-2 grid-margin stretch-card" style="border-radius: 0">
                             <div class="card flex-wrap" style="border-radius: 0">
                                 <div class="container-lg">
                                     <div class="card-img">
@@ -197,7 +197,7 @@ $img_url = 'https://image.tmdb.org/t/p/original';
                     foreach ($results as $result) {
                         $temp_url = $img_url . $result['show_poster_path'];
                         //$year = substr($result['show_air_date'], 0, 4); ?>
-                        <div class="col-sm-3 col-3 col-md-3 col-lg-2 grid-margin stretch-card" style="border-radius: 0">
+                        <div class="col-6 col-sm-4 col-md-3 col-lg-2 grid-margin stretch-card" style="border-radius: 0">
                             <div class="card flex-wrap" style="border-radius: 0">
                                 <div class="container-lg">
                                     <div class="card-img">
@@ -243,7 +243,7 @@ $img_url = 'https://image.tmdb.org/t/p/original';
                     foreach ($results as $result) {
                         $temp_url = $img_url . $result['show_poster_path'];
                         //$year = substr($result['show_air_date'], 0, 4); ?>
-                        <div class="col-sm-3 col-3 col-md-3 col-lg-2 grid-margin stretch-card" style="border-radius: 0">
+                        <div class="col-6 col-sm-4 col-md-3 col-lg-2 grid-margin stretch-card" style="border-radius: 0">
                             <div class="card flex-wrap" style="border-radius: 0">
                                 <div class="container-lg">
                                     <div class="card-img">
