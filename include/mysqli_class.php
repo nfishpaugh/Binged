@@ -19,7 +19,7 @@ class mysqli_class extends mysqli
             @parent::__construct($env["DBHost"], $env["DBUser"], $env["DBPass"], $env["DBName"], (int)$env["DBPort"]);
         } else {
             echo("Hi!" . " " . getenv("DBHost") . " " . getenv("DBUser") . " " . getenv("DBPass") . " " . getenv("DBName") . " " . (int)getenv("DBPort"));
-            @parent::__construct(getenv("DBHost"), getenv("DBUser"), getenv("DBPass"), getenv("DBName"), (int)getenv("DBPort"));
+            //@parent::__construct(getenv("DBHost"), getenv("DBUser"), getenv("DBPass"), getenv("DBName"), (int)getenv("DBPort"));
         }
         // check if connect errno is set
 
