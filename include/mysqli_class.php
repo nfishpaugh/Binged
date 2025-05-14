@@ -26,6 +26,7 @@ class mysqli_class extends mysqli
         if (mysqli_connect_error()) {
             trigger_error(mysqli_connect_error(), E_USER_WARNING);
             echo mysqli_connect_error();
+            echo("Hi!" . " " . getenv("DBHost") . " " . getenv("DBUser") . " " . getenv("DBPass") . " " . getenv("DBName") . " " . (int)getenv("DBPort"));
             exit;
         }
     }

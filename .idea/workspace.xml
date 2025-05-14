@@ -4,19 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="1ad80be8-bf78-4fa9-909f-9cb64c15dd65" name="Changes" comment="Removed final template .js files that are unnecessary, and updated package.json and package-lock.json to use dart-sass instead of the deprecated node-sass that was causing CI failures">
-      <change beforePath="$PROJECT_DIR$/genre_page.php" beforeDir="false" afterPath="$PROJECT_DIR$/genre_page.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gulpfile.js" beforeDir="false" afterPath="$PROJECT_DIR$/gulpfile.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/index.php" beforeDir="false" afterPath="$PROJECT_DIR$/index.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/login.php" beforeDir="false" afterPath="$PROJECT_DIR$/login.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/review_edit.php" beforeDir="false" afterPath="$PROJECT_DIR$/review_edit.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/review_page.php" beforeDir="false" afterPath="$PROJECT_DIR$/review_page.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/show_page.php" beforeDir="false" afterPath="$PROJECT_DIR$/show_page.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/show_search.php" beforeDir="false" afterPath="$PROJECT_DIR$/show_search.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/user_add.php" beforeDir="false" afterPath="$PROJECT_DIR$/user_add.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/user_edit.php" beforeDir="false" afterPath="$PROJECT_DIR$/user_edit.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/user_profile.php" beforeDir="false" afterPath="$PROJECT_DIR$/user_profile.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/user_reviews.php" beforeDir="false" afterPath="$PROJECT_DIR$/user_reviews.php" afterDir="false" />
+    <list default="true" id="1ad80be8-bf78-4fa9-909f-9cb64c15dd65" name="Changes" comment="Disregard - whitespace CI test 2">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/include/mysqli_class.php" beforeDir="false" afterPath="$PROJECT_DIR$/include/mysqli_class.php" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -220,7 +210,7 @@
       <workItem from="1747078560396" duration="13329000" />
       <workItem from="1747162992427" duration="1965000" />
       <workItem from="1747165700516" duration="6872000" />
-      <workItem from="1747246075875" duration="2331000" />
+      <workItem from="1747246075875" duration="5254000" />
     </task>
     <task id="LOCAL-00001" summary="this baby is ready to go!">
       <option name="closed" value="true" />
@@ -374,7 +364,31 @@
       <option name="project" value="LOCAL" />
       <updated>1747248214239</updated>
     </task>
-    <option name="localTasksCounter" value="20" />
+    <task id="LOCAL-00020" summary="Removed references to deprecated .js template files">
+      <option name="closed" value="true" />
+      <created>1747248511983</created>
+      <option name="number" value="00020" />
+      <option name="presentableId" value="LOCAL-00020" />
+      <option name="project" value="LOCAL" />
+      <updated>1747248511984</updated>
+    </task>
+    <task id="LOCAL-00021" summary="Disregard - whitespace CI test">
+      <option name="closed" value="true" />
+      <created>1747248623478</created>
+      <option name="number" value="00021" />
+      <option name="presentableId" value="LOCAL-00021" />
+      <option name="project" value="LOCAL" />
+      <updated>1747248623478</updated>
+    </task>
+    <task id="LOCAL-00022" summary="Disregard - whitespace CI test 2">
+      <option name="closed" value="true" />
+      <created>1747249166385</created>
+      <option name="number" value="00022" />
+      <option name="presentableId" value="LOCAL-00022" />
+      <option name="project" value="LOCAL" />
+      <updated>1747249166385</updated>
+    </task>
+    <option name="localTasksCounter" value="23" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -407,7 +421,10 @@
     <MESSAGE value="Updated package.json" />
     <MESSAGE value="Fixed show posters being tiny on extra small/mobile" />
     <MESSAGE value="Removed final template .js files that are unnecessary, and updated package.json and package-lock.json to use dart-sass instead of the deprecated node-sass that was causing CI failures" />
-    <option name="LAST_COMMIT_MESSAGE" value="Removed final template .js files that are unnecessary, and updated package.json and package-lock.json to use dart-sass instead of the deprecated node-sass that was causing CI failures" />
+    <MESSAGE value="Removed references to deprecated .js template files" />
+    <MESSAGE value="Disregard - whitespace CI test" />
+    <MESSAGE value="Disregard - whitespace CI test 2" />
+    <option name="LAST_COMMIT_MESSAGE" value="Disregard - whitespace CI test 2" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />
