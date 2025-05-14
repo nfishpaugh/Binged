@@ -4,8 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="1ad80be8-bf78-4fa9-909f-9cb64c15dd65" name="Changes" comment="Disregard - whitespace CI test 2">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+    <list default="true" id="1ad80be8-bf78-4fa9-909f-9cb64c15dd65" name="Changes" comment="test">
       <change beforePath="$PROJECT_DIR$/include/mysqli_class.php" beforeDir="false" afterPath="$PROJECT_DIR$/include/mysqli_class.php" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -210,7 +209,7 @@
       <workItem from="1747078560396" duration="13329000" />
       <workItem from="1747162992427" duration="1965000" />
       <workItem from="1747165700516" duration="6872000" />
-      <workItem from="1747246075875" duration="5254000" />
+      <workItem from="1747246075875" duration="5586000" />
     </task>
     <task id="LOCAL-00001" summary="this baby is ready to go!">
       <option name="closed" value="true" />
@@ -388,7 +387,31 @@
       <option name="project" value="LOCAL" />
       <updated>1747249166385</updated>
     </task>
-    <option name="localTasksCounter" value="23" />
+    <task id="LOCAL-00023" summary="test">
+      <option name="closed" value="true" />
+      <created>1747258489641</created>
+      <option name="number" value="00023" />
+      <option name="presentableId" value="LOCAL-00023" />
+      <option name="project" value="LOCAL" />
+      <updated>1747258489641</updated>
+    </task>
+    <task id="LOCAL-00024" summary="test">
+      <option name="closed" value="true" />
+      <created>1747258667671</created>
+      <option name="number" value="00024" />
+      <option name="presentableId" value="LOCAL-00024" />
+      <option name="project" value="LOCAL" />
+      <updated>1747258667671</updated>
+    </task>
+    <task id="LOCAL-00025" summary="test">
+      <option name="closed" value="true" />
+      <created>1747258740335</created>
+      <option name="number" value="00025" />
+      <option name="presentableId" value="LOCAL-00025" />
+      <option name="project" value="LOCAL" />
+      <updated>1747258740335</updated>
+    </task>
+    <option name="localTasksCounter" value="26" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -424,7 +447,8 @@
     <MESSAGE value="Removed references to deprecated .js template files" />
     <MESSAGE value="Disregard - whitespace CI test" />
     <MESSAGE value="Disregard - whitespace CI test 2" />
-    <option name="LAST_COMMIT_MESSAGE" value="Disregard - whitespace CI test 2" />
+    <MESSAGE value="test" />
+    <option name="LAST_COMMIT_MESSAGE" value="test" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />
