@@ -85,10 +85,7 @@ gulp.task('injectCommonAssets', function () {
             './vendors/base/vendor.bundle.base.js',
         ], {read: false}), {name: 'plugins', relative: true}))
         .pipe(inject(gulp.src([
-            './css/*.css',
-            './js/off-canvas.js',
-            './js/hoverable-collapse.js',
-            './js/template.js'
+            './css/*.css'
         ], {read: false}), {relative: true}))
         .pipe(gulp.dest('.'));
 });

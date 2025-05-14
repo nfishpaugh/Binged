@@ -4,17 +4,19 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="1ad80be8-bf78-4fa9-909f-9cb64c15dd65" name="Changes" comment="Fixed show posters being tiny on extra small/mobile">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/js/dashboard.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/js/file-upload.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/js/hoverable-collapse.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/js/jquery.dataTables.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/js/off-canvas.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/js/tabs.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/js/template.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
+    <list default="true" id="1ad80be8-bf78-4fa9-909f-9cb64c15dd65" name="Changes" comment="Removed final template .js files that are unnecessary, and updated package.json and package-lock.json to use dart-sass instead of the deprecated node-sass that was causing CI failures">
+      <change beforePath="$PROJECT_DIR$/genre_page.php" beforeDir="false" afterPath="$PROJECT_DIR$/genre_page.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gulpfile.js" beforeDir="false" afterPath="$PROJECT_DIR$/gulpfile.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/index.php" beforeDir="false" afterPath="$PROJECT_DIR$/index.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/login.php" beforeDir="false" afterPath="$PROJECT_DIR$/login.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/review_edit.php" beforeDir="false" afterPath="$PROJECT_DIR$/review_edit.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/review_page.php" beforeDir="false" afterPath="$PROJECT_DIR$/review_page.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/show_page.php" beforeDir="false" afterPath="$PROJECT_DIR$/show_page.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/show_search.php" beforeDir="false" afterPath="$PROJECT_DIR$/show_search.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/user_add.php" beforeDir="false" afterPath="$PROJECT_DIR$/user_add.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/user_edit.php" beforeDir="false" afterPath="$PROJECT_DIR$/user_edit.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/user_profile.php" beforeDir="false" afterPath="$PROJECT_DIR$/user_profile.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/user_reviews.php" beforeDir="false" afterPath="$PROJECT_DIR$/user_reviews.php" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -218,7 +220,7 @@
       <workItem from="1747078560396" duration="13329000" />
       <workItem from="1747162992427" duration="1965000" />
       <workItem from="1747165700516" duration="6872000" />
-      <workItem from="1747246075875" duration="2048000" />
+      <workItem from="1747246075875" duration="2331000" />
     </task>
     <task id="LOCAL-00001" summary="this baby is ready to go!">
       <option name="closed" value="true" />
@@ -364,7 +366,15 @@
       <option name="project" value="LOCAL" />
       <updated>1747247240594</updated>
     </task>
-    <option name="localTasksCounter" value="19" />
+    <task id="LOCAL-00019" summary="Removed final template .js files that are unnecessary, and updated package.json and package-lock.json to use dart-sass instead of the deprecated node-sass that was causing CI failures">
+      <option name="closed" value="true" />
+      <created>1747248214239</created>
+      <option name="number" value="00019" />
+      <option name="presentableId" value="LOCAL-00019" />
+      <option name="project" value="LOCAL" />
+      <updated>1747248214239</updated>
+    </task>
+    <option name="localTasksCounter" value="20" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -396,7 +406,8 @@
     <MESSAGE value="&#10;- Removed outdated pages&#10;- Updated composer.json" />
     <MESSAGE value="Updated package.json" />
     <MESSAGE value="Fixed show posters being tiny on extra small/mobile" />
-    <option name="LAST_COMMIT_MESSAGE" value="Fixed show posters being tiny on extra small/mobile" />
+    <MESSAGE value="Removed final template .js files that are unnecessary, and updated package.json and package-lock.json to use dart-sass instead of the deprecated node-sass that was causing CI failures" />
+    <option name="LAST_COMMIT_MESSAGE" value="Removed final template .js files that are unnecessary, and updated package.json and package-lock.json to use dart-sass instead of the deprecated node-sass that was causing CI failures" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />
