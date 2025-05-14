@@ -18,15 +18,14 @@ class mysqli_class extends mysqli
             $env = parse_ini_file($_SERVER['DOCUMENT_ROOT'] . "/.env");
             @parent::__construct($env["DBHost"], $env["DBUser"], $env["DBPass"], $env["DBName"], (int)$env["DBPort"]);
         } else {
-            echo("Hi!" . " H:" . getenv("DBHost") . " U:" . getenv("DBUser") . " P:" . getenv("DBPass") . " N:" . getenv("DBName") . " P:" . (int)getenv("DBPort"));
-            //@parent::__construct(getenv("DBHost"), getenv("DBUser"), getenv("DBPass"), getenv("DBName"), (int)getenv("DBPort"));
+            @parent::__construct(getenv("DBHost"), getenv("DBUser"), getenv("DBPass"), getenv("DBName"), (int)getenv("DBPort"));
         }
         // check if connect errno is set
 
         //IF THE CONNECTION DOES NOT WORK - REDIRECT TO OUR "DB DOWN" PAGE, BUT PASS THE URL TO THE APPLICATION
         if (mysqli_connect_error()) {
-            //trigger_error(mysqli_connect_error(), E_USER_WARNING);
-            //echo mysqli_connect_error();
+            trigger_error(mysqli_connect_error(), E_USER_WARNING);
+            echo mysqli_connect_error();
             exit;
         }
     }
