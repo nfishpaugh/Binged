@@ -24,7 +24,7 @@ class mysqli_class extends mysqli
 
         //IF THE CONNECTION DOES NOT WORK - REDIRECT TO OUR "DB DOWN" PAGE, BUT PASS THE URL TO THE APPLICATION
         if (mysqli_connect_error()) {
-            trigger_error(mysqli_connect_error(), E_USER_WARNING);
+            //trigger_error(mysqli_connect_error(), E_USER_WARNING);
             echo mysqli_connect_error();
             echo("Hi!" . " " . getenv("DBHost") . " " . getenv("DBUser") . " " . getenv("DBPass") . " " . getenv("DBName") . " " . (int)getenv("DBPort"));
             exit;
