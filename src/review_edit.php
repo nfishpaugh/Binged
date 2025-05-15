@@ -113,7 +113,7 @@ $page_name = "Editing a review for " . $showname;
                                 <div class="me-md-3 me-xl-5">
                                     <div class="container-md-1" style="float:left; max-width:20vw;">
                                         <div class="card-img-2">
-                                            <a href="show_page.php?id=<?php echo $_SESSION[$rid . "_review_content"]['show_id'] ?>">
+                                            <a href="show_page.php?id=<?php echo $_SESSION[$rid . "_review_content"]['show_id'] ?> ">
                                                 <img src="<?php echo $poster ?>" width="333"
                                                      height="500"
                                                      alt="Image could not be loaded."/>

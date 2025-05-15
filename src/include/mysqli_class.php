@@ -11,21 +11,23 @@ class mysqli_class extends mysqli
     /** Constructor function */
     public function __construct()
     {
-        mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
+        if (file_exists(dirname(__DIR__, 2) . "/vendor/autoload.php")) {
+            require dirname(__DIR__, 2) . "/vendor/autoload.php";
 
-        $os = strtolower(php_uname('s'));
-        if (str_contains($os, 'windows')) {
-            $env = parse_ini_file($_SERVER['DOCUMENT_ROOT'] . "/.env");
-            @parent::__construct($env["DBHost"], $env["DBUser"], $env["DBPass"], $env["DBName"], (int)$env["DBPort"]);
+            $dotenv = Dotenv\Dotenv::createImmutable(dirname(__DIR__, 2));
+            $dotenv->load();
+            @parent::__construct($_ENV["DBHost"], $_ENV["DBUser"], $_ENV["DBPass"], $_ENV["DBName"], (int)$_ENV["DBPort"]);
+            // check if connect errno is set
+
+            //IF THE CONNECTION DOES NOT WORK - REDIRECT TO OUR "DB DOWN" PAGE, BUT PASS THE URL TO THE APPLICATION
+            if (mysqli_connect_error()) {
+                trigger_error(mysqli_connect_error(), E_USER_WARNING);
+                mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
+                echo mysqli_connect_error();
+                exit;
+            }
         } else {
-            @parent::__construct(getenv("DBHost"), getenv("DBUser"), getenv("DBPass"), getenv("DBName"), (int)getenv("DBPort"));
-        }
-        // check if connect errno is set
-
-        //IF THE CONNECTION DOES NOT WORK - REDIRECT TO OUR "DB DOWN" PAGE, BUT PASS THE URL TO THE APPLICATION
-        if (mysqli_connect_error()) {
-            trigger_error(mysqli_connect_error(), E_USER_WARNING);
-            echo mysqli_connect_error();
+            print_r("no. Dir: " . __DIR__ . ", Path: " . dirname(__DIR__, 2) . ", Root: " . $_SERVER['DOCUMENT_ROOT']);
             exit;
         }
     }

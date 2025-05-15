@@ -93,7 +93,7 @@ $img_url = 'https://image.tmdb.org/t/p/original';
                         <div class="d-flex justify-content-between flex-wrap">
                             <div class="d-flex align-items-end flex-wrap">
                                 <div class="me-md-3 me-xl-5">
-                                    <a class="one" href="genre_page.php?genre=<?php echo "Action" ?>">
+                                    <a class="one" href="genre_page.php?genre=<?php echo "Action"; ?>">
                                         <h2>Action & Adventure</h2></a>
                                 </div>
                             </div>
@@ -137,7 +137,7 @@ $img_url = 'https://image.tmdb.org/t/p/original';
                         <div class="d-flex justify-content-between flex-wrap">
                             <div class="d-flex align-items-end flex-wrap">
                                 <div class="me-md-3 me-xl-5">
-                                    <a class="one" href="genre_page.php?genre=<?php echo "Drama" ?>">
+                                    <a class="one" href="genre_page.php?genre=<?php echo "Drama"; ?>">
                                         <h2>Drama</h2></a>
                                 </div>
                             </div>
@@ -183,7 +183,7 @@ $img_url = 'https://image.tmdb.org/t/p/original';
                         <div class="d-flex justify-content-between flex-wrap">
                             <div class="d-flex align-items-end flex-wrap">
                                 <div class="me-md-3 me-xl-5">
-                                    <a class="one" href="genre_page.php?genre=<?php echo "Comedy" ?>">
+                                    <a class="one" href="genre_page.php?genre=<?php echo 'Comedy' ?>">
                                         <h2>Comedy</h2></a>
                                 </div>
                             </div>
@@ -229,7 +229,7 @@ $img_url = 'https://image.tmdb.org/t/p/original';
                         <div class="d-flex justify-content-between flex-wrap">
                             <div class="d-flex align-items-end flex-wrap">
                                 <div class="me-md-3 me-xl-5">
-                                    <a class="one" href="genre_page.php?genre=<?php echo "SciFi" ?>">
+                                    <a class="one" href="genre_page.php?genre=<?php echo 'SciFi' ?>">
                                         <h2>Sci-Fi & Fantasy</h2></a>
                                 </div>
                             </div>

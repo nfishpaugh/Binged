@@ -4,8 +4,78 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="1ad80be8-bf78-4fa9-909f-9cb64c15dd65" name="Changes" comment="test">
-      <change beforePath="$PROJECT_DIR$/include/mysqli_class.php" beforeDir="false" afterPath="$PROJECT_DIR$/include/mysqli_class.php" afterDir="false" />
+    <list default="true" id="1ad80be8-bf78-4fa9-909f-9cb64c15dd65" name="Changes" comment="Revert">
+      <change beforePath="$PROJECT_DIR$/.idea/mis4770.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/mis4770.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/php.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/php.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/composer.json" beforeDir="false" afterPath="$PROJECT_DIR$/composer.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/composer.lock" beforeDir="false" afterPath="$PROJECT_DIR$/composer.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/css/maps/style.css.map" beforeDir="false" afterPath="$PROJECT_DIR$/src/css/maps/style.css.map" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/css/style.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/css/style.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/fonts/Roboto/Roboto-Black.eot" beforeDir="false" afterPath="$PROJECT_DIR$/src/fonts/Roboto/Roboto-Black.eot" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/fonts/Roboto/Roboto-Black.ttf" beforeDir="false" afterPath="$PROJECT_DIR$/src/fonts/Roboto/Roboto-Black.ttf" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/fonts/Roboto/Roboto-Black.woff" beforeDir="false" afterPath="$PROJECT_DIR$/src/fonts/Roboto/Roboto-Black.woff" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/fonts/Roboto/Roboto-Black.woff2" beforeDir="false" afterPath="$PROJECT_DIR$/src/fonts/Roboto/Roboto-Black.woff2" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/fonts/Roboto/Roboto-Bold.eot" beforeDir="false" afterPath="$PROJECT_DIR$/src/fonts/Roboto/Roboto-Bold.eot" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/fonts/Roboto/Roboto-Bold.ttf" beforeDir="false" afterPath="$PROJECT_DIR$/src/fonts/Roboto/Roboto-Bold.ttf" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/fonts/Roboto/Roboto-Bold.woff" beforeDir="false" afterPath="$PROJECT_DIR$/src/fonts/Roboto/Roboto-Bold.woff" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/fonts/Roboto/Roboto-Bold.woff2" beforeDir="false" afterPath="$PROJECT_DIR$/src/fonts/Roboto/Roboto-Bold.woff2" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/fonts/Roboto/Roboto-Light.eot" beforeDir="false" afterPath="$PROJECT_DIR$/src/fonts/Roboto/Roboto-Light.eot" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/fonts/Roboto/Roboto-Light.ttf" beforeDir="false" afterPath="$PROJECT_DIR$/src/fonts/Roboto/Roboto-Light.ttf" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/fonts/Roboto/Roboto-Light.woff" beforeDir="false" afterPath="$PROJECT_DIR$/src/fonts/Roboto/Roboto-Light.woff" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/fonts/Roboto/Roboto-Light.woff2" beforeDir="false" afterPath="$PROJECT_DIR$/src/fonts/Roboto/Roboto-Light.woff2" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/fonts/Roboto/Roboto-Medium.eot" beforeDir="false" afterPath="$PROJECT_DIR$/src/fonts/Roboto/Roboto-Medium.eot" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/fonts/Roboto/Roboto-Medium.ttf" beforeDir="false" afterPath="$PROJECT_DIR$/src/fonts/Roboto/Roboto-Medium.ttf" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/fonts/Roboto/Roboto-Medium.woff" beforeDir="false" afterPath="$PROJECT_DIR$/src/fonts/Roboto/Roboto-Medium.woff" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/fonts/Roboto/Roboto-Medium.woff2" beforeDir="false" afterPath="$PROJECT_DIR$/src/fonts/Roboto/Roboto-Medium.woff2" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/fonts/Roboto/Roboto-Regular.eot" beforeDir="false" afterPath="$PROJECT_DIR$/src/fonts/Roboto/Roboto-Regular.eot" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/fonts/Roboto/Roboto-Regular.ttf" beforeDir="false" afterPath="$PROJECT_DIR$/src/fonts/Roboto/Roboto-Regular.ttf" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/fonts/Roboto/Roboto-Regular.woff" beforeDir="false" afterPath="$PROJECT_DIR$/src/fonts/Roboto/Roboto-Regular.woff" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/fonts/Roboto/Roboto-Regular.woff2" beforeDir="false" afterPath="$PROJECT_DIR$/src/fonts/Roboto/Roboto-Regular.woff2" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/genre_page.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/genre_page.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/guest_login.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/guest_login.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gulpfile.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/gulpfile.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/binged_logo.svg" beforeDir="false" afterPath="$PROJECT_DIR$/src/images/binged_logo.svg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/faces/cine.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/src/images/faces/cine.jpg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/faces/dummy_pfp.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/src/images/faces/dummy_pfp.jpg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/faces/face1.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/src/images/faces/face1.jpg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/faces/face2.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/src/images/faces/face2.jpg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/faces/me.JPG" beforeDir="false" afterPath="$PROJECT_DIR$/src/images/faces/me.JPG" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/favicon.ico" beforeDir="false" afterPath="$PROJECT_DIR$/src/images/favicon.ico" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/favicon.png" beforeDir="false" afterPath="$PROJECT_DIR$/src/images/favicon.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/logo-mini.svg" beforeDir="false" afterPath="$PROJECT_DIR$/src/images/logo-mini.svg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/logo.svg" beforeDir="false" afterPath="$PROJECT_DIR$/src/images/logo.svg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/include/config.inc" beforeDir="false" afterPath="$PROJECT_DIR$/src/include/config.inc" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/include/mysqli_class.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/include/mysqli_class.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/include/utils.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/include/utils.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/index.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/index.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/js/documentation.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/js/documentation.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/js/eventListeners.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/js/eventListeners.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/js/jquery-1.9.1.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/js/jquery-1.9.1.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/js/jquery.cookie.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/js/jquery.cookie.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/login.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/login.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/logout.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/logout.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/partials/_footer.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/partials/_footer.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/partials/_navbar.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/partials/_navbar.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/partials/_sidebar.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/partials/_sidebar.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/review_edit.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/review_edit.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/review_page.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/review_page.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/show_page.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/show_page.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/show_search.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/show_search.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/user_add.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/user_add.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/user_edit.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/user_edit.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/user_profile.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/user_profile.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/user_reviews.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/user_reviews.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/vendors/base/bootstrap.min.js.map" beforeDir="false" afterPath="$PROJECT_DIR$/src/vendors/base/bootstrap.min.js.map" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/vendors/base/vendor.bundle.base.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/vendors/base/vendor.bundle.base.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/vendors/base/vendor.bundle.base.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/vendors/base/vendor.bundle.base.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/vendors/mdi/css/materialdesignicons.min.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/vendors/mdi/css/materialdesignicons.min.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/vendors/mdi/css/materialdesignicons.min.css.map" beforeDir="false" afterPath="$PROJECT_DIR$/src/vendors/mdi/css/materialdesignicons.min.css.map" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/vendors/mdi/fonts/materialdesignicons-webfont.eot" beforeDir="false" afterPath="$PROJECT_DIR$/src/vendors/mdi/fonts/materialdesignicons-webfont.eot" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/vendors/mdi/fonts/materialdesignicons-webfont.ttf" beforeDir="false" afterPath="$PROJECT_DIR$/src/vendors/mdi/fonts/materialdesignicons-webfont.ttf" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/vendors/mdi/fonts/materialdesignicons-webfont.woff" beforeDir="false" afterPath="$PROJECT_DIR$/src/vendors/mdi/fonts/materialdesignicons-webfont.woff" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/vendors/mdi/fonts/materialdesignicons-webfont.woff2" beforeDir="false" afterPath="$PROJECT_DIR$/src/vendors/mdi/fonts/materialdesignicons-webfont.woff2" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -63,15 +133,13 @@
   <component name="PhpDebugGeneral" listening_started="true" />
   <component name="PhpWorkspaceProjectConfiguration" interpreter_name="PHP">
     <include_path>
-      <path value="$PROJECT_DIR$/vendor/psr/http-factory" />
-      <path value="$PROJECT_DIR$/vendor/psr/http-message" />
-      <path value="$PROJECT_DIR$/vendor/ralouphie/getallheaders" />
-      <path value="$PROJECT_DIR$/vendor/guzzlehttp/guzzle" />
       <path value="$PROJECT_DIR$/vendor/composer" />
-      <path value="$PROJECT_DIR$/vendor/guzzlehttp/psr7" />
-      <path value="$PROJECT_DIR$/vendor/guzzlehttp/promises" />
-      <path value="$PROJECT_DIR$/vendor/symfony/deprecation-contracts" />
-      <path value="$PROJECT_DIR$/vendor/psr/http-client" />
+      <path value="$PROJECT_DIR$/vendor/vlucas/phpdotenv" />
+      <path value="$PROJECT_DIR$/vendor/phpoption/phpoption" />
+      <path value="$PROJECT_DIR$/vendor/symfony/polyfill-ctype" />
+      <path value="$PROJECT_DIR$/vendor/graham-campbell/result-type" />
+      <path value="$PROJECT_DIR$/vendor/symfony/polyfill-mbstring" />
+      <path value="$PROJECT_DIR$/vendor/symfony/polyfill-php80" />
     </include_path>
   </component>
   <component name="ProblemsViewState">
@@ -129,6 +197,8 @@
       <recent name="C:\Users\nrfis\Downloads\mis4770\mis4770" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\Nathan\PhpstormProjects\Binged\src\" />
+      <recent name="C:\Users\Nathan\PhpstormProjects\Binged\src" />
       <recent name="C:\Users\15135\OneDrive\Desktop\School\Fall23\CIT4770\GroupProject\WebsiteCode\mis4770new\MIS4770\images" />
     </key>
   </component>
@@ -209,7 +279,8 @@
       <workItem from="1747078560396" duration="13329000" />
       <workItem from="1747162992427" duration="1965000" />
       <workItem from="1747165700516" duration="6872000" />
-      <workItem from="1747246075875" duration="6222000" />
+      <workItem from="1747246075875" duration="6262000" />
+      <workItem from="1747337955890" duration="4261000" />
     </task>
     <task id="LOCAL-00001" summary="this baby is ready to go!">
       <option name="closed" value="true" />
@@ -435,7 +506,15 @@
       <option name="project" value="LOCAL" />
       <updated>1747259235290</updated>
     </task>
-    <option name="localTasksCounter" value="29" />
+    <task id="LOCAL-00029" summary="Revert">
+      <option name="closed" value="true" />
+      <created>1747259462614</created>
+      <option name="number" value="00029" />
+      <option name="presentableId" value="LOCAL-00029" />
+      <option name="project" value="LOCAL" />
+      <updated>1747259462614</updated>
+    </task>
+    <option name="localTasksCounter" value="30" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -472,7 +551,8 @@
     <MESSAGE value="Disregard - whitespace CI test" />
     <MESSAGE value="Disregard - whitespace CI test 2" />
     <MESSAGE value="test" />
-    <option name="LAST_COMMIT_MESSAGE" value="test" />
+    <MESSAGE value="Revert" />
+    <option name="LAST_COMMIT_MESSAGE" value="Revert" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />
