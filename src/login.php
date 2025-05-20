@@ -1,42 +1,29 @@
 <?php
 include "include/config.inc";
 
-function setlogin($response): void
-{
-    if ($response[0] == 1) {
-        $_SESSION[PREFIX . '_username'] = $response[1]['email'];
-        $_SESSION[PREFIX . '_user_id'] = $response[1]['user_id'];
-        $_SESSION[PREFIX . '_security'] = $response[1]['user_level_id'];
-        $_SESSION[PREFIX . '_fullname'] = $response[1]['user_name'];
-    } else {
-        ?>
-        <script>
-            alert("Your username and password are incorrect.");
-        </script>
-        <?php
-    }
-}
-
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if ($_POST['email'] != "" && $_POST['password'] != "" && isset($_POST['signin'])) {
-
         $login_response = $mysqli->login($_POST['email'], $_POST['password']);
-        setlogin($login_response);
-        //$mysqli->user_pf_insert($_SESSION[PREFIX . '_user_id'], date('Y-m-d'));
-        if ($_SESSION[PREFIX . "_ppage"] != '') {
-            $redirect = $_SESSION[PREFIX . "_ppage"];
-            header("location: $redirect");
+        if ($login_response[0] === 1) {
+            $_SESSION[PREFIX . '_username'] = $login_response[1]['email'];
+            $_SESSION[PREFIX . '_user_id'] = $login_response[1]['user_id'];
+            $_SESSION[PREFIX . '_security'] = $login_response[1]['user_level_id'];
+            $_SESSION[PREFIX . '_fullname'] = $login_response[1]['user_name'];
+
+            if ($_SESSION[PREFIX . "_ppage"] != '') {
+                $redirect = $_SESSION[PREFIX . "_ppage"];
+                header("location: $redirect");
+                exit;
+            }
+            header("location:index.php");
             exit;
+        } else {
+            http_response_code(401);
         }
-        header("location:index.php");
-        exit;
-
     } elseif (isset($_POST['signup'])) {
-
         $_POST = array();
         header("location: user_add.php");
         exit;
-
     }
 }
 //END POST
@@ -86,6 +73,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                        name="password"
                                        placeholder="Password">
                             </div>
+                            <p style="color: red"><?php
+                                if (http_response_code() === 401) {
+                                    echo "The username or password you entered is incorrect.";
+                                } else {
+                                    echo "";
+                                }
+                                ?></p>
                             <div class="mt-3">
                                 <button type="submit" id="signin" name="signin"
                                         class="btn btn-block btn-primary btn-lg font-weight-medium auth-form-btn"
