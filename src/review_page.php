@@ -93,48 +93,47 @@ $d = date_format($d, "d M Y");
                 <div class="row">
                     <div class="col-md-12 grid-margin stretch-card">
                         <div class="card">
-                            <div class="card-body">
-                                <div class="container-md" style="float:left;">
-                                    <div class="card-img-2">
+                            <div class="card-body" style="margin-left: auto; margin-right: auto; min-width: 75%;">
+                                <div class="container-md">
+                                    <div class="card-img-2" style="display: block;">
                                         <a href="show_page.php?id=<?php echo $show_id ?>">
                                             <img src="<?php echo $img_url . $show_info['show_poster_path'] ?>"
-                                                 width="333"
-                                                 height="500"
-                                                 style="margin-right:50px" alt="Image could not be loaded."/>
+                                                 style="object-fit: scale-down; max-height: 100%; max-width: 100%;"
+                                                 alt="Image could not be loaded."/>
                                         </a>
                                     </div>
-                                </div>
-                                <div style="float:right padding-top:80px" class="flex-wrap">
-
-                                    <a class="one" href="user_profile.php?id=<?php echo $user_id ?>">
-                                        <h4 class="flex-wrap"
-                                            style="padding-bottom: 10px;">
-                                            <img src="images/faces/<?php echo $pfp ?>"
-                                                 style="width: 25px; height: 25px; border-radius: 100%;"/>
-                                            <?php echo " Review by " . $user_info['user_name'] ?>
-                                        </h4>
-                                    </a>
-                                    <a class="one" href="show_page.php?id=<?php echo $show_id ?>">
-                                        <h2 class="flex-wrap"
-                                            style="padding-bottom: 20px; line-height: 0.5;"><?php echo $show_info['show_name']; ?>
-                                            <span class="flex-wrap"
-                                                  style="padding-bottom: 20px; line-height: 0.5; color: #0072ff"><?php echo $r_str; ?></span>
-                                        </h2>
-                                    </a>
-                                    <h5 class="flex-wrap"
-                                        style=" color: darkgrey"><?php echo "Watched on " . $d; ?></h5>
-                                    <p class="flex-wrap"
-                                       style="padding-bottom: 10px; padding-top: 10px;"><?php echo $review['review_content']; ?></p>
-                                </div>
-                                <div>
-                                    <?php if (isset($user_info['user_id']) && $user_info['user_id'] == $_SESSION[PREFIX . '_user_id']) { ?>
-                                        <form method="POST" action="">
-                                            <button class="d-inline btn btn-primary mt-2 mt-xl-0" name="edit">Edit
-                                            </button>
-                                            <button class="d-inline btn btn-primary mt-2 mt-xl-0" name="delete">Delete
-                                            </button>
-                                        </form>
-                                    <?php } ?>
+                                    <div class="container-md"
+                                         style="word-break: break-all; display: block; max-width: 600px; min-width: 300px;">
+                                        <header style="min-width: 250px; max-width: 300px; overflow: hidden; text-overflow: ellipsis;">
+                                            <a class="one" href="user_profile.php?id=<?php echo $user_id ?>">
+                                                <h4 style="padding-bottom: 10px;">
+                                                    <img src="images/faces/<?php echo $pfp ?>"
+                                                         style="width: 25px; height: 25px; border-radius: 100%;"/>
+                                                    <?php echo " Review by " . $user_info['user_name'] ?>
+                                                </h4>
+                                            </a>
+                                        </header>
+                                        <a class="one" href="show_page.php?id=<?php echo $show_id ?>">
+                                            <h2 style="padding-bottom: 15px; line-height: 1; min-width: 300px;"><?php echo $show_info['show_name']; ?></h2>
+                                        </a>
+                                        <div class="card-description" style="min-width: 300px;">
+                                            <span style="padding-top: 20px; padding-bottom: 20px; line-height: 0.5; color: #0072ff; font-size: 22px; display: block"><?php echo $r_str; ?></span>
+                                            <h5 style="color: darkgrey"><?php echo "Watched on " . $d; ?></h5>
+                                            <p style="padding-bottom: 10px; padding-top: 10px; color: black;"><?php echo $review['review_content']; ?></p>
+                                        </div>
+                                        <div class="container-sm" style="display: block; ">
+                                            <?php if (isset($user_info['user_id']) && $user_info['user_id'] == $_SESSION[PREFIX . '_user_id']) { ?>
+                                                <form method="POST" action="">
+                                                    <button class="d-inline btn btn-primary mt-2 mt-xl-0" name="edit">
+                                                        Edit
+                                                    </button>
+                                                    <button class="d-inline btn btn-primary mt-2 mt-xl-0" name="delete">
+                                                        Delete
+                                                    </button>
+                                                </form>
+                                            <?php } ?>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>

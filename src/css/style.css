@@ -13476,7 +13476,7 @@ fieldset:disabled .btn {
     display: flex;
     flex-direction: column;
     min-width: 0;
-    word-wrap: break-word;
+    word-wrap: normal;
     background-color: #f3f3f3;
     background-clip: border-box;
     overflow: hidden;
@@ -13490,7 +13490,9 @@ fieldset:disabled .btn {
 }
 
 .card .card-img-2 {
-    width: 100%;
+    width: 200px;
+    float: left;
+    margin-right: 50px;
     overflow: hidden;
     transition: transform .4s;
     margin-bottom: 0;
@@ -22491,6 +22493,7 @@ code {
     font-weight: 400;
     color: #76838f;
     overflow: hidden;
+    text-overflow: ellipsis;
     transition: color 0.5s ease;
     padding-right: var(--bs-gutter-x, 0.75rem);
     padding-left: var(--bs-gutter-x, 0.75rem);

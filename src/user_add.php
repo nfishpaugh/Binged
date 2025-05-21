@@ -6,6 +6,12 @@ include "include/config.inc";
 
 $page_name = "User Add";
 
+// don't allow logged-in users to add users
+if (isset($_SESSION[PREFIX . '_username']) || isset($_SESSION[PREFIX . '_user_id'])) {
+    header("location: index.php");
+    exit;
+}
+
 if (isset($_POST['back'])) {
     header("location: login.php");
     exit;

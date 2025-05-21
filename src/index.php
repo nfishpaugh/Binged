@@ -11,6 +11,9 @@ if ($_SESSION[PREFIX . '_username'] == "") {
 $page_name = "Most Popular";
 
 $img_url = 'https://image.tmdb.org/t/p/original';
+
+// length for show names before they are truncated
+$len = 40;
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -60,7 +63,7 @@ $img_url = 'https://image.tmdb.org/t/p/original';
                     $results = $mysqli->show_list();
                     foreach ($results as $result) {
                         $temp_url = $img_url . $result['show_poster_path']; ?>
-                        <div class="col-6 col-sm-4 col-md-3 col-lg-2 grid-margin stretch-card" style="border-radius: 0">
+                        <div class="col-6 col-sm-4 col-md-4 col-lg-2 grid-margin stretch-card" style="border-radius: 0">
                             <div class="card flex-wrap" style="border-radius: 0">
                                 <div class="container-lg">
                                     <div class="card-img">
@@ -76,7 +79,11 @@ $img_url = 'https://image.tmdb.org/t/p/original';
                                     <a href="show_page.php?id=<?php echo $result['id']; ?>"
                                        style="text-decoration: none; color: inherit">
                                         <p class="card-title text-truncate"
-                                           style="flex-wrap: wrap; white-space: normal; min-height: 5vh"><?php echo $result['show_name'] ?></p>
+                                           style="flex-wrap: wrap; white-space: normal; min-height: 5vh"><?php
+                                            $abbr = substr($result['show_name'], 0, $len);
+                                            if (strlen($abbr) >= $len) $abbr = $abbr . "...";
+                                            echo $abbr;
+                                            ?></p>
                                         <!-- <p class="card-text" style=""><?php //echo $result['show_overview']; ?></p> -->
                                     </a>
                                 </div>
@@ -107,7 +114,7 @@ $img_url = 'https://image.tmdb.org/t/p/original';
                     foreach ($results as $result) {
                         $temp_url = $img_url . $result['show_poster_path'];
                         //$year = substr($result['show_air_date'], 0, 4); ?>
-                        <div class="col-6 col-sm-4 col-md-3 col-lg-2 grid-margin stretch-card" style="border-radius: 0">
+                        <div class="col-6 col-sm-4 col-md-4 col-lg-2 grid-margin stretch-card" style="border-radius: 0">
                             <div class="card flex-wrap" style="border-radius: 0; outline: 0;">
                                 <div class="container-lg">
                                     <div class="card-img" style="overflow: hidden; object-fit: fill">
@@ -121,7 +128,11 @@ $img_url = 'https://image.tmdb.org/t/p/original';
                                     <a href="show_page.php?id=<?php echo $result['id']; ?>"
                                        style="text-decoration: none; color: inherit">
                                         <p class="card-title"
-                                           style="flex-wrap: wrap; white-space: normal; overflow: visible; height: 5vh"><?php echo $result['show_name'] ?></p>
+                                           style="flex-wrap: wrap; white-space: normal; overflow: visible; height: 5vh"><?php
+                                            $abbr = substr($result['show_name'], 0, $len);
+                                            if (strlen($abbr) >= $len) $abbr = $abbr . "...";
+                                            echo $abbr;
+                                            ?></p>
                                         <!-- <p class="card-text" style=""><?php //echo $result['show_overview']; ?></p> -->
                                     </a>
                                 </div>
@@ -151,7 +162,7 @@ $img_url = 'https://image.tmdb.org/t/p/original';
                     foreach ($results as $result) {
                         $temp_url = $img_url . $result['show_poster_path'];
                         //$year = substr($result['show_air_date'], 0, 4); ?>
-                        <div class="col-6 col-sm-4 col-md-3 col-lg-2 grid-margin stretch-card" style="border-radius: 0">
+                        <div class="col-6 col-sm-4 col-md-4 col-lg-2 grid-margin stretch-card" style="border-radius: 0">
                             <div class="card flex-wrap" style="border-radius: 0">
                                 <div class="container-lg">
                                     <div class="card-img">
@@ -166,7 +177,11 @@ $img_url = 'https://image.tmdb.org/t/p/original';
                                     <a href="show_page.php?id=<?php echo $result['id']; ?>"
                                        style="text-decoration: none; color: inherit">
                                         <p class="card-title"
-                                           style="flex-wrap: wrap; white-space: normal; overflow: visible; height: 5vh"><?php echo $result['show_name'] ?></p>
+                                           style="flex-wrap: wrap; white-space: normal; overflow: visible; height: 5vh"><?php
+                                            $abbr = substr($result['show_name'], 0, $len);
+                                            if (strlen($abbr) >= $len) $abbr = $abbr . "...";
+                                            echo $abbr;
+                                            ?></p>
                                         <!-- <p class="card-text" style=""><?php //echo $result['show_overview']; ?></p> -->
                                     </a>
                                 </div>
@@ -197,12 +212,12 @@ $img_url = 'https://image.tmdb.org/t/p/original';
                     foreach ($results as $result) {
                         $temp_url = $img_url . $result['show_poster_path'];
                         //$year = substr($result['show_air_date'], 0, 4); ?>
-                        <div class="col-6 col-sm-4 col-md-3 col-lg-2 grid-margin stretch-card" style="border-radius: 0">
+                        <div class="col-6 col-sm-4 col-md-4 col-lg-2 grid-margin stretch-card" style="border-radius: 0">
                             <div class="card flex-wrap" style="border-radius: 0">
                                 <div class="container-lg">
                                     <div class="card-img">
                                         <a href="show_page.php?id=<?php echo $result['id']; ?>"><img
-                                                    src="<?php echo $temp_url ?>" class="card-img"
+                                                    src="<?php echo $temp_url; ?>" class="card-img"
                                                     style="max-width: 100%; max-height: 100%; object-fit: scale-down"
                                                     alt=""/></a>
                                     </div>
@@ -212,7 +227,11 @@ $img_url = 'https://image.tmdb.org/t/p/original';
                                     <a href="show_page.php?id=<?php echo $result['id']; ?>"
                                        style="text-decoration: none; color: inherit">
                                         <p class="card-title"
-                                           style="flex-wrap: wrap; white-space: normal; overflow: visible; height: 5vh"><?php echo $result['show_name'] ?></p>
+                                           style="flex-wrap: wrap; white-space: normal; overflow: visible; height: 5vh"><?php
+                                            $abbr = substr($result['show_name'], 0, $len);
+                                            if (strlen($abbr) >= $len) $abbr = $abbr . "...";
+                                            echo $abbr;
+                                            ?></p>
                                         <!-- <p class="card-text" style=""><?php //echo $result['show_overview']; ?></p> -->
                                     </a>
                                 </div>
@@ -243,7 +262,7 @@ $img_url = 'https://image.tmdb.org/t/p/original';
                     foreach ($results as $result) {
                         $temp_url = $img_url . $result['show_poster_path'];
                         //$year = substr($result['show_air_date'], 0, 4); ?>
-                        <div class="col-6 col-sm-4 col-md-3 col-lg-2 grid-margin stretch-card" style="border-radius: 0">
+                        <div class="col-6 col-sm-4 col-md-4 col-lg-2 grid-margin stretch-card" style="border-radius: 0">
                             <div class="card flex-wrap" style="border-radius: 0">
                                 <div class="container-lg">
                                     <div class="card-img">
@@ -258,7 +277,11 @@ $img_url = 'https://image.tmdb.org/t/p/original';
                                     <a href="show_page.php?id=<?php echo $result['id']; ?>"
                                        style="text-decoration: none; color: inherit">
                                         <p class="card-title"
-                                           style="flex-wrap: wrap; white-space: normal; overflow: visible; height: 5vh"><?php echo $result['show_name'] ?></p>
+                                           style="flex-wrap: wrap; white-space: normal; overflow: visible; height: 5vh"><?php
+                                            $abbr = substr($result['show_name'], 0, $len);
+                                            if (strlen($abbr) >= $len) $abbr = $abbr . "...";
+                                            echo $abbr;
+                                            ?></p>
                                         <!-- <p class="card-text" style=""><?php //echo $result['show_overview']; ?></p> -->
                                     </a>
                                 </div>

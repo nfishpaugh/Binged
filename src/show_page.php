@@ -21,6 +21,7 @@ if (!$show_info['id']) {
 }
 
 $page = (isset($_GET['page']) && is_numeric($_GET['page'])) ? intval($_GET['page']) : 1;
+if ($page < 1) $page = 1;
 
 $all_bool = $_GET['all'] ?? 'nobool';
 if ($all_bool === '1' || $all_bool === '0') {

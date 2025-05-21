@@ -98,7 +98,12 @@ function update_avg($show_id, $rating, $review_count, $mysqli, $remove = false, 
 function review_template($review, $user_pf, $i, $user_info, $in_id, $r_str, $is_user): string
 {
     $rev_id = $review['review_id'];
-    $rev_content = $review['review_content'];
+    $str_len = 50;
+    $rev_content = substr($review['review_content'], 0, $str_len);
+    if (strlen($rev_content) >= $str_len) {
+        $rev_content = $rev_content . '...';
+    }
+
     $pfp = $user_pf["profile_pic_src"] ?? "dummy_pfp.jpg";
     $user_name = $user_info['user_name'];
     $user_id = $user_info['user_id'];

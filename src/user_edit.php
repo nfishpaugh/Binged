@@ -1,7 +1,6 @@
 <?php
 include "include/config.inc";
 
-$_SESSION[PREFIX . "_ppage"] = $_SERVER['REQUEST_URI'];
 if ($_SESSION[PREFIX . '_username'] == "") {
     header("Location: login.php");
     exit;
@@ -10,19 +9,21 @@ if ($_SESSION[PREFIX . '_security'] < 10) {
     header("location:index.php?action=5");
     exit;
 }
+$_SESSION[PREFIX . "_ppage"] = $_SERVER['REQUEST_URI'];
 
 $page_name = "User Edit";
 
 $in_id = (int)$_GET['id'];
-if (!$in_id) {
-    header("location: user_list.php");
+if (!$in_id && isset($_SESSION[PREFIX . '_user_id'])) {
+    header("location: index.php");
+    exit;
+} elseif (!$in_id && !isset($_SESSION[PREFIX . '_user_id'])) {
+    header("location: login.php");
     exit;
 }
 $user_info = $mysqli->user_info($in_id);
 
-if ($_SERVER['REQUEST_METHOD'] == "POST") {
-
-
+if ($_SERVER['REQUEST_METHOD'] == "POST" && $_SESSION[PREFIX . '_security'] == 10) {
     $mysqli->user_edit($in_id, $_POST['user_email'], $_POST['user_name'], $_POST['user_password'], $_POST['user_level_id']);
 
     $mysqli->actions_insert("Updated User: " . $_POST['user_email'], $_SESSION[PREFIX . '_user_id']);

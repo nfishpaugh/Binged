@@ -10,6 +10,7 @@ if ($_SESSION[PREFIX . '_username'] == "") {
 
 $searchstr = (string)$_GET['searchbar'];
 $page = (isset($_GET['page']) && is_numeric($_GET['page'])) ? intval($_GET['page']) : 1;
+if ($page < 1) $page = 1;
 
 // base url to grab poster images from
 $img_url = 'https://image.tmdb.org/t/p/original';

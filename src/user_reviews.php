@@ -15,6 +15,7 @@ if (!$in_id) {
 }
 
 $page = (isset($_GET['page']) && is_numeric($_GET['page'])) ? intval($_GET['page']) : 1;
+if ($page < 1) $page = 1;
 $amt_per_page = 12;
 
 $user_info = $mysqli->user_info($in_id);
@@ -113,7 +114,7 @@ $img_url = 'https://image.tmdb.org/t/p/original';
                             $temp_url = $img_url . $result['show_poster_path']; ?>
                             <div class="col-md-6" style="border-radius: 0">
                                 <div class="card flex-nowrap" style="border-radius: 0; flex-direction: row">
-                                    <div class="container-md-1">
+                                    <div class="container-md-1" style="min-width: 150px; max-width: 150px;">
                                         <div class="card-img">
                                             <a href="review_page.php?rid=<?php echo $result['review_id']; ?>&sid=<?php echo $result['id']; ?>&uid=<?php echo $in_id; ?>"><img
                                                         src="<?php echo $temp_url ?>" class="card-img"
@@ -136,7 +137,14 @@ $img_url = 'https://image.tmdb.org/t/p/original';
                                                     };
                                                     echo nl2br("\n") . $r_str; ?></span>
                                             </p>
-                                            <p class="card-text"><?php echo $result['review_content']; ?></p>
+                                            <p class="card-text"><?php
+                                                $abbr = substr($result['review_content'], 0, 30);
+                                                if (strlen($abbr) >= 30) {
+                                                    echo $abbr . '...';
+                                                } else {
+                                                    echo $abbr;
+                                                }
+                                                ?></p>
                                         </a>
                                     </div>
                                 </div>
