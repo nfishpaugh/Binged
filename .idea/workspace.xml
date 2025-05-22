@@ -4,10 +4,11 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="1ad80be8-bf78-4fa9-909f-9cb64c15dd65" name="Changes" comment="- Fixed URL tampering leading to page errors&#10;- Added text truncation for reviews and shows. No more 150 character show names!&#10;- Modified poster sizes to better fit on smaller screens&#10;- Added more security checks for user adds and edits&#10;- Tidied up review_page.php">
+    <list default="true" id="1ad80be8-bf78-4fa9-909f-9cb64c15dd65" name="Changes" comment="- Added docs for utils.php functions and type declarations for their params&#10;- Reduced recent reviews to 5 instead of 10 to better highlight the difference b/w the two tabs">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/include/mysqli_class.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/include/mysqli_class.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/include/utils.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/include/utils.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/show_page.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/show_page.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/user_reviews.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/user_reviews.php" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -129,8 +130,8 @@
       <recent name="C:\Users\nrfis\Downloads\mis4770\mis4770" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
-      <recent name="C:\Users\Nathan\PhpstormProjects\Binged\src\" />
       <recent name="C:\Users\Nathan\PhpstormProjects\Binged\src" />
+      <recent name="C:\Users\Nathan\PhpstormProjects\Binged\src\" />
       <recent name="C:\Users\15135\OneDrive\Desktop\School\Fall23\CIT4770\GroupProject\WebsiteCode\mis4770new\MIS4770\images" />
     </key>
   </component>
@@ -216,7 +217,7 @@
       <workItem from="1747681412055" duration="2003000" />
       <workItem from="1747767644760" duration="3215000" />
       <workItem from="1747850685483" duration="8085000" />
-      <workItem from="1747942187473" duration="1331000" />
+      <workItem from="1747942187473" duration="13380000" />
     </task>
     <task id="LOCAL-00001" summary="this baby is ready to go!">
       <option name="closed" value="true" />
@@ -474,7 +475,15 @@
       <option name="project" value="LOCAL" />
       <updated>1747858891318</updated>
     </task>
-    <option name="localTasksCounter" value="33" />
+    <task id="LOCAL-00033" summary="- Added docs for utils.php functions and type declarations for their params&#10;- Reduced recent reviews to 5 instead of 10 to better highlight the difference b/w the two tabs">
+      <option name="closed" value="true" />
+      <created>1747943646343</created>
+      <option name="number" value="00033" />
+      <option name="presentableId" value="LOCAL-00033" />
+      <option name="project" value="LOCAL" />
+      <updated>1747943646343</updated>
+    </task>
+    <option name="localTasksCounter" value="34" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -515,7 +524,8 @@
     <MESSAGE value="Refactored file structure to disallow environment variable access" />
     <MESSAGE value="Added 401 response codes when login auth fails in order to log problematic IPs w/fail2ban" />
     <MESSAGE value="- Fixed URL tampering leading to page errors&#10;- Added text truncation for reviews and shows. No more 150 character show names!&#10;- Modified poster sizes to better fit on smaller screens&#10;- Added more security checks for user adds and edits&#10;- Tidied up review_page.php" />
-    <option name="LAST_COMMIT_MESSAGE" value="- Fixed URL tampering leading to page errors&#10;- Added text truncation for reviews and shows. No more 150 character show names!&#10;- Modified poster sizes to better fit on smaller screens&#10;- Added more security checks for user adds and edits&#10;- Tidied up review_page.php" />
+    <MESSAGE value="- Added docs for utils.php functions and type declarations for their params&#10;- Reduced recent reviews to 5 instead of 10 to better highlight the difference b/w the two tabs" />
+    <option name="LAST_COMMIT_MESSAGE" value="- Added docs for utils.php functions and type declarations for their params&#10;- Reduced recent reviews to 5 instead of 10 to better highlight the difference b/w the two tabs" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />

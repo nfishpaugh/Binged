@@ -954,8 +954,13 @@ class mysqli_class extends mysqli
         return $last_id;
     }
 
-    /** Updates a review based on new content and/or value */
-    public function review_update($review_id, $value, $content): void
+    /** Updates a review based on new content and/or value
+     * @param int $review_id - The review to update
+     * @param int $value - The rating value to update the review with
+     * @param string $content - The review text to update the review with
+     * @return void
+     */
+    public function review_update(int $review_id, int $value, string $content): void
     {
         $query = "
             UPDATE reviews
@@ -974,8 +979,11 @@ class mysqli_class extends mysqli
         }
     }
 
-    /** Removes a review based on its id */
-    public function review_delete($review_id): void
+    /** Removes a review based on its id
+     * @param int $review_id - The review to fetch
+     * @return void
+     */
+    public function review_delete(int $review_id): void
     {
         $query = "
         DELETE FROM reviews
@@ -993,8 +1001,13 @@ class mysqli_class extends mysqli
         }
     }
 
-    /** Retrieves all reviews owned by a user */
-    public function user_review_info($user_id, $limit, $offset): array
+    /** Retrieves all reviews owned by a user
+     * @param int $user_id - The ID of the user
+     * @param int $limit - The amount of reviews to return
+     * @param int $offset - How much offset to apply to the query, e.g. $offset = 5, $limit = 1 -> returns the sixth review of the user (if it exists)
+     * @return array
+     */
+    public function user_review_info(int $user_id, int $limit, int $offset): array
     {
 
         $results = array();
@@ -1038,8 +1051,12 @@ class mysqli_class extends mysqli
         return $results;
     }
 
-    /** Retrieves a $limit amt of reviews owned by a user */
-    public function user_review_info_lim($user_id, $limit): array
+    /** Retrieves a $limit amt of reviews owned by a user
+     * @param int $user_id - The ID of the user
+     * @param int $limit - The amount of reviews to return
+     * @return array
+     */
+    public function user_review_info_lim(int $user_id, int $limit): array
     {
 
         $results = array();
@@ -1120,9 +1137,12 @@ class mysqli_class extends mysqli
     }
 
     /** Retrieves $limit reviews of a show
-     *** offset - Optional integer, adds an offset for pagination. Defaults to 0
+     * @param int $id - The ID of the show
+     * @param int $limit - The amount of results to return
+     * @param int $offset - Optional integer, adds an offset for pagination. Defaults to 0
+     * @return array
      */
-    public function show_reviews($id, $limit, $offset = 0): array
+    public function show_reviews(int $id, int $limit, int $offset = 0): array
     {
         $results = array();
         $query = "
@@ -1164,8 +1184,10 @@ class mysqli_class extends mysqli
     }
 
     /** Returns the amount of reviews for the specified show
+     * @param int $show_id - The ID of the show
+     * @return float|false|int|string|null
      */
-    public function review_count($show_id): float|false|int|string|null
+    public function review_count(int $show_id): float|false|int|string|null
     {
         $query = "
         SELECT count(review_id) 
@@ -1188,7 +1210,11 @@ class mysqli_class extends mysqli
         return $data;
     }
 
-    public function user_review_count($uid): float|false|int|string|null
+    /** Returns the amount of reviews for a specified user
+     * @param int $uid - The id of the user to query
+     * @return float|false|int|string|null
+     */
+    public function user_review_count(int $uid): float|false|int|string|null
     {
         $query = "
             SELECT count(reviews.review_id)
@@ -1199,6 +1225,30 @@ class mysqli_class extends mysqli
 
         if ($stmt = parent::prepare($query)) {
             $stmt->bind_param("i", $uid);
+            if (!$stmt->execute()) {
+                trigger_error($this->error, E_USER_WARNING);
+            }
+            $result = $stmt->get_result();
+            $data = $result->fetch_column(0);
+            $stmt->close();
+        } else {
+            trigger_error($this->error, E_USER_WARNING);
+        }
+
+        return $data;
+    }
+
+    /** Retrieves the total amount of shows
+     * @return float|false|int|string|null
+     */
+    public function show_count(): float|false|int|string|null
+    {
+        $query = "
+            SELECT count(id)
+            FROM shows
+        ";
+
+        if ($stmt = parent::prepare($query)) {
             if (!$stmt->execute()) {
                 trigger_error($this->error, E_USER_WARNING);
             }

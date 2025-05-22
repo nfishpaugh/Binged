@@ -138,8 +138,9 @@ $img_url = 'https://image.tmdb.org/t/p/original';
                                                     echo nl2br("\n") . $r_str; ?></span>
                                             </p>
                                             <p class="card-text"><?php
-                                                $abbr = substr($result['review_content'], 0, 30);
-                                                if (strlen($abbr) >= 30) {
+                                                $amt = 50;
+                                                $abbr = substr($result['review_content'], 0, $amt);
+                                                if (strlen($abbr) >= $amt) {
                                                     echo $abbr . '...';
                                                 } else {
                                                     echo $abbr;
@@ -151,7 +152,7 @@ $img_url = 'https://image.tmdb.org/t/p/original';
                             </div>
                             <?php
                         }
-                        if ($review_count > $amt_per_page) echo pagination_template($page, $num_pages, 0, $in_id);
+                        if ($review_count > $amt_per_page) echo pagination_template($page, $num_pages, 0, $in_id, "user-review");
                     }
                     ?>
                 </div>

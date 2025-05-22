@@ -116,7 +116,7 @@ function update_avg(int $show_id, int $rating, int $review_count, mysqli_class $
 function review_template(array $review, array $user_pf, int $i, array $user_info, int $in_id, string $r_str, bool $is_user): string
 {
     $rev_id = $review['review_id'];
-    $str_len = 50;
+    $str_len = 75;
     $rev_content = substr($review['review_content'], 0, $str_len);
     if (strlen($rev_content) >= $str_len) {
         $rev_content = $rev_content . '...';
@@ -224,22 +224,23 @@ function pagination_template(int $page, int $num_pages, int $in_id = 0, int $uid
         
         TEMPLATE;
 
-    $i = 1;
-    while ($i <= $num_pages) {
-        if ($i === $page) {
-            $pages = $pages . <<<TEMPLATE
+    if ($num_pages < 10) {
+        $i = 1;
+        while ($i <= $num_pages) {
+            if ($i === $page) {
+                $pages = $pages . <<<TEMPLATE
             <li class="page-item disabled"><a class="page-link" href="$url[0]$i$url[1]">$i</a></li>
             TEMPLATE;
-        } else {
-            $pages = $pages . <<<TEMPLATE
+            } else {
+                $pages = $pages . <<<TEMPLATE
             <li class="page-item"><a class="page-link" href="$url[0]$i$url[1]">$i</a></li>
             TEMPLATE;
+            }
+            $i++;
         }
-        $i++;
-    }
 
-    // pagination template
-    return <<<TEMPLATE
+        // pagination template
+        return <<<TEMPLATE
         <nav aria-label="Review pagination">
           <ul class="pagination justify-content-center">
             {$previous}
@@ -248,4 +249,50 @@ function pagination_template(int $page, int $num_pages, int $in_id = 0, int $uid
           </ul>
         </nav>
         TEMPLATE;
+    } else {
+        $last = <<<TEMPLATE
+        <li class="page-item"><a class="page-link" href="$url[0]$num_pages$url[1]">Last</a></li>
+        TEMPLATE;
+        $first = <<<TEMPLATE
+        <li class="page-item"><a class="page-link" href="$url[0]1$url[1]">First</a></li>
+        TEMPLATE;
+
+        $btn_amt = 10;
+        $midpoint = $btn_amt / 2;
+
+        if ($page <= $midpoint) {
+            $page_start = 1;
+        } elseif ($page >= $num_pages - $midpoint) {
+            $page_start = $num_pages - $btn_amt;
+        } else {
+            $page_start = $page - $midpoint;
+        }
+
+        $page_end = $page_start + $btn_amt;
+
+        for ($i = $page_start; $i <= $page_end; $i++) {
+            if ($i === $page) {
+                $pages = $pages . <<<TEMPLATE
+            <li class="page-item disabled"><a class="page-link" href="$url[0]$i$url[1]">$i</a></li>
+            TEMPLATE;
+            } else {
+                $pages = $pages . <<<TEMPLATE
+            <li class="page-item"><a class="page-link" href="$url[0]$i$url[1]">$i</a></li>
+            TEMPLATE;
+            }
+        }
+
+        // pagination template
+        return <<<TEMPLATE
+        <nav aria-label="Review pagination">
+          <ul class="pagination justify-content-center">
+            {$first}
+            {$previous}
+            {$pages}
+            {$next_page}
+            {$last}
+          </ul>
+        </nav>
+        TEMPLATE;
+    }
 }
