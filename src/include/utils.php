@@ -1,8 +1,12 @@
 <?php
 include "config.inc";
 
-/** Finds the position of the $num-th occurrence of a substring in a string */
-function strposX($hay, $needle, $num): bool|int
+/** Finds the position of the $num-th occurrence of a substring in a string, e.g. $hay = "Hello!!", $needle = "!", $num = 2 -> returns 6
+ * @param string $hay - The string to be searched in
+ * @param string $needle - The substring to find in $hay
+ * @param int $num - The n-th occurrence that you wish to find
+ */
+function strposX(string $hay, string $needle, int $num): bool|int
 {
     if ($num == 1) {
         return strpos($hay, $needle);
@@ -13,8 +17,11 @@ function strposX($hay, $needle, $num): bool|int
     }
 }
 
-/** Translates a numeric review value into a score out of 5 stars, e.g. 3 -> ★★★☆☆ */
-function starify($value): string
+/** Translates a numeric review value into a score out of 5 stars, e.g. 3 -> ★★★☆☆
+ * @param int $value - The integer (between 1 and 5) to translate into stars
+ * @return string
+ */
+function starify(int $value): string
 {
     return match ($value) {
         1 => "★",
@@ -26,8 +33,11 @@ function starify($value): string
     };
 }
 
-/** Sends param data to browser console */
-function debug_to_console($data): void
+/** Sends param data to browser console
+ * @param float|int|array|string|null $data - The data to be sent to the console
+ * @return void
+ */
+function debug_to_console(float|int|array|string|null $data): void
 {
     $output = $data;
     if (is_array($output))
@@ -38,8 +48,10 @@ function debug_to_console($data): void
 
 /** Returns the weighted total of a star column array, e.g if there are 5 1 star reviews and 10 3 star reviews,
  * total = (5 * 1) + (10 * 3). Based on the names of the array keys, so beware of changing the column names in the DB
+ * @param array $arr - The array of the show to retrieve the weighted total from
+ * @return int
  */
-function weighted_amt($arr): int
+function weighted_amt(array $arr): int
 {
     if (!is_numeric(substr(array_key_first($arr), 0, 1))) trigger_error("Array key does not start with a numeric value. Key: " . array_key_first($arr));
 
@@ -54,10 +66,16 @@ function weighted_amt($arr): int
 }
 
 /** Calculates and updates the average for a show based on params
- ** remove - Optional boolean, true = remove a value from the average, false (default) = add a value to the average
- ** edit - Optional boolean, true = do not add to the review count, false (default) = add to the review count
+ * @param int $show_id - ID of the show to update
+ * @param int $rating - The user's rating that needs to be added to the average (1-5)
+ * @param int $review_count - The total amount of reviews (not including the newly added review) of the show
+ * @param mysqli_class $mysqli - The MySqli object, needed to call mysqli methods
+ * @param bool $remove - Optional boolean, true = remove a value from the average, false (default) = add a value to the average
+ * @param bool $edit - Optional boolean, true = do not add to the review count, false (default) = add to the review count
+ * @param int|null $old_rating - Optional int, used if a review is updated with a new rating
+ * @return void
  */
-function update_avg($show_id, $rating, $review_count, $mysqli, $remove = false, $edit = false, $old_rating = null): void
+function update_avg(int $show_id, int $rating, int $review_count, mysqli_class $mysqli, bool $remove = false, bool $edit = false, int $old_rating = null): void
 {
     // only change review count if a new review has been inserted
     if (!$edit) {
@@ -85,17 +103,17 @@ function update_avg($show_id, $rating, $review_count, $mysqli, $remove = false, 
     $_SESSION[$show_id . "_avg"] = $avg;
 }
 
-/** @description Heredoc HTML template for review tabs
- * @param $review - Review data array
- * @param $user_pf - User profile array
- * @param $i - Iteration variable, needed for array indexing in main doc
- * @param $user_info - User info array
- * @param $in_id - Show id (int)
- * @param $r_str - Review content string
- * @param $is_user - Boolean that determines if the current user is allowed to see the edit/delete buttons for the review
+/** Heredoc HTML template for review tabs
+ * @param array $review - Review data array
+ * @param array $user_pf - User profile array
+ * @param int $i - Iteration variable, needed for array indexing in main doc
+ * @param array $user_info - User info array
+ * @param int $in_id - Show id (int)
+ * @param string $r_str - Review content string
+ * @param boolean $is_user - Boolean that determines if the current user is allowed to see the edit/delete buttons for the review
  * @return string
  */
-function review_template($review, $user_pf, $i, $user_info, $in_id, $r_str, $is_user): string
+function review_template(array $review, array $user_pf, int $i, array $user_info, int $in_id, string $r_str, bool $is_user): string
 {
     $rev_id = $review['review_id'];
     $str_len = 50;
@@ -150,19 +168,19 @@ function review_template($review, $user_pf, $i, $user_info, $in_id, $r_str, $is_
     TEMPLATE;
 }
 
-/**
- * @param $page - The current page number
- * @param $num_pages - The total number of pages
+/** Heredoc template for pagination buttons
+ * @param int $page - The current page number
+ * @param int $num_pages - The total number of pages
  * @param int $in_id - Optional, ID of the show, only used for the review template
  * @param int $uid - Optional, user ID, only used for user-review template
  * @param string $type - Determines the template string returned:
- * review - returns the review pagination template
- * search - returns the search pagination template
- * none - default pagination template with inactive hrefs
+ *- review - returns the review pagination template
+ *- search - returns the search pagination template
+ *- none - default pagination template with inactive hrefs
  * @param string $searchstr - The string used if type = search
  * @return string
  */
-function pagination_template($page, $num_pages, int $in_id = 0, int $uid = 0, string $type = "none", string $searchstr = ""): string
+function pagination_template(int $page, int $num_pages, int $in_id = 0, int $uid = 0, string $type = "none", string $searchstr = ""): string
 {
     $prev = $page - 1;
     $next = $page + 1;

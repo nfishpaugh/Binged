@@ -38,6 +38,7 @@ $year = substr($show_info['show_air_date'], 0, 4);
 
 $page_name = $show_info['show_name'];
 
+$recent_amt_per_page = 5;
 $amt_per_page = 10;
 $reviews = $mysqli->show_reviews($show_info['id'], $amt_per_page);
 
@@ -259,7 +260,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                                         </div>
                                     </div>
                                 <?php } else {
-                                    $max = $amt_per_page;
+                                    $max = $recent_amt_per_page;
                                     // make sure to not loop out of bounds
                                     if ($review_count < $max) {
                                         $max = $review_count;

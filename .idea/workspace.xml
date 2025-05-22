@@ -4,18 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="1ad80be8-bf78-4fa9-909f-9cb64c15dd65" name="Changes" comment="Added 401 response codes when login auth fails in order to log problematic IPs w/fail2ban">
+    <list default="true" id="1ad80be8-bf78-4fa9-909f-9cb64c15dd65" name="Changes" comment="- Fixed URL tampering leading to page errors&#10;- Added text truncation for reviews and shows. No more 150 character show names!&#10;- Modified poster sizes to better fit on smaller screens&#10;- Added more security checks for user adds and edits&#10;- Tidied up review_page.php">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/css/style.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/css/style.css" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/include/utils.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/include/utils.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/index.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/index.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/review_page.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/review_page.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/show_page.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/show_page.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/show_search.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/show_search.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/user_add.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/user_add.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/user_edit.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/user_edit.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/user_profile.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/user_profile.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/user_reviews.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/user_reviews.php" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -223,7 +215,8 @@
       <workItem from="1747337955890" duration="4472000" />
       <workItem from="1747681412055" duration="2003000" />
       <workItem from="1747767644760" duration="3215000" />
-      <workItem from="1747850685483" duration="7239000" />
+      <workItem from="1747850685483" duration="8085000" />
+      <workItem from="1747942187473" duration="1331000" />
     </task>
     <task id="LOCAL-00001" summary="this baby is ready to go!">
       <option name="closed" value="true" />
@@ -473,7 +466,15 @@
       <option name="project" value="LOCAL" />
       <updated>1747769659461</updated>
     </task>
-    <option name="localTasksCounter" value="32" />
+    <task id="LOCAL-00032" summary="- Fixed URL tampering leading to page errors&#10;- Added text truncation for reviews and shows. No more 150 character show names!&#10;- Modified poster sizes to better fit on smaller screens&#10;- Added more security checks for user adds and edits&#10;- Tidied up review_page.php">
+      <option name="closed" value="true" />
+      <created>1747858891318</created>
+      <option name="number" value="00032" />
+      <option name="presentableId" value="LOCAL-00032" />
+      <option name="project" value="LOCAL" />
+      <updated>1747858891318</updated>
+    </task>
+    <option name="localTasksCounter" value="33" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -513,7 +514,8 @@
     <MESSAGE value="Revert" />
     <MESSAGE value="Refactored file structure to disallow environment variable access" />
     <MESSAGE value="Added 401 response codes when login auth fails in order to log problematic IPs w/fail2ban" />
-    <option name="LAST_COMMIT_MESSAGE" value="Added 401 response codes when login auth fails in order to log problematic IPs w/fail2ban" />
+    <MESSAGE value="- Fixed URL tampering leading to page errors&#10;- Added text truncation for reviews and shows. No more 150 character show names!&#10;- Modified poster sizes to better fit on smaller screens&#10;- Added more security checks for user adds and edits&#10;- Tidied up review_page.php" />
+    <option name="LAST_COMMIT_MESSAGE" value="- Fixed URL tampering leading to page errors&#10;- Added text truncation for reviews and shows. No more 150 character show names!&#10;- Modified poster sizes to better fit on smaller screens&#10;- Added more security checks for user adds and edits&#10;- Tidied up review_page.php" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />
