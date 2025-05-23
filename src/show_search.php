@@ -18,8 +18,8 @@ $img_url = 'https://image.tmdb.org/t/p/original';
 $amt_per_page = 30;
 $count = $mysqli->search_count($searchstr);
 
-if ($count <= 0) {
-    $count = 0;
+if ($count <= 1) {
+    $page = 1;
     $num_pages = 1;
 } else {
     // find the number of pages needed to display all results, add one if it doesn't divide cleanly

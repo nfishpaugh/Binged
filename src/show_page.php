@@ -47,8 +47,8 @@ $avg = $_SESSION[$in_id . "_avg"] ?? $mysqli->get_show_column($in_id, "review_av
 $avg = number_format($avg, 1);
 
 $review_count = $mysqli->review_count($in_id);
-if ($review_count <= 0) {
-    $review_count = 0;
+if ($review_count <= 1) {
+    $page = 1;
     $num_pages = 1;
 } else {
     // find the number of pages needed to display all reviews, add one extra if it doesn't divide cleanly

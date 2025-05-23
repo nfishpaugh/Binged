@@ -21,14 +21,14 @@ $amt_per_page = 12;
 $user_info = $mysqli->user_info($in_id);
 
 $review_count = $mysqli->user_review_count($in_id);
-if ($review_count <= 0) {
-    $review_count = 0;
+if ($review_count <= 1) {
+    $page = 1;
     $num_pages = 1;
 } else {
     // find the number of pages needed to display all reviews, add one extra if it doesn't divide cleanly
     $num_pages = ($amt_per_page % $review_count) === 0 ? intval($review_count / $amt_per_page) : intval($review_count / $amt_per_page) + 1;
 
-    if ($page > $num_pages) {
+    if ($page > $num_pages && $page > 0) {
         $page = $num_pages;
     }
 }

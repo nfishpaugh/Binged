@@ -31,8 +31,8 @@ $genre_id = $mysqli->get_genre_id($genre_full);
 $amt_per_page = 30;
 $count = $mysqli->genre_show_count($genre_id);
 
-if ($count <= 0) {
-    $count = 0;
+if ($count <= 1) {
+    $page = 1;
     $num_pages = 1;
 } else {
     // find the number of pages needed to display all results, add one if it doesn't divide cleanly
