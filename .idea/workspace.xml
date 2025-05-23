@@ -4,10 +4,13 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="1ad80be8-bf78-4fa9-909f-9cb64c15dd65" name="Changes" comment="- Added docs for utils.php functions and type declarations for their params&#10;- Reduced recent reviews to 5 instead of 10 to better highlight the difference b/w the two tabs">
+    <list default="true" id="1ad80be8-bf78-4fa9-909f-9cb64c15dd65" name="Changes" comment="- Increased string length before truncation for reviews&#10;- Reduced the amount of buttons for pagination, now the buttons are based on the current page (e.g. instead of displaying every single button, if curr_page = 5 -&gt; buttons = &lt;first&gt;, &lt;prev&gt;, 2, 3, 4, 5, 6, 7, 8, &lt;next&gt;, &lt;last&gt;)&#10;- Fixed user review pagination buttons not using the correct href&#10;- Added more comprehensive docs to some mysqli_class methods (will update the rest later)&#10;- Regarding DB: added dummy reviews and updated show review counts/averages accordingly">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/genre_page.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/genre_page.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/include/mysqli_class.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/include/mysqli_class.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/include/utils.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/include/utils.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/show_page.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/show_page.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/show_search.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/show_search.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/user_reviews.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/user_reviews.php" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -217,7 +220,8 @@
       <workItem from="1747681412055" duration="2003000" />
       <workItem from="1747767644760" duration="3215000" />
       <workItem from="1747850685483" duration="8085000" />
-      <workItem from="1747942187473" duration="13380000" />
+      <workItem from="1747942187473" duration="13458000" />
+      <workItem from="1748023968510" duration="5528000" />
     </task>
     <task id="LOCAL-00001" summary="this baby is ready to go!">
       <option name="closed" value="true" />
@@ -483,7 +487,15 @@
       <option name="project" value="LOCAL" />
       <updated>1747943646343</updated>
     </task>
-    <option name="localTasksCounter" value="34" />
+    <task id="LOCAL-00034" summary="- Increased string length before truncation for reviews&#10;- Reduced the amount of buttons for pagination, now the buttons are based on the current page (e.g. instead of displaying every single button, if curr_page = 5 -&gt; buttons = &lt;first&gt;, &lt;prev&gt;, 2, 3, 4, 5, 6, 7, 8, &lt;next&gt;, &lt;last&gt;)&#10;- Fixed user review pagination buttons not using the correct href&#10;- Added more comprehensive docs to some mysqli_class methods (will update the rest later)&#10;- Regarding DB: added dummy reviews and updated show review counts/averages accordingly">
+      <option name="closed" value="true" />
+      <created>1747956356688</created>
+      <option name="number" value="00034" />
+      <option name="presentableId" value="LOCAL-00034" />
+      <option name="project" value="LOCAL" />
+      <updated>1747956356688</updated>
+    </task>
+    <option name="localTasksCounter" value="35" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -525,7 +537,8 @@
     <MESSAGE value="Added 401 response codes when login auth fails in order to log problematic IPs w/fail2ban" />
     <MESSAGE value="- Fixed URL tampering leading to page errors&#10;- Added text truncation for reviews and shows. No more 150 character show names!&#10;- Modified poster sizes to better fit on smaller screens&#10;- Added more security checks for user adds and edits&#10;- Tidied up review_page.php" />
     <MESSAGE value="- Added docs for utils.php functions and type declarations for their params&#10;- Reduced recent reviews to 5 instead of 10 to better highlight the difference b/w the two tabs" />
-    <option name="LAST_COMMIT_MESSAGE" value="- Added docs for utils.php functions and type declarations for their params&#10;- Reduced recent reviews to 5 instead of 10 to better highlight the difference b/w the two tabs" />
+    <MESSAGE value="- Increased string length before truncation for reviews&#10;- Reduced the amount of buttons for pagination, now the buttons are based on the current page (e.g. instead of displaying every single button, if curr_page = 5 -&gt; buttons = &lt;first&gt;, &lt;prev&gt;, 2, 3, 4, 5, 6, 7, 8, &lt;next&gt;, &lt;last&gt;)&#10;- Fixed user review pagination buttons not using the correct href&#10;- Added more comprehensive docs to some mysqli_class methods (will update the rest later)&#10;- Regarding DB: added dummy reviews and updated show review counts/averages accordingly" />
+    <option name="LAST_COMMIT_MESSAGE" value="- Increased string length before truncation for reviews&#10;- Reduced the amount of buttons for pagination, now the buttons are based on the current page (e.g. instead of displaying every single button, if curr_page = 5 -&gt; buttons = &lt;first&gt;, &lt;prev&gt;, 2, 3, 4, 5, 6, 7, 8, &lt;next&gt;, &lt;last&gt;)&#10;- Fixed user review pagination buttons not using the correct href&#10;- Added more comprehensive docs to some mysqli_class methods (will update the rest later)&#10;- Regarding DB: added dummy reviews and updated show review counts/averages accordingly" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />

@@ -32,9 +32,12 @@ class mysqli_class extends mysqli
         }
     }
 
-    /**** LOGIN ******************************************************************
-     * /*## Checks login credentials */
-    public function login($email, $password)
+    /** Checks user login credentials
+     * @param string $email - The email of the user
+     * @param string $password - The hashed password of the user
+     * @return array|null
+     */
+    public function login(string $email, string $password): ?array
     {
 
         $query = "SELECT * FROM users WHERE email = ?";
@@ -73,13 +76,16 @@ class mysqli_class extends mysqli
         }//END PREPARE
         else {
             trigger_error($this->error, E_USER_WARNING);
+            return null;
         }
     }
 
-    /*** LOG LOGINS ******************************************************************
-     * /*## Logs user logins  */
+    /** Logs user logins
+     * @param int $user_id - The user ID to log
+     * @return int|string
+     */
     public
-    function logins_insert($user_id): int|string
+    function logins_insert(int $user_id): int|string
     {
         $agent = $_SERVER['HTTP_USER_AGENT'];
 
@@ -116,8 +122,11 @@ class mysqli_class extends mysqli
         return $last_id;
     }
 
-    /*** Removes selected id from the logins table */
-    public function login_remove($id): void
+    /*** Removes selected id from the logins table
+     * @param int $id - The review ID to delete
+     * @return void
+     */
+    public function login_remove(int $id): void
     {
         $query = "DELETE FROM logins WHERE user_id = ?";
 
@@ -134,9 +143,13 @@ class mysqli_class extends mysqli
         }
     }
 
-    /** Logs an action committed by the specified user */
+    /** Logs an action committed by the specified user
+     * @param string $action - The description of the action to log
+     * @param int $user_id - The user ID to log
+     * @return int|string
+     */
     public
-    function actions_insert($action, $user_id): int|string
+    function actions_insert(string $action, int $user_id): int|string
     {
         $page = $_SERVER['REQUEST_URI'];
         $agent = $_SERVER['HTTP_USER_AGENT'];
@@ -183,10 +196,12 @@ class mysqli_class extends mysqli
 //USERS
 /////////////
 
-    /*** INFO ******************************************************************
-     * /*## Gets info for a row */
+    /** Returns info for a row
+     * @param int $user_id - The user id of the row to fetch
+     * @return array
+     */
     public
-    function user_info($user_id): array
+    function user_info(int $user_id): array
     {
 
         $results = array();
@@ -221,8 +236,11 @@ class mysqli_class extends mysqli
         return $results;
     }
 
-    /** Gets a user's profile information based on their ID */
-    public function user_pf_info($user_id): array
+    /** Gets a user's profile information based on their ID
+     * @param int $user_id - The user id of the profile to fetch
+     * @return array
+     */
+    public function user_pf_info(int $user_id): array
     {
         $results = array();
         $query = "
@@ -255,10 +273,15 @@ class mysqli_class extends mysqli
         return $results;
     }
 
-    /*** USER ADD  ******************************************************************
-     * /*## adds row  data */
+    /** Adds a new user
+     * @param string $email - The email of the user to be added
+     * @param string $name - The username of the user to be added
+     * @param string $password - The hashed password of the user to be added
+     * @param int $level - The security level of the user to be added
+     * @return int|string
+     */
     public
-    function user_insert($email, $name, $password, $level): int|string
+    function user_insert(string $email, string $name, string $password, int $level): int|string
     {
         $pass_hash = password_hash($password, PASSWORD_DEFAULT);
         $query = "
@@ -288,8 +311,13 @@ class mysqli_class extends mysqli
 
     }
 
-    /** Creates a user's profile information. Description is optional */
-    public function user_pf_insert($user_id, $join_date, $desc = "This user has not added a description yet."): void
+    /** Creates a user's profile information
+     * @param int $user_id - The ID of the user to add a description to
+     * @param string $join_date - The timestamp the user was created on
+     * @param string $desc - The description of the user's profile - TODO - add a modal to modify this, currently everyone's description is placeholderX
+     * @return void
+     */
+    public function user_pf_insert(int $user_id, string $join_date, string $desc = "This user has not added a description yet."): void
     {
         $query = "
             INSERT INTO user_pf_data(user_id, user_description, user_join_date) 
@@ -310,11 +338,13 @@ class mysqli_class extends mysqli
     }
 
     /** Checks if the email/username already exists
-     ** $field - the email/username to check
-     ** $column - which column in the DB to check, e.g. 'email' to check an email and 'username' to check a username
+     ** @param string $field - the email/username to check
+     ** @param string $column - which column in the DB to check, e.g. 'email' to check an email and 'username' to check a username
+     * @return bool
      */
-    public function user_field_check($field, $column): bool
+    public function user_field_check(string $field, string $column): bool
     {
+        if ($column !== 'email' && $column !== 'username') trigger_error("user field check column must be either 'email' or 'username'", E_USER_WARNING);
         $query = "SELECT email FROM users WHERE " . $column . " = ?";
         $results = [];
 
@@ -346,10 +376,16 @@ class mysqli_class extends mysqli
         return (bool)count($results);
     }
 
-    /*** USER EDIT  ******************************************************************
-     * /*## Updates row */
+    /** Updates a user row
+     * @param int $user_id - The ID of the user to be updated
+     * @param string $email - The email of the user to be updated
+     * @param string $name - The username of the user to be updated
+     * @param string $password - The hashed password of the user to be updated
+     * @param int $level - The security level of the user to be updated
+     * @return void
+     */
     public
-    function user_edit($user_id, $email, $name, $password, $level): void
+    function user_edit(int $user_id, string $email, string $name, string $password, int $level): void
     {
         // if password is given via the function parameter above, hash it,
         // otherwise, get already hashed password from sql table
@@ -380,10 +416,12 @@ class mysqli_class extends mysqli
 
     }
 
-    /*** USER REMOVE  ******************************************************************
-     * /*## removes row */
+    /** Removes a user
+     * @param int $user_id - The id of the user to be deleted
+     * @return void
+     */
     public
-    function user_remove($user_id): void
+    function user_remove(int $user_id): void
     {
 
         $query = "
@@ -404,8 +442,9 @@ class mysqli_class extends mysqli
         }
     }
 
-    /*** USER LEVEL LIST ******************************************************************
-     * /*## List all data */
+    /** Returns the available security levels for users
+     * @return array
+     */
     public
     function user_level_list(): array
     {
@@ -446,7 +485,9 @@ class mysqli_class extends mysqli
 
     // SHOW FUNCTIONS START HERE
 
-    /** Creates an array with the top $limit shows (stick to factors of 6 please) */
+    /** Creates an array with the top $limit shows (stick to factors of 6 please)
+     * @return array
+     */
     public function show_list(): array
     {
         $limit = 30;
@@ -483,8 +524,13 @@ class mysqli_class extends mysqli
         return $results;
     }
 
-    /** Retrieves $limit amt of shows with the $genre genre name (stick to factors of 6) */
-    public function show_list_genre($genre, $limit): array
+    /** Retrieves $limit amt of shows with the $genre genre name (stick to factors of 6 for best looking results)
+     * @param string $genre - The genre to search
+     * @param int $limit - The amount of results to return
+     * @param int $offset - The amount of results to skip
+     * @return array
+     */
+    public function show_list_genre(string $genre, int $limit, int $offset): array
     {
         $results = array();
         $query = "
@@ -498,10 +544,10 @@ class mysqli_class extends mysqli
             JOIN genres ON show_genres.genre_id = genres.genre_id
             JOIN shows ON show_genres.show_id = shows.id
             WHERE genres.genre_name = ?
-            LIMIT ?";
+            LIMIT ? OFFSET ?";
 
         if ($stmt = parent::prepare($query)) {
-            $stmt->bind_param("si", $genre, $limit);
+            $stmt->bind_param("sii", $genre, $limit, $offset);
             if (!$stmt->execute()) {
                 trigger_error($this->error, E_USER_WARNING);
             }
@@ -527,8 +573,11 @@ class mysqli_class extends mysqli
         return $results;
     }
 
-    /** Retrieves genre tags for the show with the specified id */
-    public function show_genres($id): array
+    /** Retrieves genre tags for the show with the specified id
+     * @param int $id - The id of the show to fetch the genre tags for
+     * @return array
+     */
+    public function show_genres(int $id): array
     {
         $results = array();
         // limit results just in case a show has like 20 genres
@@ -568,8 +617,39 @@ class mysqli_class extends mysqli
         return $results;
     }
 
-    /** Inserts show with the specified params */
-    public function show_insert($api_id, $show_name, $lang, $overview, $poster, $air_date, $orig_lang, $back_path): int|string
+    /** Retrieves the genre ID based on the genre name
+     * @param string $genre_name - The name of the genre to get the ID for
+     * @return int
+     */
+    public function get_genre_id(string $genre_name): int
+    {
+        $query = "SELECT genre_id FROM genres WHERE genre_name = ?";
+        if ($stmt = parent::prepare($query)) {
+            $stmt->bind_param("s", $genre_name);
+            if (!$stmt->execute()) {
+                trigger_error($this->error, E_USER_WARNING);
+            }
+            $result = $stmt->get_result();
+            $data = $result->fetch_column(0);
+            $stmt->close();
+        } else {
+            trigger_error($this->error, E_USER_WARNING);
+        }
+        return $data;
+    }
+
+    /** Inserts show with the specified params
+     * @param int $api_id - The TMDB api ID of the show
+     * @param string $show_name - The name of the show
+     * @param string $lang - The 2 character language of the show (e.g. 'en' = english, 'ko' = korean, etc.)
+     * @param string $overview - The description of the show
+     * @param string $poster - The URL fragment to the show's poster image
+     * @param string $air_date - The date the show first aired
+     * @param string $orig_lang - The 2 character original language of the show
+     * @param string $back_path - The URL fragment to the show's backdrop image
+     * @return int|string
+     */
+    public function show_insert(int $api_id, string $show_name, string $lang, string $overview, string $poster, string $air_date, string $orig_lang, string $back_path): int|string
     {
         $query = "
 			INSERT INTO shows
@@ -600,8 +680,12 @@ class mysqli_class extends mysqli
 
     }
 
-    /** Links the specified show with the specified genre */
-    public function show_genre_insert($show_id, $genre_id): int|string
+    /** Links the specified show with the specified genre
+     * @param int $show_id - The ID of the show to add a genre to
+     * @param int $genre_id - The ID of the genre to be added to a show
+     * @return int|string
+     */
+    public function show_genre_insert(int $show_id, int $genre_id): int|string
     {
         $query = "
 			INSERT INTO show_genres
@@ -626,8 +710,11 @@ class mysqli_class extends mysqli
 
     }
 
-    /** Retrieves information about the specified show based on the id */
-    public function show_info($id): array
+    /** Retrieves information about the specified show based on the id
+     * @param int $id - The ID of the show to fetch
+     * @return array
+     */
+    public function show_info(int $id): array
     {
 
         $results = array();
@@ -662,8 +749,11 @@ class mysqli_class extends mysqli
         return $results;
     }
 
-    /** Retrieves information about the specified show based on the name */
-    public function show_info_name($name): array
+    /** Retrieves information about the specified show based on the name
+     * @param string $name - The name of the show to fetch
+     * @return array
+     */
+    public function show_info_name(string $name): array
     {
         $results = array();
         $query = "
@@ -695,9 +785,13 @@ class mysqli_class extends mysqli
     }
 
     /** Updates a show based on the params
-     ** Only $id and $showname are required
+     * @param int $id - The ID of the show to be updated
+     * @param int $showname - The name of the show to be updated
+     * @param string $overview - The description of the show to be updated
+     * @param string $air_date - The air date of the show to be updated
+     * @return void
      */
-    public function show_edit($id, $showname, $overview, $air_date): void
+    public function show_edit(int $id, int $showname, string $overview, string $air_date): void
     {
 
         $query = "
@@ -721,8 +815,13 @@ class mysqli_class extends mysqli
 
     }
 
-    /** Searches for a show based on the input string */
-    public function show_search($searchstr, $amt_per_page = 72, $offset = 0): array
+    /** Searches for a show based on the input string
+     * @param string $searchstr - The input text to be searched
+     * @param int $amt_per_page - Optional - The amount of results to be displayed per page
+     * @param int $offset - Optional - The amount of results to skip
+     * @return array
+     */
+    public function show_search(string $searchstr, int $amt_per_page = 72, int $offset = 0): array
     {
         $results = [];
         $searchstr = "%" . $searchstr . "%";
@@ -759,8 +858,11 @@ class mysqli_class extends mysqli
         return $results;
     }
 
-    /** Returns the amount of results for a search string */
-    public function search_count($searchstr): float|false|int|string|null
+    /** Returns the amount of results for a search string
+     * @param string $searchstr - The input text to be searched
+     * @return float|false|int|string|null
+     */
+    public function search_count(string $searchstr): float|false|int|string|null
     {
         $data = 0;
         $searchstr = "%" . $searchstr . "%";
@@ -780,10 +882,12 @@ class mysqli_class extends mysqli
         return $data;
     }
 
-    /** Retrieves a single column from the shows table based on the row id and column name
-     * Returns null if the column is null/empty
+    /** Retrieves a single column from the shows table based on the row id and column name. Returns null if the column is null/empty
+     * @param int $id - The ID of the show to have a column fetched from it
+     * @param string $column - The name of the column to fetch. WILL TRIGGER AN ERROR IF NOT A VALID COLUMN
+     * @return float|int|string|null
      */
-    public function get_show_column($id, $column): int|float|string|null
+    public function get_show_column(int $id, string $column): int|float|string|null
     {
         if (!in_array($column, $this->column_arr)) {
             trigger_error("The specified column was not found in the show table", E_USER_WARNING);
@@ -819,15 +923,17 @@ class mysqli_class extends mysqli
         return $data[$column];
     }
 
-    /** Adds one to a star column based on the review rating, e.g. a 1 star review means the column 1_stars = 1_stars + 1
-     ** id - Int, the ID of the show the review is for
-     ** value - Int, the review's rating
-     ** remove - Optional boolean, assign false to subtract from the column instead of adding
-     ** edit - Optional boolean, assign false for default behavior and true to add one to the new rating and subtract one from $old_rating
+    /** Adds one to a star column based on the review rating, e.g. a 1-star review means the column 1_stars = 1_stars + 1
+     ** @param int $id - The ID of the show the review is for
+     ** @param int $value - The review's rating
+     ** @param bool $remove - Optional, assign false to add from the column instead of subtracting
+     ** @param bool $edit - Optional, assign false for default behavior and true to add one to the new rating and subtract one from $old_rating
+     * @param int $old_value - Optional, only used if editing a review. Stores the original value of the review
+     * @return void
      */
-    public function star_update($id, $value, $remove = false, $edit = false, $old_value = 1): void
+    public function star_update(int $id, int $value, bool $remove = false, bool $edit = false, int $old_value = 1): void
     {
-        if (!is_int($value) || $value > 5 || $value < 1) {
+        if ($value > 5 || $value < 1) {
             trigger_error("Cannot insert into star column, value is out of bounds or is not an integer", E_USER_WARNING);
         }
 
@@ -860,8 +966,11 @@ class mysqli_class extends mysqli
         }
     }
 
-    /** Returns all star columns for the specified show */
-    public function get_star_cols($id): array
+    /** Returns all star columns for the specified show
+     * @param int $id - The ID of the show to get the star columns of
+     * @return array
+     */
+    public function get_star_cols(int $id): array
     {
         $results = array();
         $query = "
@@ -896,17 +1005,28 @@ class mysqli_class extends mysqli
     }
 
     /** Updates a single column of a show entry based on the row id and column name
-     ** column_type = Optional string, used to determine what data type is being inserted into the column
-     *** i -> integer
-     *** d -> double/float
-     *** s -> string
-     *** b -> blob, sent in packets (not used)
+     * @param int $id - The ID of the show to update the column of
+     * @param float|int|string $newval - The value of the column to update
+     * @param string $column - The column to update
+     ** @param string $column_type = Optional, used to determine what data type is being inserted into the column
+     *
+     * 'i' -> integer
+     *
+     * 'd' -> double/float
+     *
+     * 's' -> string
+     *
+     * 'b' -> blob, sent in packets (not used)
+     * @return void
      */
-    public function update_show_column($id, $newval, $column, $column_type = "i"): void
+    public function update_show_column(int $id, float|int|string $newval, string $column, string $column_type = "i"): void
     {
         if (!in_array($column, $this->column_arr)) {
             trigger_error($this->error, E_USER_WARNING);
+        } elseif ($column_type === 'b') {
+            trigger_error("Blob is not a supported data type for this method.", E_USER_WARNING);
         }
+
         $query = "
             UPDATE shows 
             SET $column = ? 
@@ -926,8 +1046,14 @@ class mysqli_class extends mysqli
 
     // REVIEW FUNCTIONS START HERE
 
-    /** Creates a review for a show by the specified user. Returns the ID of the inserted row */
-    public function review_insert($review_value, $review_content, $show_id, $user_id): int|string
+    /** Creates a review for a show by the specified user. Returns the ID of the inserted row
+     * @param int $review_value - The star rating of the review
+     * @param string $review_content - The text of the review
+     * @param int $show_id - The ID of the show the review was made for
+     * @param int $user_id - The ID of the user that made the review
+     * @return int|string
+     */
+    public function review_insert(int $review_value, string $review_content, int $show_id, int $user_id): int|string
     {
         $query = "
 			INSERT INTO reviews
@@ -1100,8 +1226,11 @@ class mysqli_class extends mysqli
         return $results;
     }
 
-    /** Retrieves a review based on its id */
-    public function review_info($id): array
+    /** Retrieves a review based on its id
+     * @param int $id - The ID of the review to be fetched
+     * @return array
+     */
+    public function review_info(int $id): array
     {
         $results = array();
         $query = "
@@ -1249,6 +1378,33 @@ class mysqli_class extends mysqli
         ";
 
         if ($stmt = parent::prepare($query)) {
+            if (!$stmt->execute()) {
+                trigger_error($this->error, E_USER_WARNING);
+            }
+            $result = $stmt->get_result();
+            $data = $result->fetch_column(0);
+            $stmt->close();
+        } else {
+            trigger_error($this->error, E_USER_WARNING);
+        }
+
+        return $data;
+    }
+
+    /** Returns the amount of shows that are in a specified genre
+     * @param int $genre_id - The ID of the genre to get the amt of shows for
+     * @return float|false|int|string|null
+     */
+    public function genre_show_count(int $genre_id): float|false|int|string|null
+    {
+        $query = "
+            SELECT count(id)
+            FROM show_genres
+            WHERE genre_id = ?
+        ";
+
+        if ($stmt = parent::prepare($query)) {
+            $stmt->bind_param("i", $genre_id);
             if (!$stmt->execute()) {
                 trigger_error($this->error, E_USER_WARNING);
             }

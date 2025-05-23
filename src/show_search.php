@@ -16,7 +16,6 @@ if ($page < 1) $page = 1;
 $img_url = 'https://image.tmdb.org/t/p/original';
 
 $amt_per_page = 30;
-$results = $mysqli->show_search($searchstr, $amt_per_page, ($amt_per_page * ($page - 1)));
 $count = $mysqli->search_count($searchstr);
 
 if ($count <= 0) {
@@ -30,6 +29,8 @@ if ($count <= 0) {
         $page = $num_pages;
     }
 }
+
+$results = $mysqli->show_search($searchstr, $amt_per_page, ($amt_per_page * ($page - 1)));
 
 $page_name = $count . " result" . ($count === 1 ? "" : "s") . " found for " . "'" . $searchstr . "'";
 ?>

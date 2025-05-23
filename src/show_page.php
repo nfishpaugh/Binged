@@ -40,7 +40,6 @@ $page_name = $show_info['show_name'];
 
 $recent_amt_per_page = 5;
 $amt_per_page = 10;
-$reviews = $mysqli->show_reviews($show_info['id'], $amt_per_page);
 
 $avg = $_SESSION[$in_id . "_avg"] ?? $mysqli->get_show_column($in_id, "review_avg") ?? 0.0;
 
@@ -59,6 +58,8 @@ if ($review_count <= 0) {
         $page = $num_pages;
     }
 }
+
+$reviews = $mysqli->show_reviews($show_info['id'], $amt_per_page);
 
 $genres = $mysqli->show_genres($in_id);
 

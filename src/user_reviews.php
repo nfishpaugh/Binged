@@ -20,7 +20,6 @@ $amt_per_page = 12;
 
 $user_info = $mysqli->user_info($in_id);
 
-$results = $mysqli->user_review_info($in_id, $amt_per_page, ($amt_per_page * ($page - 1)));
 $review_count = $mysqli->user_review_count($in_id);
 if ($review_count <= 0) {
     $review_count = 0;
@@ -33,6 +32,8 @@ if ($review_count <= 0) {
         $page = $num_pages;
     }
 }
+
+$results = $mysqli->user_review_info($in_id, $amt_per_page, ($amt_per_page * ($page - 1)));
 
 $page_name = "" . $user_info['user_name'] . "'" . "s Reviews";
 

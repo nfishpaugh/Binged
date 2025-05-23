@@ -1,5 +1,6 @@
 <?php
 include "include/config.inc";
+include "include/utils.php";
 
 $_SESSION[PREFIX . "_ppage"] = $_SERVER['REQUEST_URI'];
 if ($_SESSION[PREFIX . '_username'] == "") {
@@ -13,21 +14,36 @@ if (!$genre) {
     exit;
 }
 
+$page = (isset($_GET['page']) && is_numeric($_GET['page'])) ? intval($_GET['page']) : 1;
+if ($page < 1) $page = 1;
+
 $img_url = 'https://image.tmdb.org/t/p/original';
 
-switch ($genre) {
-    case "Action":
-        $genre = "Action & Adventure";
-        break;
-    case "SciFi":
-        $genre = "Sci-Fi & Fantasy";
-        break;
-    case "War":
-        $genre = "War & Politics";
-        break;
+$genre_full = match ($genre) {
+    "Action" => "Action & Adventure",
+    "SciFi" => "Sci-Fi & Fantasy",
+    "War" => "War & Politics",
+    default => $genre,
+};
+
+$genre_id = $mysqli->get_genre_id($genre_full);
+
+$amt_per_page = 30;
+$count = $mysqli->genre_show_count($genre_id);
+
+if ($count <= 0) {
+    $count = 0;
+    $num_pages = 1;
+} else {
+    // find the number of pages needed to display all results, add one if it doesn't divide cleanly
+    $num_pages = ($amt_per_page % $count) === 0 ? intval($count / $amt_per_page) : intval($count / $amt_per_page) + 1;
+
+    if ($page > $num_pages) {
+        $page = $num_pages;
+    }
 }
 
-$results = $mysqli->show_list_genre($genre, 72);
+$results = $results = $mysqli->show_list_genre($genre_full, $amt_per_page, ($amt_per_page * ($page - 1)));
 
 ?>
 <!DOCTYPE html>
@@ -37,7 +53,7 @@ $results = $mysqli->show_list_genre($genre, 72);
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title><?php echo $app_name; ?> - <?php echo $genre; ?></title>
+    <title><?php echo $app_name; ?> - <?php echo $genre_full; ?></title>
     <!-- plugins:css -->
     <link rel="stylesheet" href="vendors/mdi/css/materialdesignicons.min.css">
     <link rel="stylesheet" href="vendors/base/vendor.bundle.base.css">
@@ -64,7 +80,7 @@ $results = $mysqli->show_list_genre($genre, 72);
                         <div class="d-flex justify-content-between flex-wrap">
                             <div class="d-flex align-items-end flex-wrap">
                                 <div class="me-md-3 me-xl-5">
-                                    <h2><?php echo $genre; ?></h2>
+                                    <h2><?php echo $genre_full; ?></h2>
                                 </div>
                             </div>
 
@@ -102,6 +118,7 @@ $results = $mysqli->show_list_genre($genre, 72);
                         </div>
                         <?php
                     }
+                    if ($count > $amt_per_page) echo pagination_template($page, $num_pages, 0, 0, "genre", "", $genre)
                     ?>
                 </div>
             </div>

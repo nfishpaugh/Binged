@@ -174,14 +174,25 @@ function review_template(array $review, array $user_pf, int $i, array $user_info
  * @param int $in_id - Optional, ID of the show, only used for the review template
  * @param int $uid - Optional, user ID, only used for user-review template
  * @param string $type - Determines the template string returned:
+ *
  *- review - returns the review pagination template
+ *
  *- search - returns the search pagination template
+ *
+ *- user-review - returns the user-review pagination template
+ *
+ *- genre - returns the genre pagination template
+ *
  *- none - default pagination template with inactive hrefs
  * @param string $searchstr - The string used if type = search
+ * @param string $genre - The string used if type = genre
  * @return string
  */
-function pagination_template(int $page, int $num_pages, int $in_id = 0, int $uid = 0, string $type = "none", string $searchstr = ""): string
+function pagination_template(int $page, int $num_pages, int $in_id = 0, int $uid = 0, string $type = "none", string $searchstr = "", string $genre = ""): string
 {
+    if ($page > $num_pages) $page = $num_pages;
+    elseif ($page < 1) $page = 1;
+
     $prev = $page - 1;
     $next = $page + 1;
 
@@ -189,7 +200,8 @@ function pagination_template(int $page, int $num_pages, int $in_id = 0, int $uid
         "review" => array("show_page.php?id=" . $in_id . "&page=", "&all=1"),
         "search" => array("show_search.php?searchbar=" . $searchstr . "&sub=Submit+Query&page=", ""),
         "user-review" => array("user_reviews.php?id=" . $uid . "&page=", ""),
-        default => array("#", ""),
+        "genre" => array("genre_page.php?genre=" . $genre . "&page=", ""),
+        default => array("#", "")
     };
 
     if ($page > 1) {
@@ -229,12 +241,12 @@ function pagination_template(int $page, int $num_pages, int $in_id = 0, int $uid
         while ($i <= $num_pages) {
             if ($i === $page) {
                 $pages = $pages . <<<TEMPLATE
-            <li class="page-item disabled"><a class="page-link" href="$url[0]$i$url[1]">$i</a></li>
-            TEMPLATE;
+                <li class="page-item disabled"><a class="page-link" href="$url[0]$i$url[1]">$i</a></li>
+                TEMPLATE;
             } else {
                 $pages = $pages . <<<TEMPLATE
-            <li class="page-item"><a class="page-link" href="$url[0]$i$url[1]">$i</a></li>
-            TEMPLATE;
+                <li class="page-item"><a class="page-link" href="$url[0]$i$url[1]">$i</a></li>
+                TEMPLATE;
             }
             $i++;
         }
@@ -250,12 +262,25 @@ function pagination_template(int $page, int $num_pages, int $in_id = 0, int $uid
         </nav>
         TEMPLATE;
     } else {
-        $last = <<<TEMPLATE
-        <li class="page-item"><a class="page-link" href="$url[0]$num_pages$url[1]">Last</a></li>
-        TEMPLATE;
-        $first = <<<TEMPLATE
-        <li class="page-item"><a class="page-link" href="$url[0]1$url[1]">First</a></li>
-        TEMPLATE;
+        if ($page === $num_pages) {
+            $last = <<<TEMPLATE
+            <li class="page-item disabled"><a class="page-link">Last</a></li>
+            TEMPLATE;
+        } else {
+            $last = <<<TEMPLATE
+            <li class="page-item"><a class="page-link" href="$url[0]$num_pages$url[1]">Last</a></li>
+            TEMPLATE;
+        }
+
+        if ($page === 1) {
+            $first = <<<TEMPLATE
+            <li class="page-item disabled"><a class="page-link">First</a></li>
+            TEMPLATE;
+        } else {
+            $first = <<<TEMPLATE
+            <li class="page-item"><a class="page-link" href="$url[0]1$url[1]">First</a></li>
+            TEMPLATE;
+        }
 
         $btn_amt = 10;
         $midpoint = $btn_amt / 2;
