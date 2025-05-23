@@ -527,10 +527,10 @@ class mysqli_class extends mysqli
     /** Retrieves $limit amt of shows with the $genre genre name (stick to factors of 6 for best looking results)
      * @param string $genre - The genre to search
      * @param int $limit - The amount of results to return
-     * @param int $offset - The amount of results to skip
+     * @param int $offset - Optional, the amount of results to skip
      * @return array
      */
-    public function show_list_genre(string $genre, int $limit, int $offset): array
+    public function show_list_genre(string $genre, int $limit, int $offset = 0): array
     {
         $results = array();
         $query = "
