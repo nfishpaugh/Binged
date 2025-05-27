@@ -14732,6 +14732,7 @@ fieldset:disabled .btn {
     flex-wrap: wrap;
     align-items: center;
     justify-content: flex-end;
+    background-color: inherit;
     padding: var(--modal-footer-padding-y) var(--modal-footer-padding-x);
     border-top: var(--modal-footer-border-width) solid #cde;
     border-bottom-right-radius: var(--modal-inner-border-radius);

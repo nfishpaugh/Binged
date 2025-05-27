@@ -61,7 +61,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                         <div class="brand-logo" style="margin-bottom: 0;">
                             <img src="images/binged_logo.svg" width="64" height="64" alt="logo">
                         </div>
-                        <h4>Hello! Welcome to Binged!</h4>
+                        <h4 style="padding-bottom: 10px;">Hello! Welcome to Binged, a cataloging website for your
+                            favorite TV shows!</h4>
                         <h6 class="font-weight-light">Sign in to continue.</h6>
                         <form id="subform" class="pt-3" action="" method="POST">
                             <div class="form-group">
