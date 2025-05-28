@@ -3,3 +3,5 @@
 sftp.json
 .ftpconfig
 .vscode
+./.idea
+./_info
