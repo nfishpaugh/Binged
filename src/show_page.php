@@ -30,14 +30,6 @@ if ($all_bool === '1' || $all_bool === '0') {
     $all_bool = 0;
 }
 
-$img_url = 'https://image.tmdb.org/t/p/original';
-$temp_url = $img_url . $show_info['show_poster_path'];
-$back_url = $img_url . $show_info['show_backdrop_path'];
-
-$year = substr($show_info['show_air_date'], 0, 4);
-
-$page_name = $show_info['show_name'];
-
 $recent_amt_per_page = 5;
 $amt_per_page = 10;
 
@@ -59,51 +51,78 @@ if ($review_count <= 1) {
     }
 }
 
-$reviews = $mysqli->show_reviews($show_info['id'], $amt_per_page);
+class Reviews
+{
+    public array $reviews_arr;
 
-$genres = $mysqli->show_genres($in_id);
+    public function __construct($mysqli, $show_id, $amt_per_page, $offset = 0)
+    {
+        $this->reviews_arr = $mysqli->show_reviews($show_id, $amt_per_page, $offset);
+    }
 
-$r_str = '';
+    public function getReviews(): array
+    {
+        return $this->reviews_arr;
+    }
+
+    public function getReviewContent($i)
+    {
+        return $this->reviews_arr[$i]['review_content'];
+    }
+
+    public function getReviewRating($i)
+    {
+        return $this->reviews_arr[$i]['review_value'];
+    }
+}
+
+$revs = new Reviews($mysqli, $show_info['id'], $amt_per_page);
+$reviews = $revs->getReviews();
+
+/** Extracts various IDs from the specified POST key name
+ * @param $key - The POST key to get IDs from
+ * @return array
+ */
+function getIDs($key): array
+{
+    // retrieves the command (delete or edit)
+    $cmd = substr($key, 0, strcspn($key, "0123456789"));
+
+    // creates a substring starting at the first numeric character of $val
+    $ids = substr($key, strcspn($key, "0123456789"));
+
+    // get indices of hyphen characters to use as starting points for ids
+    $first = strpos($ids, "-");
+    $second = strposX($ids, "-", 2);
+
+    // arrid = id in array
+    // rid = review id
+    // uid = author's user id
+    $arrid = substr($ids, 0, $first);
+    $rid = substr($ids, $first + 1, $second - 2);
+    $uid = substr($ids, $second + 1);
+
+    return array($arrid, $rid, $uid, $cmd);
+}
 
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
-    if (isset($_SESSION[PREFIX . '_user_id']) && $_POST['modify'] === "1") {
+    if (isset($_SESSION[PREFIX . '_user_id']) && isset($_POST['modify']) && $_POST['modify'] === "1") {
         unset($_POST['modify']);
         $sid = $show_info['id'];
         foreach ($_POST as $key => $val) {
-            if (preg_match("/(delete|edit)[0-9]./", $key)) {
-                // retrieves the command (delete or edit)
-                $cmd = substr($key, 0, strcspn($key, "0123456789"));
+            if (preg_match("/(delete)[0-9]./", $key)) {
+                $IDs = getIDs($key);
 
-                // creates a substring starting at the first numeric character of $val
-                $ids = substr($key, strcspn($key, "0123456789"));
-
-                // get indices of hyphen characters to use as starting points for ids
-                $first = strpos($ids, "-");
-                $second = strposX($ids, "-", 2);
-
-                // arrid = id in array
-                // rid = review id
-                // uid = author's user id
-                $arrid = substr($ids, 0, $first);
-                $rid = substr($ids, $first + 1, $second - 2);
-                $uid = substr($ids, $second + 1);
-
-                if ($_SESSION[PREFIX . '_user_id'] == $uid && $cmd === "delete") {
-                    $mysqli->review_delete($rid);
-                    update_avg($sid, $reviews[$arrid]["review_value"], $review_count, $mysqli, true);
+                if ($_SESSION[PREFIX . '_user_id'] == $IDs[2] && $IDs[3] === "delete") {
+                    $mysqli->review_delete($IDs[1]);
+                    update_avg($sid, $reviews[$IDs[0]]["review_value"], $review_count, $mysqli, true);
 
                     header("location: show_page.php?id=" . $in_id);
-                } else {
-                    $_SESSION["edit_review_content"] = $reviews[$arrid]["review_content"];
-                    $_SESSION["edit_review_value"] = $reviews[$arrid]["review_value"];
-                    $_SESSION["edit_review_date"] = $reviews[$arrid]["review_date"];
-                    $_SESSION["edit_show_id"] = $in_id;
-                    header("location: review_edit.php?rid=" . $rid . "&uid=" . $uid);
+                    exit;
                 }
-                exit;
             }
         }
-    } elseif (!isset($_SESSION[PREFIX . '_user_id'])) {
+    } elseif (!isset($_SESSION[PREFIX . '_user_id']) || !isset($_SESSION[PREFIX . '_security'])) {
         ?>
         <script>
             alert("Invalid user id");
@@ -141,8 +160,59 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             <?php
             unset($_POST);
         }
+    } elseif (!isset($_POST['modify']) && $_POST['modal-edit'] === "1" && $_SESSION[PREFIX . '_security'] > 0) {
+        unset($_POST['modal-edit']);
+
+        foreach ($_POST as $key => $value) {
+            if (preg_match("/(edit)[0-9]./", $key)) {
+                $IDs = getIDs($key);
+
+                if ($_SESSION[PREFIX . '_user_id'] == $IDs[2] && $IDs[3] === "edit") {
+                    $rating = match ($_POST['rate']) {
+                        "5" => 5,
+                        "4" => 4,
+                        "3" => 3,
+                        "2" => 2,
+                        default => 1,
+                    };
+
+                    $mysqli->review_update($IDs[1], $rating, $_POST['review-input']);
+
+                    // only update the average if the rating changes
+                    if ($rating != $reviews[$IDs[0]]['review_value']) {
+                        $review_count = $mysqli->get_show_column($in_id, "review_amt");
+
+                        // can just set the avg to the user's rating if it's the only review
+                        if (!$review_count || $review_count === 1) {
+                            $mysqli->update_show_column($in_id, $rating, "review_avg");
+                            $mysqli->update_show_column($in_id, 1, "review_amt");
+                        } else {
+                            update_avg($in_id, $rating, $review_count, $mysqli, false, true, $reviews[$IDs[0]]['review_value']);
+                        }
+                    }
+
+                    $mysqli->actions_insert("Updated Review: " . date("Y-m-d") . " " . $in_id, $_SESSION[PREFIX . '_user_id']);
+
+                    $_SESSION[PREFIX . '_action'][] = 'updated';
+                    header("location: show_page.php?id=" . $in_id);
+                    exit;
+                }
+            }
+        }
     }
 }
+
+$img_url = 'https://image.tmdb.org/t/p/original';
+$temp_url = $img_url . $show_info['show_poster_path'];
+$back_url = $img_url . $show_info['show_backdrop_path'];
+
+$year = substr($show_info['show_air_date'], 0, 4);
+
+$page_name = $show_info['show_name'];
+
+$genres = $mysqli->show_genres($in_id);
+
+$r_str = '';
 ?>
 <!DOCTYPE html>
 <html lang="en" class="no-mobile">
@@ -158,7 +228,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 </head>
 <body>
 <!-- a nothing script that just prevents a flash of unstyled content on Firefox -->
-<script>let z = 0;</script>
+<script>console.log("start");</script>
 
 <div class="container-scroller">
 
@@ -284,7 +354,8 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                                 </div>
                                 <div id="load-content" <?php if (!$all_bool) echo 'hidden'; ?>>
                                     <?php if ($page > 1) {
-                                        $new_reviews = $mysqli->show_reviews($in_id, $amt_per_page, ($amt_per_page * ($page - 1)));
+                                        $new_revs = new Reviews($mysqli, $in_id, $amt_per_page, ($amt_per_page * ($page - 1)));
+                                        $new_reviews = $new_revs->getReviews();
                                         $page_rev_count = count($new_reviews);
                                         $i = 0;
 
@@ -317,15 +388,14 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     </div>
 </div>
 
-<!-- TODO - have this be the modal for editing as well -->
 <div class="modal fade reviewModal hideModal" id="review-modal" data-bs-backdrop="static" data-bs-keyboard="false"
      tabindex="-1">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content" style="height: 60%">
             <div class="modal-header">
-                <h5 class="modal-title" id="review_modal_title">
-                    <span data-title-label="submit">I watched...</span>
-                    <span data-title-label="edit" hidden>Edit review</span>
+                <h5 class="modal-title" id="review-modal-title">
+                    <span id="review-modal-title-watch" data-title-label="submit">I watched...</span>
+                    <span id="review-modal-title-edit" data-title-label="edit" hidden>Edit review</span>
                 </h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" id="modal_close_review"></button>
             </div>
@@ -346,7 +416,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                         </aside>
                         <div class="body">
                             <input type="hidden" name="modal-submit" id="modal-submit-hidden" value="1">
-                            <input type="hidden" name="modal-data-review" id="modal-edit-hidden" value="0">
+                            <input type="hidden" name="modal-edit" id="modal-edit-hidden" value="0">
                             <div class="reviewfields">
                                 <div class="inner">
                                     <textarea id="review-input" class="field reviewfield" name="review-input"
@@ -416,39 +486,69 @@ function review_temp($i, $arr, $mysqli, $in_id): string
 <script src="js/eventListeners.js"></script>
 <script>
     // get all buttons with ids that start with 'modal_'
-    for (let i of document.querySelectorAll("button[id^=modal_]")) {
-        let sub = i.id.substring(i.id.lastIndexOf('_') + 1);
-        let modalId = sub + '-modal';
+    // for (let i of document.querySelectorAll("button[id^=modal_]")) {
+    //     let sub = i.id.substring(i.id.lastIndexOf('_') + 1);
+    //     let modalId = '';
+    //     if (sub.indexOf("alert")) {
+    //         modalId = 'alert-modal';
+    //     } else {
+    //         modalId = 'review-modal';
+    //     }
+    //
+    //     i.addEventListener('click', function () {
+    //         console.log(i.id + " was clicked");
+    //         console.log(modalId);
+    //         changeModalDisplay(document.getElementById(modalId));
+    //     });
+    // }
 
+    document.getElementById('modal_open_review').addEventListener('click', function () {
+        document.getElementById('modal-submit-hidden').value = 1;
+        document.getElementById('modal-edit-hidden').value = 0;
+        document.getElementById('review-modal-title-edit').hidden = true;
+        document.getElementById('review-modal-title-watch').hidden = false;
+    });
+
+    for (let i of document.querySelectorAll("button[id^=modal_open_alert]")) {
         i.addEventListener('click', function () {
-            console.log(i.id + " was clicked");
-            changeModalDisplay(document.getElementById(modalId));
+            transferName(i);
         });
     }
 
-    for (let i of document.querySelectorAll("button[id^=modal_open_alert")) {
-        i.addEventListener('click', function () {
-            transferName(i);
-        })
-    }
+    // clears inputs for the review modal
+    document.getElementById("modal_close_review").addEventListener('click', function () {
+        document.getElementById('review-input').innerText = '';
+        for (let i of document.querySelectorAll("input[id^=star]")) {
+            if (i.hasAttribute("checked")) i.removeAttribute("checked");
+        }
+    });
 
+    // review modal basic form validation
     document.getElementById('review-modal-submit-btn').addEventListener('click', function (evt) {
         let el = document.getElementById('review-input-msg');
-        if (document.getElementById('review-input').value === '') {
+        let revEl = document.getElementById('review-input');
+        if (revEl.value === '' || revEl.value.length < 5) {
             evt.preventDefault();
             el.style.color = 'red';
-            el.innerHTML = 'Review content must not be empty.';
+            el.innerText = 'Review text must be at least 5 characters long.';
+            this.prop('disabled', true);
+        } else if (revEl.value.length > 1000) {
+            evt.preventDefault();
+            el.style.color = 'red';
+            el.innerText = 'Review text cannot be over 1000 characters.';
             this.prop('disabled', true);
         } else {
-            el.innerHTML = '';
+            el.innerText = '';
             this.prop('disabled', true);
         }
     });
 
+    // switches active review tab to recent
     document.getElementById('review-tab-recent').addEventListener('click', function () {
         changeActive(this, document.getElementById('recent-reviews'), document.getElementById('review-tab-all'), document.getElementById('all-reviews'));
     });
 
+    // switches active review tab to all
     document.getElementById('review-tab-all').addEventListener('click', function () {
         changeActive(this, document.getElementById('all-reviews'), document.getElementById('review-tab-recent'), document.getElementById('recent-reviews'));
     });
@@ -456,6 +556,26 @@ function review_temp($i, $arr, $mysqli, $in_id): string
     document.getElementById('review-tab-all').addEventListener('click', function () {
         showOnLoad(document.getElementById('load-content'));
     });
+
+    for (let i of document.querySelectorAll("button[id^=edit]")) {
+        let content = i.dataset.rcontent;
+        let rating = i.dataset.rrating;
+        let contentEl = document.getElementById('review-input');
+        let ratingEl = document.getElementById("star" + rating);
+        document.getElementById('modal-submit-hidden').value = 0;
+        document.getElementById('modal-edit-hidden').value = 1;
+        document.getElementById('review-modal-title-edit').hidden = false;
+        document.getElementById('review-modal-title-watch').hidden = true;
+        i.addEventListener('click', function () {
+            changeModalDisplay(document.getElementById('review-modal'));
+        });
+        i.addEventListener('click', function () {
+            fillEditModal(contentEl, ratingEl, content);
+        });
+        i.addEventListener('click', function () {
+            transferName(i, 'edit');
+        });
+    }
 </script>
 <script src="vendors/base/vendor.bundle.base.js"></script>
 <!-- endinject -->

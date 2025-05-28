@@ -31,10 +31,18 @@ $pf_img_nav = $pf_result['profile_pic_src'] ?? 'dummy_pfp.jpg';
                           <i class="mdi mdi-magnify"></i>
                         </span>
                     </div>
-                    <form action="show_search.php" method="get" id="form" name="form">
+                    <form action="show_search.php" method="get" id="form" name="form" style="width: 75%;">
                         <input type="text" class="form-control" name="searchbar"
                                id="searchbar"
                                placeholder="Search now">
+                        <script>
+                            // limits the amount of characters allowed in the searchbar
+                            document.getElementById('searchbar').addEventListener('keydown', function () {
+                                if (this.value.length > 100) {
+                                    this.value = this.value.substring(0, 100);
+                                }
+                            })
+                        </script>
                         <input type="submit" name="sub" id="sub" hidden>
                     </form>
                     <script src="js/jquery-1.9.1.js">

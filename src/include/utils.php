@@ -109,7 +109,7 @@ function update_avg(int $show_id, int $rating, int $review_count, mysqli_class $
  * @param int $i - Iteration variable, needed for array indexing in main doc
  * @param array $user_info - User info array
  * @param int $in_id - Show id (int)
- * @param string $r_str - Review content string
+ * @param string $r_str - Review rating in stars
  * @param boolean $is_user - Boolean that determines if the current user is allowed to see the edit/delete buttons for the review
  * @return string
  */
@@ -117,7 +117,8 @@ function review_template(array $review, array $user_pf, int $i, array $user_info
 {
     $rev_id = $review['review_id'];
     $str_len = 75;
-    $rev_content = substr($review['review_content'], 0, $str_len);
+    $full_rev_content = $review['review_content'];
+    $rev_content = substr($full_rev_content, 0, $str_len);
     if (strlen($rev_content) >= $str_len) {
         $rev_content = $rev_content . '...';
     }
@@ -125,7 +126,9 @@ function review_template(array $review, array $user_pf, int $i, array $user_info
     $pfp = $user_pf["profile_pic_src"] ?? "dummy_pfp.jpg";
     $user_name = $user_info['user_name'];
     $user_id = $user_info['user_id'];
-    $buttonstr = $i . '-' . $review['review_id'] . '-' . $user_info['user_id'];
+    $review_id = $review['review_id'];
+    $rating = $review['review_value'];
+    $buttonstr = $i . '-' . $review_id . '-' . $user_info['user_id'];
 
     // Need an anon function as an alternative to if conditionals inside HEREDOC templates
     $hereif = function ($condition, $true, $false) {
@@ -135,8 +138,9 @@ function review_template(array $review, array $user_pf, int $i, array $user_info
     $set = <<<TEMPLATE
     <form action="" method="POST">
         <input type="hidden" name="modify" id="modify-field-hidden" value="1">
-        <button class="d-inline btn btn-primary" type="submit"
-            name="edit$buttonstr">
+        <button type="button" class="d-inline btn btn-primary"
+            name="edit$buttonstr" id="edit$buttonstr" data-rcontent="$full_rev_content" data-rrating="$rating" 
+            data-bs-toggle="modal" data-bs-target="#review-modal">
             Edit
         </button>
         <button class="d-inline btn btn-secondary" type="button"

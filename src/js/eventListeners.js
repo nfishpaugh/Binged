@@ -8,12 +8,19 @@ function changeModalDisplay(e) {
 
 /** @description Copies the name of the delete/edit btn to the modal for use in submission processing
  *
- * @param i - The element object to transfer the name of the delete/edit button to
+ * @param i - The element object that needs its name transferred to the appropriate form
+ * @param type - Either delete or edit, defaults to delete
  * @return void
  */
-function transferName(i) {
+function transferName(i, type = "delete") {
+    let sub;
+    if (type === "edit") {
+        sub = 'review';
+    } else {
+        sub = 'alert';
+    }
     // excludes trailing numbers
-    let sub = i.id.substring(i.id.lastIndexOf('_') + 1, i.id.search(/\d/));
+    //let sub = i.id.substring(i.id.lastIndexOf('_') + 1, i.id.search(/\d/));
     let form = document.getElementById(sub + '-form');
     let el = document.createElement("input");
     el.setAttribute("type", "hidden");
@@ -27,11 +34,10 @@ function transferName(i) {
  * @param iHref - The element that i displays when clicked
  * @param otherElement - The other li in a group of two nav tabs to remove the 'active' class from
  * @param otherHref - The element that otherElement displays when clicked
- * @param extraArr - Optional, an array of any ancilliary elements to hide/show
+ * @param extraArr - Optional, an array of any ancillary elements to hide/show
  * @return void
  */
 function changeActive(i, iHref, otherElement, otherHref, extraArr = []) {
-    // to make more modular, just swap the logic around: use the index of the li to add active to instead of the one not to add it to
     if (!i.classList.contains('active')) {
         i.classList.add('active');
         i.children.item(0).classList.add('active');
@@ -49,7 +55,20 @@ function changeActive(i, iHref, otherElement, otherHref, extraArr = []) {
     }
 }
 
+/** Hides the spinner element and shows the loaded content
+ * @param e - The element to show
+ */
 function showOnLoad(e) {
     if (e.hidden) e.hidden = false;
     document.getElementById('spinner').hidden = true;
+}
+
+/** Fills the review modal with the content of the review to be edited
+ * @param inputEl - The textarea element to fill with textual content
+ * @param ratingEl - The radio button star element to have checked
+ * @param content - The textual content to fill inputEl with
+ */
+function fillEditModal(inputEl, ratingEl, content = "") {
+    inputEl.innerText = content;
+    ratingEl.setAttribute("checked", true);
 }
