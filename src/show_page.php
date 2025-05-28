@@ -128,7 +128,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             alert("Invalid user id");
         </script><?php
         unset($_POST);
-    } elseif (!isset($_POST['modify']) && $_POST['modal-submit'] === "1" && $_SESSION[PREFIX . '_security'] > 0) {
+    } elseif (!isset($_POST['modify']) && $_POST['modal-submit'] === "1" && $_SESSION[PREFIX . '_security'] > 1) {
         unset($_POST['modal-submit']);
 
         if (isset($_POST['review-input'])) {
@@ -160,7 +160,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             <?php
             unset($_POST);
         }
-    } elseif (!isset($_POST['modify']) && $_POST['modal-edit'] === "1" && $_SESSION[PREFIX . '_security'] > 0) {
+    } elseif (!isset($_POST['modify']) && $_POST['modal-edit'] === "1" && $_SESSION[PREFIX . '_security'] > 1) {
         unset($_POST['modal-edit']);
 
         foreach ($_POST as $key => $value) {
