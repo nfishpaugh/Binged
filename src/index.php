@@ -295,6 +295,7 @@ $len = 40;
 
             </div>
             <!-- content-wrapper ends -->
+            <?php require_once 'partials/_footer.php'; ?>
         </div>
         <!-- main-panel ends -->
     </div>
