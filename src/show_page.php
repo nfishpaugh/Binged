@@ -260,7 +260,11 @@ $r_str = '';
                                     </button>
                                     <script>
                                         // removes review button if user is guest
-                                        let check = parseInt('<?php echo $_SESSION[PREFIX . '_security']?>');
+                                        let check = parseInt('<?php if (isset($_SESSION[PREFIX . '_security'])) {
+                                            echo $_SESSION[PREFIX . '_security'];
+                                        } else {
+                                            echo 1;
+                                        } ?>');
                                         if (check < 5) {
                                             document.getElementById('modal_open_review').remove();
                                         }
@@ -502,12 +506,15 @@ function review_temp($i, $arr, $mysqli, $in_id): string
     //     });
     // }
 
-    document.getElementById('modal_open_review').addEventListener('click', function () {
-        document.getElementById('modal-submit-hidden').value = 1;
-        document.getElementById('modal-edit-hidden').value = 0;
-        document.getElementById('review-modal-title-edit').hidden = true;
-        document.getElementById('review-modal-title-watch').hidden = false;
-    });
+    // since guests don't have this button, need to check if it exists first
+    if (document.getElementById('modal_open_review')) {
+        document.getElementById('modal_open_review').addEventListener('click', function () {
+            document.getElementById('modal-submit-hidden').value = 1;
+            document.getElementById('modal-edit-hidden').value = 0;
+            document.getElementById('review-modal-title-edit').hidden = true;
+            document.getElementById('review-modal-title-watch').hidden = false;
+        });
+    }
 
     for (let i of document.querySelectorAll("button[id^=modal_open_alert]")) {
         i.addEventListener('click', function () {

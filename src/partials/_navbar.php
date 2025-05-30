@@ -75,8 +75,7 @@ $pf_img_nav = $pf_result['profile_pic_src'] ?? 'dummy_pfp.jpg';
         <ul class="navbar-nav navbar-nav-right">
             <li class="nav-item nav-profile dropdown">
                 <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown" id="profileDropdown">
-                    <img src="images/faces/<?php echo $pf_img_nav ?>"
-                         onerror="this.onerror=null; this.src='images/faces/dummy_pfp.jpg';"/>
+                    <img src="images/faces/<?php echo $pf_img_nav ?>"/>
                     <span class="nav-profile-name"><?php echo $_SESSION[PREFIX . '_fullname']; ?></span>
                 </a>
                 <div class="dropdown-menu dropdown-menu-right navbar-dropdown" aria-labelledby="profileDropdown">
